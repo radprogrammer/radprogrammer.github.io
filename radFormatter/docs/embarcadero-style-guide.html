@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embarcadero style guide - radFormatter</title>
+<meta name="description" content="How radFormatter's Embarcadero profile maps to Embarcadero's official Delphi Object Pascal Style Guide - what it enforces, what the indent engine handles structurally, and what falls outside a formatter's scope.">
+<link rel="icon" href="../assets/radformatter.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../assets/radformatter-icon.svg">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+.docs{display:grid;grid-template-columns:230px minmax(0,1fr);gap:48px;padding:48px 0 72px}
+.toc{position:sticky;top:24px;align-self:start;font-size:.88rem}
+.toc h2{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);margin-bottom:.8em}
+.toc ul{list-style:none;margin:0 0 1.6em;padding:0}
+.toc li{margin:0 0 .45em}
+.toc a{text-decoration:none;color:var(--ink)}
+.toc a:hover{color:var(--rad-red)}
+main h1{margin-bottom:.3em}
+main h2{font-size:1.35rem;margin-top:2.2em;padding-top:.6em}
+main h3{margin-top:1.8em}
+.crumb{font-family:var(--mono);font-size:.78rem;color:var(--steel);margin:0 0 1.4em}
+.crumb a{color:var(--steel);text-decoration:none}
+.crumb a:hover{color:var(--rad-red)}
+.note{border-left:4px solid var(--sky);background:#fff;border-radius:0 10px 10px 0;padding:14px 18px;margin:20px 0;color:var(--steel);font-size:.93rem}
+.note strong{color:var(--ink)}
+pre.term{margin:16px 0 24px}
+table.data td:first-child{font-family:var(--body);font-size:.9rem;white-space:normal}
+table.data td:last-child{font-family:var(--mono);font-size:.82rem}
+table.data.plain td:last-child{font-family:var(--body);font-size:.9rem}
+.dl{display:inline-block;font-family:var(--display);font-weight:700;text-decoration:none;border-radius:9px;padding:.6em 1.2em;font-size:.92rem;background:var(--ink);color:#fff}
+.dl:hover{background:#101820}
+.anchor-heading{scroll-margin-top:24px}
+@media (max-width:860px){
+  .docs{grid-template-columns:1fr;gap:0}
+  .toc{position:static;border:1px solid var(--line);background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:28px}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="../index.html" aria-label="radFormatter home">
+      <img src="../assets/radformatter-logo-reversed.svg" alt="radFormatter" height="34">
+    </a>
+    <nav aria-label="Main">
+      <a href="../index.html">Home</a>
+      <a href="../ide.html">IDE Plugin</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../docs/radFormatter-cli.html">Docs</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+      <a class="cta" href="../buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap docs">
+  <aside class="toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ul>
+      <li><a href="#using">Using the profile</a></li>
+      <li><a href="#mapping">Settings mapped to the style guide</a></li>
+      <li><a href="#structural">Handled by the indent engine</a></li>
+      <li><a href="#not-enforced">Not enforced by radFormatter</a></li>
+      <li><a href="#notes">Notes</a></li>
+    </ul>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="radFormatter-cli.html">CLI reference</a></li>
+      <li><a href="config-options.html">Configuration options</a></li>
+      <li><a href="profiles.html">Profiles</a></li>
+      <li><a href="known-limitations.html">Known limitations</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <p class="crumb"><a href="../index.html">radFormatter</a> / docs / embarcadero style guide</p>
+    <h1>Embarcadero style guide</h1>
+
+    <p>radFormatter ships a built-in <strong><code>Embarcadero</code></strong>
+    profile that maps its settings to Embarcadero's official <em>Delphi Object
+    Pascal Style Guide</em> for RAD Studio. This page explains what that profile
+    does, which style-guide recommendations it enforces, and which ones fall
+    outside a formatter's scope.</p>
+
+    <p>Official style-guide references:</p>
+    <ul>
+      <li><a href="https://docwiki.embarcadero.com/RADStudio/en/Delphi%E2%80%99s_Object_Pascal_Style_Guide">Delphi Object Pascal Style Guide</a></li>
+      <li><a href="https://docwiki.embarcadero.com/RADStudio/en/General_Rules">General Rules</a></li>
+      <li><a href="https://docwiki.embarcadero.com/RADStudio/en/Source_Code_Files_Units_and_Their_Structure">Source Code Files, Units and Their Structure</a></li>
+      <li><a href="https://docwiki.embarcadero.com/RADStudio/en/White_Space_Usage">White Space Usage</a></li>
+      <li><a href="https://docwiki.embarcadero.com/RADStudio/en/Delphi_Statements">Statements</a></li>
+      <li><a href="https://docwiki.embarcadero.com/RADStudio/en/Type_Declarations">Type Declarations</a></li>
+    </ul>
+
+    <h2 id="using" class="anchor-heading">Using the profile</h2>
+    <p>Select it on the CLI:</p>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -w -d source -r</code></pre>
+    <p>The profile is a complete starting point. To adjust any individual
+    setting, overlay your own JSON with <code>-config</code> &mdash; only the
+    keys you list change:</p>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -config team-overrides.json -w source/MyUnit.pas</code></pre>
+    <p>The companion <code>radFormatter.Embarcadero.json</code> is the full
+    profile written out explicitly (equivalent to
+    <code>-profile Embarcadero</code>). To adopt it, either save it into your
+    project as <code>radFormatter.json</code> (the conventional active-config
+    name) or pass it directly:</p>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -config radFormatter.Embarcadero.json -w -d source -r</code></pre>
+    <p><a class="dl" href="radFormatter.Embarcadero.json" download>Download radFormatter.Embarcadero.json</a></p>
+    <div class="note">Unlike the conservative <strong>Default</strong> profile,
+    <code>Embarcadero</code> performs active formatting: it lowercases keywords,
+    normalizes spacing, reflows <code>begin</code>/<code>end</code> and control
+    bodies (<code>lineBreaks.keepUser</code> is <code>false</code>), and wraps
+    at a 160-column margin.</div>
+    <p>See the <a href="config-options.html">configuration options reference</a>
+    for the meaning of every key.</p>
+
+    <h2 id="mapping" class="anchor-heading">Settings mapped to the style guide</h2>
+    <table class="data">
+      <thead><tr><th scope="col">Style-guide recommendation</th><th scope="col">radFormatter (Embarcadero) setting</th></tr></thead>
+      <tbody>
+        <tr><td>Use lowercase language keywords, reserved words, and compiler directives.</td><td>casing.keywords: "lower", casing.directives: "lower"</td></tr>
+        <tr><td>Keep identifiers in their intended Pascal casing.</td><td>casing.identifiers: "asis" (radFormatter never rewrites identifier casing)</td></tr>
+        <tr><td>Two spaces per indentation level; no tabs.</td><td>indent.size: 2, indent.style: "spaces"</td></tr>
+        <tr><td>Two-space continuation indent for wrapped statements/declarations.</td><td>indent.continuationSize: 2</td></tr>
+        <tr><td>Keep compiler directives at the left margin.</td><td>indent.directives: "column0"</td></tr>
+        <tr><td>Indent case labels relative to <code>case</code>, and case-arm bodies relative to the label; keep <code>case</code>'s <code>else</code> with the labels.</td><td>indent.caseLabels: true, indent.caseContent: true, indent.caseElseAlignment: "withLabels"</td></tr>
+        <tr><td>Spaces around assignment and binary operators.</td><td>spacing.assignment: "both", spacing.aroundBinaryOperators: "yes"</td></tr>
+        <tr><td>A single space after commas, declaration colons, and semicolons; none before.</td><td>spacing.comma: "after", spacing.colon: "after", spacing.semicolon: "after"</td></tr>
+        <tr><td>No spaces just inside parentheses or brackets.</td><td>spacing.insideParens: "no", spacing.insideBrackets: "no"</td></tr>
+        <tr><td>No space between a routine name and its parameter parenthesis.</td><td>spacing.beforeParens: "no"</td></tr>
+        <tr><td>No space before an index/bounds bracket.</td><td>spacing.beforeBracket: "no"</td></tr>
+        <tr><td>No spaces inside generic angle brackets.</td><td>spacing.genericBrackets: "no"</td></tr>
+        <tr><td>No spaces around the subrange operator <code>..</code></td><td>spacing.aroundRange: "no"</td></tr>
+        <tr><td>No space between a unary/prefix operator (or cast) and its operand.</td><td>spacing.aroundUnaryOperators: "no"</td></tr>
+        <tr><td>Put <code>begin</code> and <code>end</code> on their own lines; give control-statement bodies their own line.</td><td>lineBreaks.beforeBegin: "yes", lineBreaks.afterBegin: true, lineBreaks.beforeSingleInstr: "yes"</td></tr>
+        <tr><td>Keep at most one statement on a line.</td><td>lineBreaks.lineAfterSemicolon: true</td></tr>
+        <tr><td>Preserve the accepted <code>else if</code> same-line style.</td><td>lineBreaks.betweenElseAndIf: false</td></tr>
+        <tr><td>One <code>uses</code> entry per line, following the lowercase <code>uses</code> keyword.</td><td>lineBreaks.usesMode: "onePerLine"</td></tr>
+        <tr><td>Avoid vertical alignment of declarations.</td><td>all alignment.* off</td></tr>
+        <tr><td>Separate major logical sections with a blank line, but no repeated blank lines.</td><td>output.maxEmptyLines: 1, output.emptyLines.aroundSections: 1, output.emptyLines.betweenDeclarations: 1, output.emptyLines.beforeTypeKeyword: 1, output.emptyLines.beforeVisibility: 0</td></tr>
+        <tr><td>Wrap long lines at a conventional editor width.</td><td>output.rightMargin: 160</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="structural" class="anchor-heading">Handled automatically by the CST indent engine</h2>
+    <p>Several style-guide layout rules need no option &mdash; the
+    concrete-syntax indent engine produces them structurally:</p>
+    <ul>
+      <li>Unit-level keywords (<code>unit</code>, <code>uses</code>,
+      <code>type</code>, <code>interface</code>, <code>implementation</code>,
+      <code>initialization</code>, <code>finalization</code>, and the final
+      <code>end</code>) stay at the left margin.</li>
+      <li>Block contents sit one level inside <code>begin</code>/<code>end</code>,
+      while <code>begin</code>/<code>end</code> themselves stay at the enclosing
+      depth.</li>
+      <li>Nested (local) routines are indented under their enclosing routine.</li>
+      <li><code>then</code> stays on the same line as the <code>if</code>
+      condition.</li>
+    </ul>
+
+    <h2 id="not-enforced" class="anchor-heading">Not enforced by radFormatter</h2>
+    <h3>Semantic / organizational (out of scope for a layout formatter)</h3>
+    <p>These are recommendations about <em>what</em> the code says, not
+    <em>how</em> it is spaced, so radFormatter deliberately leaves them alone:</p>
+    <ul>
+      <li>Use descriptive names, Pascal casing, and no Hungarian notation.</li>
+      <li>Use dotted unit scope names such as <code>System.SysUtils</code>.</li>
+      <li>Put data types and symbols used by only one unit in the implementation section.</li>
+      <li>Arrange class members by access section, then fields, methods, and properties.</li>
+      <li>Prefer constants (or inline constants) for values that are never modified.</li>
+      <li>Prefer inline variables for tightly scoped block-local variables.</li>
+      <li>Avoid extra parentheses around simple <code>if</code> conditions.</li>
+      <li>Omit empty parentheses for parameterless routines unless required by the compiler.</li>
+    </ul>
+
+    <h2 id="notes" class="anchor-heading">Notes</h2>
+    <ul>
+      <li><code>casing.numbers</code> is left <code>"asis"</code>: the style
+      guide does not mandate a hex or exponent letter case, so radFormatter
+      preserves what you wrote.</li>
+      <li><code>output.lineEnding</code> is <code>"auto"</code> (the platform
+      default line ending; CRLF on Windows). Set it to <code>"crlf"</code>,
+      <code>"lf"</code>, or <code>"cr"</code> if your project standardizes on
+      one.</li>
+      <li>The profile leaves all <code>reshaping.*</code> options off, so it
+      will not force call arguments, enums, arrays, or inheritance lists onto
+      separate lines. The 160-column <code>rightMargin</code> still wraps
+      over-long lines at their natural break points.</li>
+    </ul>
+  </main>
+</div>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../../index.html" aria-label="RAD Programmer home"><img class="mark" src="../../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radFormatter is part of the <a href="../../index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a> toolset &mdash;
+      developer tooling for the Delphi ecosystem.</p>
+    </div>
+    <div>
+      <h3>Documentation</h3>
+      <ul>
+        <li><a href="radFormatter-cli.html">CLI reference</a></li>
+        <li><a href="config-options.html">Configuration options</a></li>
+        <li><a href="profiles.html">Profiles</a></li>
+        <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="../buy.html">Buy radFormatter</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter/releases">Download</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter">GitHub</a></li>
+        <li><a href="../../about.html">About</a></li>
+        <li><a href="https://github.com/radprogrammer/radformatter/issues">Support</a></li>
+        <li><a href="known-limitations.html">Known limitations</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

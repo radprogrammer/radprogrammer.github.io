@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAD Programmer — developer tooling for the Delphi ecosystem</title>
+<meta name="description" content="RAD Programmer builds developer tooling for the Delphi ecosystem, starting with radFormatter: a non-destructive, CST-aware Delphi source code formatter.">
+<link rel="icon" type="image/svg+xml" href="assets/radprogrammer-logo.svg">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+/* hub header wordmark */
+.brandmark{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brandmark img{height:40px;width:auto;background:#fff;border-radius:9px;padding:3px}
+.brandmark .word{font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em;color:#fff}
+.brandmark .word b{color:var(--rad-red);font-weight:800}
+
+/* hero — light, mascot-led (inverse of the product pages) */
+.hub-hero{background:linear-gradient(180deg,#fff 0%,var(--paper) 100%);border-bottom:1px solid var(--line);padding:72px 0}
+.hub-hero .cols{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+.hub-hero h1{font-size:clamp(2rem,4.5vw,3rem);letter-spacing:-.02em}
+.hub-hero h1 b{color:var(--rad-red);font-weight:800}
+.hub-hero .sub{font-size:1.15rem;color:var(--steel);max-width:30em}
+.hub-hero .actions{display:flex;gap:14px;margin-top:26px;flex-wrap:wrap}
+.btn.dark{background:var(--ink);color:#fff}
+.btn.dark:hover{background:#101820}
+.btn.outline{border:2px solid var(--line);color:var(--ink)}
+.btn.outline:hover{border-color:var(--steel)}
+.hub-hero .mascot{justify-self:center}
+.hub-hero .mascot img{max-height:320px;width:auto}
+
+/* featured product band — dark, hands off to the product identity */
+.featured{background:linear-gradient(180deg,var(--ink) 0%,#25323d 100%);color:var(--mist);padding:64px 0}
+.featured .card{display:grid;grid-template-columns:auto 1fr auto;gap:32px;align-items:center;background:#162028;border:1px solid var(--slate);border-radius:16px;padding:34px 38px}
+.featured .tile{width:96px;height:96px}
+.featured h2{color:#fff;margin:0 0 .2em;font-size:1.6rem}
+.featured h2 b{color:var(--rad-red)}
+.featured p{margin:0;color:#AEC0CD;max-width:38em}
+.featured .go{display:flex;flex-direction:column;gap:10px}
+.featured .meta{font-family:var(--mono);font-size:.78rem;color:#8FA3B1;margin-top:10px}
+.featured .meta span{background:#22303B;border-radius:5px;padding:.15em .55em;margin-right:6px;display:inline-block;margin-bottom:6px}
+
+/* family strip */
+.family{padding:64px 0}
+.family .tiles{display:flex;gap:18px;margin-top:26px;align-items:center;flex-wrap:wrap}
+.family .tiles a{display:block;line-height:0;border-radius:16px;transition:transform .12s ease}
+.family .tiles a:hover{transform:translateY(-3px)}
+.family .tiles img{width:72px;height:72px;border-radius:16px}
+.family .tiles .ghost{width:72px;height:72px;border-radius:16px;border:2px dashed var(--line)}
+.family .lede{max-width:44em;color:var(--steel)}
+
+@media (max-width:860px){
+  .hub-hero .cols{grid-template-columns:1fr}
+  .hub-hero .mascot{order:-1}
+  .hub-hero .mascot img{max-height:200px}
+  .featured .card{grid-template-columns:1fr;text-align:center;justify-items:center}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brandmark" href="index.html" aria-label="RAD Programmer home">
+      <img src="assets/radprogrammer-logo.svg" alt="">
+      <span class="word"><b>RAD</b>&nbsp;Programmer</span>
+    </a>
+    <nav aria-label="Main">
+      <a href="radFormatter/index.html">radFormatter</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/radprogrammer">GitHub</a>
+      <a class="cta" href="radFormatter/buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hub-hero">
+  <div class="wrap cols">
+    <div>
+      <h1><b>Rad</b> tooling for<br>Delphi developers.</h1>
+      <p class="sub">Building the next generation of developer tools for the RAD Studio ecosystem - from formatting and code analysis to exploration and automation.</p>
+      <div class="actions">
+        <a class="btn primary" href="radFormatter/index.html">Explore radFormatter</a>
+        <a class="btn outline" href="https://github.com/radprogrammer">GitHub</a>
+      </div>
+    </div>
+    <div class="mascot">
+      <img src="assets/radprogrammer-logo.svg" alt="The RAD Programmer mascot at a laptop">
+    </div>
+  </div>
+</div>
+
+<!-- ================= FEATURED PRODUCT ================= -->
+<section class="featured" id="tools">
+  <div class="wrap">
+    <div class="card">
+      <img class="tile" src="radFormatter/assets/radformatter-icon.svg" alt="">
+      <div>
+        <h2><b>rad</b>Formatter</h2>
+        <p>A non-destructive Delphi source code formatter. It parses your source
+        into a full syntax tree, formats from real structure, and validates that
+        nothing beyond whitespace and casing ever changes &mdash; fully offline,
+        with your source never leaving your machine.</p>
+        <p class="meta"><span>IDE plugin</span><span>CLI</span><span>CST-aware</span><span>57 options</span><span>CI-ready</span><span>offline</span></p>
+      </div>
+      <div class="go">
+        <a class="btn primary" href="radFormatter/index.html">Learn more</a>
+        <a class="btn ghost" href="radFormatter/docs/radFormatter-cli.html">Docs</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAMILY ================= -->
+<section class="family">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>One family, one standard</h2>
+    <p class="lede">Every RAD Programmer tool is built to the same engineering
+    bar: validated output, predictable behavior, no surprises in your source
+    tree &mdash; and nothing ever phoned home. radFormatter is the first; more
+    tools for code analysis, exploration, and automation are in development.</p>
+    <div class="tiles">
+      <a href="radFormatter/index.html" aria-label="radFormatter"><img src="radFormatter/assets/radformatter-icon.svg" alt="radFormatter"></a>
+      <div class="ghost" aria-hidden="true"></div>
+      <div class="ghost" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <img class="mark" src="assets/radprogrammer-logo.svg" alt="RAD Programmer">
+      <p><strong>RAD Programmer</strong> &mdash; developer tooling for the
+      Delphi ecosystem.</p>
+    </div>
+    <div>
+      <h3>radFormatter</h3>
+      <ul>
+        <li><a href="radFormatter/index.html">Product</a></li>
+        <li><a href="radFormatter/docs/radFormatter-cli.html">Documentation</a></li>
+        <li><a href="radFormatter/buy.html">Buy</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="https://github.com/radprogrammer">GitHub</a></li>
+        <li><a href="https://github.com/radprogrammer/radformatter/issues">Support</a></li>
+        <li><a href="legal/privacy.html">Privacy</a></li>
+        <li><a href="legal/terms.html">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

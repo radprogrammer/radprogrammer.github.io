@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Known limitations - radFormatter</title>
+<meta name="description" content="Known constraints and deliberate limits for radFormatter v2: default preserve-source behavior, tab handling, right-margin wrap coverage, conditional compilation, and comment indentation.">
+<link rel="icon" href="../assets/radformatter.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../assets/radformatter-icon.svg">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+.docs{display:grid;grid-template-columns:230px minmax(0,1fr);gap:48px;padding:48px 0 72px}
+.toc{position:sticky;top:24px;align-self:start;font-size:.88rem}
+.toc h2{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);margin-bottom:.8em}
+.toc ul{list-style:none;margin:0 0 1.6em;padding:0}
+.toc li{margin:0 0 .45em}
+.toc a{text-decoration:none;color:var(--ink)}
+.toc a:hover{color:var(--rad-red)}
+main h1{margin-bottom:.3em}
+main h2{font-size:1.35rem;margin-top:2.2em;padding-top:.6em}
+main h3{margin-top:1.8em}
+.crumb{font-family:var(--mono);font-size:.78rem;color:var(--steel);margin:0 0 1.4em}
+.crumb a{color:var(--steel);text-decoration:none}
+.crumb a:hover{color:var(--rad-red)}
+.note{border-left:4px solid var(--sky);background:#fff;border-radius:0 10px 10px 0;padding:14px 18px;margin:20px 0;color:var(--steel);font-size:.93rem}
+.note strong{color:var(--ink)}
+pre.term{margin:16px 0 24px}
+.k{color:var(--sky)}
+.cm{color:#8FA3B1}
+table.data td:first-child{white-space:normal}
+.anchor-heading{scroll-margin-top:24px}
+@media (max-width:860px){
+  .docs{grid-template-columns:1fr;gap:0}
+  .toc{position:static;border:1px solid var(--line);background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:28px}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="../index.html" aria-label="radFormatter home">
+      <img src="../assets/radformatter-logo-reversed.svg" alt="radFormatter" height="34">
+    </a>
+    <nav aria-label="Main">
+      <a href="../index.html">Home</a>
+      <a href="../ide.html">IDE Plugin</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../docs/radFormatter-cli.html">Docs</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+      <a class="cta" href="../buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap docs">
+  <aside class="toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ul>
+      <li><a href="#asis">AsIs = preserve the source</a></li>
+      <li><a href="#tabs">Tabs and indent style</a></li>
+      <li><a href="#conditional">Conditional compilation</a></li>
+      <li><a href="#right-margin">Right margin scope</a></li>
+      <li><a href="#comments">Comment indentation</a></li>
+      <li><a href="#alignment">Alignment</a></li>
+    </ul>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="radFormatter-cli.html">CLI reference</a></li>
+      <li><a href="config-options.html">Configuration options</a></li>
+      <li><a href="profiles.html">Profiles</a></li>
+      <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <p class="crumb"><a href="../index.html">radFormatter</a> / docs / known limitations</p>
+    <h1>Known limitations</h1>
+
+    <p>Known constraints and deliberate limits for <strong>radFormatter v2</strong>.
+    Some of these are engineering trade-offs; others are principled decisions
+    about what a layout formatter should and should not do. They are documented
+    here so behavior is predictable rather than surprising.</p>
+
+    <h2 id="asis" class="anchor-heading">AsIs = preserve the source</h2>
+    <p><code>as-is</code> for any spacing option means <em>do not alter the
+    source spacing</em> &mdash; the original inter-token whitespace (including
+    multiple spaces and tabs) is reproduced verbatim. Normalization happens only
+    where an option is set to a non-AsIs value, and only for that option's gap
+    type.</p>
+    <div class="note"><strong>Consequence:</strong> at the <strong>default
+    profile</strong> (every spacing option AsIs) the formatter performs no
+    inter-token spacing changes at all &mdash; it only changes casing,
+    indentation, and line breaks per their own options. The opinionated profiles
+    (Embarcadero, FormatterExe) set the spacing options to their idiomatic
+    non-AsIs values.</div>
+
+    <h2 id="tabs" class="anchor-heading">Tabs and indent style</h2>
+    <p><code>indent.style</code> extends the same &ldquo;preserve source by
+    default&rdquo; stance to the indent <em>character</em>. At the default
+    profile it is <code>asIs</code>: the formatter detects the source's indent
+    character (the first ordinary indented line decides &mdash; a leading tab
+    &rarr; tabs, a leading space &rarr; spaces; none &rarr; spaces) and
+    preserves it, rather than silently converting tab-indented source to spaces.
+    Only the character is preserved &mdash; indent <strong>depth is always
+    recomputed</strong>. The opinionated profiles set
+    <code>style: "spaces"</code>.</p>
+    <p>Consequently <code>indent.size</code> is a <strong>spaces-only</strong>
+    setting: under tabs the tab count is the structural level and the editor's
+    tab stop owns the visual width, so <code>indent.size</code> does not apply.
+    Continuation indent and alignment padding stay <strong>spaces</strong> even
+    under tabs (&ldquo;smart tabs&rdquo;). Right-margin measurement counts a
+    leading-indent tab at its true visual tab-stop width, so soft-break
+    decisions on tab-indented lines use the correct column.</p>
+
+    <h2 id="conditional" class="anchor-heading">Conditional compilation</h2>
+    <p>Inactive conditional branches are treated as preserve barriers &mdash;
+    their content is reproduced untouched. Rich directive formatting is limited
+    to indent (left margin vs structural depth) and casing. Formatting never
+    joins, splits, aligns, or wraps through conditional boundaries.</p>
+
+    <h2 id="right-margin" class="anchor-heading">Right margin scope</h2>
+    <p>Right-margin wrapping works by activating declared soft break points, so
+    coverage depends on which constructs declare them. Currently supported wrap
+    points:</p>
+    <ul>
+      <li>Call arguments</li>
+      <li>Formal parameter lists</li>
+      <li><code>uses</code> clause commas</li>
+      <li>Binary expression operators</li>
+      <li>Record initializer fields</li>
+      <li>Class/interface inheritance lists</li>
+      <li>Type member declaration boundaries</li>
+      <li>Enum values</li>
+      <li>Array initializer elements</li>
+      <li>Index, parenthesized, and set expressions</li>
+    </ul>
+    <p>Iterative multi-wrap is supported: after a wrap, indentation is
+    recomputed and over-long lines are re-measured.</p>
+    <p>Not yet supported for wrapping:</p>
+    <ul>
+      <li>Consecutive statements in <code>begin..end</code> blocks</li>
+      <li>Consecutive <code>var</code>/<code>const</code> section declarations</li>
+      <li>The assignment operator (<code>:=</code>) as a wrap point</li>
+      <li>Long string literals (splitting would require synthesizing
+      <code>' + '</code> concatenation tokens)</li>
+    </ul>
+
+    <h2 id="comments" class="anchor-heading">Comment indentation</h2>
+    <p>An own-line comment is aligned to the innermost block of code still
+    <em>open</em> at its position, rather than computing an indent of its own.
+    In practice the formatter matches the comment to a nearby statement in the
+    same block; for an empty block it uses the block's opener plus one indent
+    level; and a comment that is the empty or leading body of an unbraced
+    <code>if</code> / <code>for</code> / <code>while</code> / <code>with</code>
+    branch &mdash; sitting directly after <code>then</code>, <code>else</code>,
+    or <code>do</code> &mdash; takes that branch's body column. A comment that
+    follows a block's own closing <code>end</code> returns to the enclosing
+    level. Only when none of these apply does it fall back to matching the
+    <strong>next</strong> non-comment line.</p>
+    <p>So a comment inside a block indents with the block body, not with the
+    dedenting closer that follows it:</p>
+<pre class="term"><code><span class="k">begin</span>
+  <span class="k">if</span> AOptions.UsesMode = umOnePerLine <span class="k">then</span>
+  <span class="k">begin</span>
+    ...
+  <span class="k">end</span>;
+  <span class="cm">// umSingleLine handled below via join logic.   &lt;- block-body level, not the outer 'end'</span>
+<span class="k">end</span>;</code></pre>
+    <p>and a placeholder comment in an otherwise-empty <code>then</code> branch
+    takes the deeper then-body column, not the <code>else</code>:</p>
+<pre class="term"><code><span class="k">if</span> (...) <span class="k">then</span>
+  <span class="cm">// { skip -- option explicitly requests collapsing }   &lt;- then-body column</span>
+<span class="k">else</span>
+  IsStructural := True;</code></pre>
+    <h3>Residual limitation</h3>
+    <p>One narrow ambiguity remains. A comment sitting between a
+    <em>completed</em> statement and a following dedenting closer
+    (<code>else</code>, <code>end</code>, <code>until</code>,
+    <code>finally</code>) falls back to the next line, so it takes the closer's
+    shallower level rather than the deeper statement it might be trailing:</p>
+<pre class="term"><code><span class="k">if</span> X <span class="k">then</span>
+  A
+  <span class="cm">// prose introducing the else   &lt;- 'else' level, not A's deeper level</span>
+<span class="k">else</span>
+  B;</code></pre>
+    <p>This is a deliberate default: position alone cannot tell
+    &ldquo;trailing the statement above&rdquo; from &ldquo;introducing the
+    construct below,&rdquo; and the two intents want opposite indents. Aligning
+    such a comment to the deeper preceding line would break the common case of a
+    comment that heads an <code>else</code> / <code>until</code> /
+    <code>finally</code>, so the predictable next-line default is kept for the
+    cases the block-relative rules cannot resolve.</p>
+
+    <h2 id="alignment" class="anchor-heading">Alignment</h2>
+    <p>Alignment runs after indent and owns only interior padding. Alignment
+    interacts correctly with right-margin wrapping &mdash; alignment is computed
+    before wrapping, and wrapping triggers indent recomputation but not
+    alignment recomputation.</p>
+  </main>
+</div>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../../index.html" aria-label="RAD Programmer home"><img class="mark" src="../../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radFormatter is part of the <a href="../../index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a> toolset &mdash;
+      developer tooling for the Delphi ecosystem.</p>
+    </div>
+    <div>
+      <h3>Documentation</h3>
+      <ul>
+        <li><a href="radFormatter-cli.html">CLI reference</a></li>
+        <li><a href="config-options.html">Configuration options</a></li>
+        <li><a href="profiles.html">Profiles</a></li>
+        <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="../buy.html">Buy radFormatter</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter/releases">Download</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter">GitHub</a></li>
+        <li><a href="../../about.html">About</a></li>
+        <li><a href="https://github.com/radprogrammer/radformatter/issues">Support</a></li>
+        <li><a href="known-limitations.html">Known limitations</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>radFormatter - non-destructive Delphi source code formatter</title>
+<meta name="description" content="radFormatter is a non-destructive, CST-aware Delphi source code formatter. 56 options, four built-in profiles, and CI-ready check and diff modes. Part of the RAD Programmer toolset.">
+<link rel="icon" href="assets/radformatter.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="assets/radformatter-icon.svg">
+<link rel="apple-touch-icon" href="assets/radformatter-icon-256.png">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+/* ---------- hero ---------- */
+.hero{background:linear-gradient(180deg,var(--ink) 0%,#25323d 100%);color:var(--mist);padding:64px 0 80px}
+.hero .cols{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:start}
+.hero h1{font-size:clamp(1.9rem,4vw,2.8rem);color:#fff;letter-spacing:-.02em}
+.hero h1 .red{color:var(--rad-red)}
+.hero .sub{font-size:1.1rem;color:var(--mist);max-width:32em}
+.hero .pill{display:inline-block;font-family:var(--mono);font-size:.78rem;border:1px solid var(--steel);color:#AEC0CD;border-radius:999px;padding:.2em .8em;margin-bottom:18px}
+.hero .actions{display:flex;gap:14px;margin:26px 0 20px;flex-wrap:wrap}
+.filetypes{font-family:var(--mono);font-size:.8rem;color:#8FA3B1}
+.filetypes span{background:#2A3843;border-radius:5px;padding:.15em .55em;margin-right:6px;display:inline-block;margin-bottom:6px}
+
+/* demo panel */
+.demo{background:#162028;border:1px solid var(--slate);border-radius:14px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.demo .bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#1B2731;border-bottom:1px solid var(--slate)}
+.demo .bar .dot{width:10px;height:10px;border-radius:50%;background:var(--steel)}
+.demo .bar .title{margin-left:6px;font-family:var(--mono);font-size:.78rem;color:#8FA3B1}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px 0}
+.tabs button{font-family:var(--mono);font-size:.78rem;color:var(--mist);background:#22303B;border:1px solid var(--slate);border-radius:7px;padding:.35em .8em;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--rad-red);border-color:var(--rad-red);color:#fff;font-weight:600}
+.tabs button.input-tab[aria-selected="true"]{background:var(--steel);border-color:var(--steel)}
+.demo pre{margin:0;padding:18px 18px 18px 30px;overflow-x:auto;font-size:.82rem;line-height:1.55;color:var(--mist);position:relative}
+.demo .panel{position:relative}
+.demo .panel::before{content:"";position:absolute;left:16px;top:14px;bottom:14px;width:2px;background:var(--slate);border-radius:1px;opacity:.6}
+.demo .note{font-size:.78rem;color:#8FA3B1;font-family:var(--mono);padding:0 18px 14px 30px;margin:0}
+.k{color:var(--sky)}
+.u{color:#F08A8F}
+.demo [hidden]{display:none}
+
+/* ---------- sections ---------- */
+section.block{padding:64px 0}
+section.block.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lede{max-width:44em;color:var(--steel)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:30px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:30px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px}
+.alt .card{background:var(--paper)}
+.card h3{margin-top:0}
+.card p{margin-bottom:0;color:var(--steel);font-size:.95rem}
+.card .tag{font-family:var(--mono);font-size:.72rem;color:var(--rad-red);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px}
+
+/* safety strip - light section, dark tiles echoing the icon */
+.safety{background:#fff;border-bottom:1px solid var(--line)}
+.safety .card{background:var(--ink);border-color:var(--ink);border-radius:14px}
+.safety .card h3{color:#fff}
+.safety .card p{color:#AEC0CD}
+.safety .card code{background:#22303B;color:var(--mist)}
+
+/* strip labels */
+.striplabel{font-family:var(--mono);font-size:.72rem;color:var(--steel);letter-spacing:.06em;text-transform:uppercase;margin:26px 0 0}
+
+/* pipeline strip */
+.pipeline{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px;font-family:var(--mono);font-size:.8rem}
+.pipeline span:not(.sep){background:var(--ink);color:var(--mist);border-radius:7px;padding:.45em .85em}
+.pipeline span.in{background:transparent;color:var(--steel);border:1px dashed var(--steel)}
+.pipeline .sep{color:var(--rad-red);font-weight:600}
+
+/* option section chips */
+.optgrid{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 4px}
+.optgrid a{font-family:var(--mono);font-size:.82rem;text-decoration:none;color:var(--ink);background:var(--mist);border:1px solid var(--line);border-radius:7px;padding:.45em .9em}
+.optgrid a:hover{border-color:var(--rad-red);color:var(--rad-red)}
+
+/* cli columns */
+.cli-cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px}
+
+@media (max-width:860px){
+  .hero .cols,.cli-cols{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="#" aria-label="radFormatter home">
+      <img src="assets/radformatter-logo-reversed.svg" alt="radFormatter" height="34">
+    </a>
+    <nav aria-label="Main">
+      <a href="ide.html">IDE Plugin</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="docs/radFormatter-cli.html">Docs</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+      <a class="cta" href="buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="wrap cols">
+    <div>
+      <span class="pill">IDE plugin + CLI &middot; Delphi 2010 &rarr; 13 Florence</span>
+      <h1>Format your Delphi code.<br><span class="red">Lose nothing.</span></h1>
+      <p class="sub">radFormatter is a non-destructive Delphi source code formatter
+      for the RAD Studio IDE and the command line.
+      It parses your source into a full syntax tree, decides spacing, line breaks,
+      indentation, and alignment from real structure &mdash; and validates that nothing
+      beyond whitespace and casing ever changes. If it would, your original file is
+      returned untouched.</p>
+      <div class="actions">
+        <a class="btn primary" href="pricing.html">Editions &amp; pricing</a>
+        <a class="btn ghost" href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+        <a class="btn ghost" href="docs/radFormatter-cli.html">Read the docs</a>
+      </div>
+      <p class="filetypes">
+        <span>.pas</span><span>.dpr</span><span>.dpk</span><span>.dpkw</span><span>.inc</span>
+      </p>
+    </div>
+
+    <!-- Signature: live profile switcher on the documented sample -->
+    <div class="demo" id="demo">
+      <div class="bar" aria-hidden="true">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="title">Demo.pas &mdash; one input, four profiles</span>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Formatting profile">
+        <button class="input-tab" role="tab" id="tab-input" aria-selected="true"  aria-controls="panel-input">Input</button>
+        <button role="tab" id="tab-default"  aria-selected="false" aria-controls="panel-default">Default</button>
+        <button role="tab" id="tab-fmtexe"   aria-selected="false" aria-controls="panel-fmtexe">FormatterExe</button>
+        <button role="tab" id="tab-emb"      aria-selected="false" aria-controls="panel-emb">Embarcadero</button>
+        <button role="tab" id="tab-noop"     aria-selected="false" aria-controls="panel-noop">NoOp</button>
+      </div>
+
+      <div class="panel" id="panel-input" role="tabpanel" aria-labelledby="tab-input">
+<pre><code><span class="k">unit</span> Demo;
+<span class="k">interface</span>
+<span class="k">uses</span> System.SysUtils, System.Classes;
+<span class="k">implementation</span>
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  <span class="u">IF</span> A<span class="u">&gt;</span>0 <span class="u">THEN</span> DoIt(A);
+  B<span class="u">:=</span>A<span class="u">*</span>2<span class="u">+</span>1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+        <p class="note">// Mixed casing, tight spacing, no blank lines. Pick a profile.</p>
+      </div>
+
+      <div class="panel" id="panel-default" role="tabpanel" aria-labelledby="tab-default" hidden>
+<pre><code><span class="k">unit</span> Demo;
+<span class="k">interface</span>
+<span class="k">uses</span> System.SysUtils, System.Classes;
+<span class="k">implementation</span>
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  <span class="u">IF</span> A<span class="u">&gt;</span>0 <span class="u">THEN</span> DoIt(A);
+  B<span class="u">:=</span>A<span class="u">*</span>2<span class="u">+</span>1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+        <p class="note">// Conservative: reindents structure, preserves your casing, spacing, and line breaks. This input was already tidy &mdash; unchanged.</p>
+      </div>
+
+      <div class="panel" id="panel-fmtexe" role="tabpanel" aria-labelledby="tab-fmtexe" hidden>
+<pre><code><span class="k">unit</span> Demo;
+
+<span class="k">interface</span>
+
+<span class="k">uses</span> System.SysUtils, System.Classes;
+
+<span class="k">implementation</span>
+
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  <span class="u">IF</span> A &gt; 0 <span class="u">THEN</span>
+    DoIt(A);
+  B := A * 2 + 1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+        <p class="note">// Approximates RAD Studio's Formatter.exe: active spacing, section blank lines, 80-column margin. Keyword casing left as-is.</p>
+      </div>
+
+      <div class="panel" id="panel-emb" role="tabpanel" aria-labelledby="tab-emb" hidden>
+<pre><code><span class="k">unit</span> Demo;
+
+<span class="k">interface</span>
+
+<span class="k">uses</span> System.SysUtils,
+  System.Classes;
+
+<span class="k">implementation</span>
+
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  <span class="k">if</span> A &gt; 0 <span class="k">then</span>
+    DoIt(A);
+  B := A * 2 + 1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+        <p class="note">// The Embarcadero Delphi style guide: lowercase keywords, one uses entry per line, one statement per line, 160-column margin.</p>
+      </div>
+
+      <div class="panel" id="panel-noop" role="tabpanel" aria-labelledby="tab-noop" hidden>
+<pre><code><span class="k">unit</span> Demo;
+<span class="k">interface</span>
+<span class="k">uses</span> System.SysUtils, System.Classes;
+<span class="k">implementation</span>
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  <span class="u">IF</span> A<span class="u">&gt;</span>0 <span class="u">THEN</span> DoIt(A);
+  B<span class="u">:=</span>A<span class="u">*</span>2<span class="u">+</span>1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+        <p class="note">// Pass-through: byte-for-byte identical (modulo line endings). A baseline for opt-in, one-rule-at-a-time adoption.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SAFETY ================= -->
+<section class="block safety" id="safety">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>It can't eat your code</h2>
+    <p class="lede">Every format is verified before it is accepted. If anything beyond
+    whitespace or casing would change, the result is discarded and your original
+    source comes back untouched. And your source never leaves your machine:
+    radFormatter runs fully offline &mdash; no telemetry, no license phone-home,
+    no network access at all.</p>
+    <div class="grid3">
+      <div class="card">
+        <h3>Content-hash validation</h3>
+        <p>A whitespace-excluded hash of the source is compared before and after
+        formatting. Any mismatch discards the change.</p>
+      </div>
+      <div class="card">
+        <h3>Token fingerprinting</h3>
+        <p>The output is re-lexed and its token fingerprint compared to the
+        original. Same tokens in, same tokens out &mdash; or no change at all.</p>
+      </div>
+      <div class="card">
+        <h3>Graceful failure &amp; backups</h3>
+        <p>When validation fails, the original source is returned unchanged. Add
+        <code>-b</code> to write a <code>.bak</code> copy before any overwrite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= IDE ================= -->
+<section class="block" id="ide">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>In your IDE, or in your pipeline</h2>
+    <p class="lede">Press <strong>Ctrl+D</strong> in RAD Studio to format the
+    current unit &mdash; or just a selection. The plugin's split-screen config
+    editor previews every option live against your own source, and it writes the
+    same <code>radFormatter.json</code> the CLI uses, so the editor, the command
+    line, and CI all format identically. One installer covers every IDE from
+    Delphi 2010 through 13 Florence.</p>
+    <p style="margin:26px 0 8px"><a href="ide.html"><img src="assets/ide-config-editor.png" width="1286" height="693" style="max-width:100%;height:auto;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 34px rgba(31,42,51,.12)" alt="The radFormatter split-screen configuration editor showing option tabs and a live before/after source preview"></a></p>
+    <p style="margin-top:14px"><a href="ide.html">Explore the IDE plugin &rarr;</a></p>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="block" id="features">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Built on real parse data</h2>
+    <p class="lede">radFormatter tokenizes your source and builds a full Concrete
+    Syntax Tree, then runs an owned-decision pipeline: each stage writes exactly
+    one part of the output, and no stage can undo another&rsquo;s work.</p>
+    <p class="striplabel">From your source to settled decisions &mdash; in this order</p>
+    <div class="pipeline" aria-label="Formatting pipeline stages">
+      <span class="in">Source</span><span class="sep" aria-hidden="true">&rarr;</span>
+      <span class="in">CST</span><span class="sep" aria-hidden="true">&rarr;</span>
+      <span>Casing &amp; spacing</span><span class="sep" aria-hidden="true">&rarr;</span>
+      <span>Line breaks</span><span class="sep" aria-hidden="true">&rarr;</span>
+      <span>Indent</span><span class="sep" aria-hidden="true">&rarr;</span>
+      <span>Alignment</span><span class="sep" aria-hidden="true">&rarr;</span>
+      <span>Right margin</span><span class="sep" aria-hidden="true">&rarr;</span>
+      <span>Render &amp; validate</span>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <span class="tag">CST-aware</span>
+        <h3>Structure, not heuristics</h3>
+        <p>Indentation, <code>case</code> structure, generic parameters, and nested
+        control flow are driven by the parse tree, not line-based guesswork.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Owned decisions</span>
+        <h3>One writer per decision</h3>
+        <p>Every physical part of the emitted file has exactly one owner &mdash; line
+        breaks, leading whitespace, interior padding. Decisions settle once, so
+        stages never fight over the same character.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROFILES ================= -->
+<section class="block alt" id="profiles">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Profiles and configuration</h2>
+    <p class="lede">A profile is a named starting point. Whatever you pass with
+    <code>-config</code> is overlaid on top, so you only specify what you want to
+    change &mdash; from &ldquo;touch nothing&rdquo; to the full Embarcadero style guide.
+    Underneath are <strong>57 options across seven sections</strong>, all in one
+    <code>radFormatter.json</code>. Commit it and every developer and CI job
+    formats identically.</p>
+    <p class="striplabel">The seven option sections &mdash; click any to browse its reference</p>
+    <nav class="optgrid" aria-label="Configuration option sections">
+      <a href="docs/config-options.html#casing">casing</a>
+      <a href="docs/config-options.html#spacing">spacing</a>
+      <a href="docs/config-options.html#indent">indent</a>
+      <a href="docs/config-options.html#linebreaks">lineBreaks</a>
+      <a href="docs/config-options.html#reshaping">reshaping</a>
+      <a href="docs/config-options.html#alignment">alignment</a>
+      <a href="docs/config-options.html#output">output</a>
+    </nav>
+    <table class="data">
+      <thead>
+        <tr><th scope="col">Profile</th><th scope="col">Intent</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Default</td>
+          <td>Conservative: reindents and applies <code>case</code> structure, but
+          preserves spacing, casing, and user line breaks. The safest starting point.</td>
+        </tr>
+        <tr>
+          <td>FormatterExe</td>
+          <td>Approximates RAD Studio&rsquo;s built-in Formatter.exe &mdash; active spacing,
+          blank lines around sections, an 80-column right margin.</td>
+        </tr>
+        <tr>
+          <td>Embarcadero</td>
+          <td>The official Embarcadero Delphi style guide: lowercase keywords, one
+          <code>uses</code> entry per line, one statement per line, 160-column margin.</td>
+        </tr>
+        <tr>
+          <td>NoOp</td>
+          <td>Pass-through: output matches input byte-for-byte (modulo line endings).
+          The least invasive way to adopt the formatter one rule at a time.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:18px;display:flex;gap:28px;flex-wrap:wrap">
+      <a href="docs/config-options.html">Browse all 57 options &rarr;</a>
+      <a href="docs/profiles.html">See all four profiles on the same input &rarr;</a>
+    </p>
+  </div>
+</section>
+
+<!-- ================= CLI ================= -->
+<section class="block" id="cli">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>A CLI that fits your workflow</h2>
+    <p class="lede">Format a file to stdout, rewrite a whole tree in place, or gate a
+    pull request &mdash; with the same config everywhere.</p>
+    <div class="cli-cols">
+      <div>
+        <h3>Everyday use</h3>
+<pre class="term"><code><span class="c"># Format one file to stdout (source untouched)</span>
+<span class="p">&gt;</span> radFormatter source/MyUnit.pas
+
+<span class="c"># Format a whole tree in place, with backups</span>
+<span class="p">&gt;</span> radFormatter -d source -r -w -b
+
+<span class="c"># Generate a starter configuration</span>
+<span class="p">&gt;</span> radFormatter -writeDefaultConfig radFormatter.json</code></pre>
+      </div>
+      <div>
+        <h3>In CI</h3>
+<pre class="term"><code><span class="c"># Fail the build if any file needs formatting</span>
+<span class="p">&gt;</span> radFormatter -check -config radFormatter.json -d source -r
+
+<span class="c"># GitHub Actions</span>
+- name: Check formatting
+  run: radFormatter -check -config radFormatter.json -d source -r</code></pre>
+      </div>
+    </div>
+    <p style="margin-top:22px">Settle formatting disputes once: commit
+    <code>radFormatter.json</code> to your repository and every developer and CI job
+    uses the same configuration. <a href="docs/radFormatter-cli.html">Full CLI reference &rarr;</a></p>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../index.html" aria-label="RAD Programmer home"><img class="mark" src="../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radFormatter is part of the <a href="../index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a> toolset &mdash;
+      developer tooling for the RAD Studio ecosystem.</p>
+    </div>
+    <div>
+      <h3>Documentation</h3>
+      <ul>
+        <li><a href="docs/radFormatter-cli.html">CLI reference</a></li>
+        <li><a href="docs/config-options.html">Configuration options</a></li>
+        <li><a href="docs/profiles.html">Profiles</a></li>
+        <li><a href="docs/embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="buy.html">Buy radFormatter</a></li>
+        <li><a href="pricing.html">Editions &amp; pricing</a></li>
+        <li><a href="ide.html">IDE plugin</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter/releases">Download</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter">GitHub</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="https://github.com/radprogrammer/radformatter/issues">Support</a></li>
+        <li><a href="docs/known-limitations.html">Known limitations</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc. radFormatter is a closed-source product.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var tabs = document.querySelectorAll('.tabs [role="tab"]');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){
+        t.setAttribute('aria-selected', String(t === tab));
+        document.getElementById(t.getAttribute('aria-controls')).hidden = (t !== tab);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration options - radFormatter</title>
+<meta name="description" content="Complete reference for all 57 radFormatter configuration options across seven sections: casing, spacing, indent, lineBreaks, reshaping, alignment, and output.">
+<link rel="icon" href="../assets/radformatter.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../assets/radformatter-icon.svg">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+.docs{display:grid;grid-template-columns:230px minmax(0,1fr);gap:48px;padding:48px 0 72px}
+.toc{position:sticky;top:24px;align-self:start;font-size:.88rem}
+.toc h2{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);margin-bottom:.8em}
+.toc ul{list-style:none;margin:0 0 1.6em;padding:0}
+.toc li{margin:0 0 .45em}
+.toc a{text-decoration:none;color:var(--ink)}
+.toc a:hover{color:var(--rad-red)}
+.toc a.sect{font-family:var(--mono);font-size:.84rem}
+main h1{margin-bottom:.3em}
+main h2{font-size:1.35rem;margin-top:2.2em;padding-top:.6em}
+main h2 code{font-size:1.05em;background:none;padding:0;color:var(--rad-red)}
+main h3{margin-top:1.8em}
+main h3 code{background:none;padding:0}
+.crumb{font-family:var(--mono);font-size:.78rem;color:var(--steel);margin:0 0 1.4em}
+.crumb a{color:var(--steel);text-decoration:none}
+.crumb a:hover{color:var(--rad-red)}
+.note{border-left:4px solid var(--sky);background:#fff;border-radius:0 10px 10px 0;padding:14px 18px;margin:20px 0;color:var(--steel);font-size:.93rem}
+.note strong{color:var(--ink)}
+pre.term{margin:16px 0 24px}
+.j{color:#8FBEDD}
+.anchor-heading{scroll-margin-top:24px}
+@media (max-width:860px){
+  .docs{grid-template-columns:1fr;gap:0}
+  .toc{position:static;border:1px solid var(--line);background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:28px}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="../index.html" aria-label="radFormatter home">
+      <img src="../assets/radformatter-logo-reversed.svg" alt="radFormatter" height="34">
+    </a>
+    <nav aria-label="Main">
+      <a href="../index.html">Home</a>
+      <a href="../ide.html">IDE Plugin</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../docs/radFormatter-cli.html">Docs</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+      <a class="cta" href="../buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap docs">
+  <aside class="toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ul>
+      <li><a class="sect" href="#casing">casing</a></li>
+      <li><a class="sect" href="#spacing">spacing</a></li>
+      <li><a class="sect" href="#indent">indent</a></li>
+      <li><a class="sect" href="#linebreaks">lineBreaks</a></li>
+      <li><a class="sect" href="#reshaping">reshaping</a></li>
+      <li><a class="sect" href="#alignment">alignment</a></li>
+      <li><a class="sect" href="#output">output</a></li>
+    </ul>
+    <ul>
+      <li><a href="#default-config">Full default configuration</a></li>
+      <li><a href="#safety">Safety guarantees</a></li>
+      <li><a href="#value-types">Appendix: value types</a></li>
+    </ul>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="radFormatter-cli.html">CLI reference</a></li>
+      <li><a href="profiles.html">Profiles</a></li>
+      <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      <li><a href="known-limitations.html">Known limitations</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <p class="crumb"><a href="../index.html">radFormatter</a> / docs / config-options</p>
+    <h1>Configuration options reference</h1>
+
+    <p>radFormatter is configured with a JSON document. Every key is optional;
+    any key you omit keeps the value from the active <strong>profile</strong>
+    (see <a href="profiles.html">Profiles</a>). A missing or empty config therefore
+    applies the chosen profile's defaults &mdash; with no profile selected, that
+    is the built-in <strong>Default</strong> profile.</p>
+
+    <p>There are <strong>57 options across seven sections</strong>:
+    <code>casing</code>, <code>spacing</code>, <code>indent</code>,
+    <code>lineBreaks</code>, <code>reshaping</code>, <code>alignment</code>, and
+    <code>output</code>.</p>
+
+    <p>Generate a fully populated config with the current defaults using the CLI:</p>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -writeDefaultConfig radFormatter.json</code></pre>
+    <p>See the <a href="radFormatter-cli.html">CLI reference</a> for how the CLI
+    loads and overlays configuration.</p>
+    <div class="note"><strong>Prefer a visual editor?</strong> The
+    <a href="../ide.html">IDE plugin</a> includes a split-screen configuration
+    editor that reads and writes this same file, with a live before/after
+    preview of every option against real source &mdash; included even in the
+    free Community Edition, so CLI users can edit configs visually too.</div>
+
+    <h2 id="casing" class="anchor-heading"><code>casing</code></h2>
+    <p>Casing changes are the only non-whitespace edits radFormatter makes;
+    every other change is whitespace or line breaks.</p>
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>casing.keywords</td><td><a href="#case-mode">case mode</a></td><td>"asis"</td><td>Reserved words (<code>begin</code>, <code>end</code>, <code>if</code>, &hellip;)</td></tr>
+        <tr><td>casing.numbers</td><td><a href="#case-mode">case mode</a></td><td>"asis"</td><td>Letters in numeric literals: hex digits <code>A</code>&ndash;<code>F</code> and the float exponent marker <code>E</code></td></tr>
+        <tr><td>casing.directives</td><td><a href="#case-mode">case mode</a></td><td>"asis"</td><td>Compiler-directive keyword (<code>{$IFDEF}</code>, <code>{$DEFINE}</code>); the directive body is preserved</td></tr>
+        <tr><td>casing.identifiers</td><td><a href="#ident-case-mode">ident case mode</a></td><td>"asis"</td><td>Identifiers</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="spacing" class="anchor-heading"><code>spacing</code></h2>
+    <div class="note"><strong>AsIs means &ldquo;do not touch&rdquo;.</strong> For any
+    spacing option, <code>asis</code> reproduces the original inter-token
+    whitespace verbatim. At the Default profile (every spacing option
+    <code>asis</code>) radFormatter makes <strong>no</strong> inter-token spacing
+    changes at all &mdash; it only changes indentation. The opinionated profiles
+    set spacing options to concrete values.</div>
+
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>spacing.assignment</td><td><a href="#spacing-option">spacing option</a></td><td>"asis"</td><td>Space around <code>:=</code></td></tr>
+        <tr><td>spacing.comma</td><td><a href="#spacing-option">spacing option</a></td><td>"asis"</td><td>Space around <code>,</code></td></tr>
+        <tr><td>spacing.colon</td><td><a href="#spacing-option">spacing option</a></td><td>"asis"</td><td>Space around <code>:</code></td></tr>
+        <tr><td>spacing.semicolon</td><td><a href="#spacing-option">spacing option</a></td><td>"asis"</td><td>Space around <code>;</code></td></tr>
+        <tr><td>spacing.insideParens</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space just inside <code>( )</code></td></tr>
+        <tr><td>spacing.insideBrackets</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space just inside <code>[ ]</code></td></tr>
+        <tr><td>spacing.beforeParens</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space before an opening <code>(</code> (calls / declarations)</td></tr>
+        <tr><td>spacing.beforeBracket</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space before an opening <code>[</code> (index / bounds)</td></tr>
+        <tr><td>spacing.aroundRange</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space around the range operator <code>..</code></td></tr>
+        <tr><td>spacing.genericBrackets</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space just inside generic angle brackets <code>&lt; &gt;</code></td></tr>
+        <tr><td>spacing.aroundUnaryOperators</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space around unary <code>-</code>, <code>+</code>, <code>@</code></td></tr>
+        <tr><td>spacing.aroundBinaryOperators</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space around <strong>symbol</strong> binary operators (<code>=</code>, <code>&lt;&gt;</code>, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, &hellip;)</td></tr>
+        <tr><td>spacing.maxConsecutiveSpaces</td><td>integer</td><td>-1</td><td><code>-1</code>/<code>0</code> = no limit; <code>N</code> = collapse any interior run of spaces longer than <code>N</code> down to <code>N</code>. Never widens a 0- or 1-space gap; leading indentation is unaffected</td></tr>
+      </tbody>
+    </table>
+    <div class="note"><strong>Keyword operators are excluded</strong> from
+    <code>aroundBinaryOperators</code>. Word operators such as <code>and</code>,
+    <code>or</code>, <code>xor</code>, <code>div</code>, <code>mod</code>,
+    <code>shl</code>, <code>shr</code>, <code>in</code>, <code>is</code>,
+    <code>as</code> are never tightened, because removing their spaces would
+    produce invalid code.</div>
+
+    <h2 id="indent" class="anchor-heading"><code>indent</code></h2>
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>indent.size</td><td>integer</td><td>2</td><td>Spaces per depth level. <strong>Applies to space indentation only</strong> &mdash; ignored when the effective style is tabs (the editor's tab stop owns the visual width). <code>0</code> disables reindentation</td></tr>
+        <tr><td>indent.style</td><td>"spaces" | "tabs" | "asIs"</td><td>"asIs"</td><td>Indent character: <code>spaces</code> always uses spaces; <code>tabs</code> uses one tab per structural level (continuation/alignment stay spaces); <code>asIs</code> (Default) preserves the source's indent character &mdash; the first line with leading indentation decides (leading tab &rarr; tabs, leading space &rarr; spaces), none &rarr; spaces. Depth is always recomputed; only the character is preserved</td></tr>
+        <tr><td>indent.directives</td><td>"asIs" | "column0" | "structural"</td><td>"asIs"</td><td>Compiler-directive indentation: <code>asIs</code> preserves source indent (Default); <code>column0</code> forces the left margin (FormatterExe/Embarcadero); <code>structural</code> indents to surrounding depth</td></tr>
+        <tr><td>indent.continuationSize</td><td>integer</td><td>2</td><td>Extra spaces added to wrapped / continuation lines</td></tr>
+        <tr><td>indent.anchorBased</td><td>bool</td><td>false</td><td>When wrapping, align continuation lines under the column after the opening delimiter instead of using a fixed continuation indent</td></tr>
+        <tr><td>indent.maxColumn</td><td>integer</td><td>0</td><td><code>0</code> = no cap; <code>&gt;0</code> = clamp any computed indent to this column</td></tr>
+        <tr><td>indent.caseLabels</td><td>bool</td><td>true</td><td>Indent <code>case</code> arm labels one level under the <code>case</code> keyword</td></tr>
+        <tr><td>indent.caseContent</td><td>bool</td><td>true</td><td>Indent a <code>case</code> arm body one level under its label</td></tr>
+        <tr><td>indent.caseSingleLine</td><td>bool</td><td>true</td><td><code>true</code> = allow a single-statement <code>case</code> arm body to stay on the label line; <code>false</code> = force it onto its own line</td></tr>
+        <tr><td>indent.caseElseAlignment</td><td>"withLabels" / "withCase"</td><td>"withLabels"</td><td>Align a <code>case</code>'s <code>else</code> with the arm labels, or with the <code>case</code> keyword</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="linebreaks" class="anchor-heading"><code>lineBreaks</code></h2>
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>lineBreaks.keepUser</td><td>bool</td><td>true</td><td>When <code>true</code>, radFormatter only <strong>adds</strong> line breaks and never removes ones you placed. Set <code>false</code> for full reflow</td></tr>
+        <tr><td>lineBreaks.beforeSingleInstr</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Newline before a single-statement control body (<code>if</code>/<code>while</code>/<code>for</code>/&hellip;)</td></tr>
+        <tr><td>lineBreaks.beforeBegin</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Newline before <code>begin</code></td></tr>
+        <tr><td>lineBreaks.betweenElseAndIf</td><td>bool</td><td>false</td><td><code>true</code> = put <code>else</code> and <code>if</code> on separate lines; <code>false</code> = keep <code>else if</code> together</td></tr>
+        <tr><td>lineBreaks.afterBegin</td><td>bool</td><td>false</td><td>Force a line break after <code>begin</code></td></tr>
+        <tr><td>lineBreaks.afterSectionKeyword</td><td>bool</td><td>false</td><td>Force a line break after a section keyword (<code>uses</code>, <code>type</code>, <code>var</code>, <code>const</code>, <code>interface</code>, <code>implementation</code>)</td></tr>
+        <tr><td>lineBreaks.afterLabel</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Newline after a statement label's colon</td></tr>
+        <tr><td>lineBreaks.lineAfterSemicolon</td><td>bool</td><td>false</td><td>Force a line break after every statement-terminating semicolon, so each statement lands on its own line. Add-only (never removes user breaks) and CST-aware &mdash; parameter-list and declaration separators are left untouched</td></tr>
+        <tr><td>lineBreaks.usesMode</td><td>"preserve" / "singleLine" / "onePerLine"</td><td>"preserve"</td><td>How <code>uses</code> clauses are laid out: unchanged, collapsed to one line, or one unit per line</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="reshaping" class="anchor-heading"><code>reshaping</code></h2>
+    <p>Structural rewrites of a construct's layout. All default off / conservative.</p>
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>reshaping.oneParamPerLineInCalls</td><td>bool</td><td>false</td><td>Put each call argument on its own line</td></tr>
+        <tr><td>reshaping.collapseEndElse</td><td>bool</td><td>false</td><td>Collapse <code>end</code> + newline + <code>else</code> onto one line</td></tr>
+        <tr><td>reshaping.collapseEndElseBegin</td><td>bool</td><td>false</td><td>Collapse <code>end</code> + <code>else</code> + <code>begin</code> onto one line</td></tr>
+        <tr><td>reshaping.joinMultilineParens</td><td>bool</td><td>false</td><td>Collapse a multi-line parenthesized expression to a normalized inline form (<code>output.rightMargin</code> may then rewrap it)</td></tr>
+        <tr><td>reshaping.arrayInitPerLine</td><td>bool</td><td>false</td><td>Put each array-initializer element on its own line</td></tr>
+        <tr><td>reshaping.inheritancePerLine</td><td>bool</td><td>false</td><td>Put each class/interface inheritance-list entry on its own line</td></tr>
+        <tr><td>reshaping.enumPerLine</td><td>bool</td><td>false</td><td>Put each enum value on its own line</td></tr>
+        <tr><td>reshaping.delimitedGroupStyle</td><td>"compact" / "allman"</td><td>"compact"</td><td>Bracket/grouping style for delimited groups: opening delimiter trailing (compact) or on its own line (Allman)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="alignment" class="anchor-heading"><code>alignment</code></h2>
+    <p>Column alignment across consecutive, structurally similar lines. All off
+    by default. Alignment runs after indentation and only inserts interior padding.</p>
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>alignment.assignments</td><td>bool</td><td>false</td><td>Align <code>:=</code> operators</td></tr>
+        <tr><td>alignment.colons</td><td>bool</td><td>false</td><td>Align <code>:</code> type annotations in declarations (parameter lists excluded)</td></tr>
+        <tr><td>alignment.consts</td><td>bool</td><td>false</td><td>Align <code>=</code> in const declarations</td></tr>
+        <tr><td>alignment.trailingComments</td><td>bool</td><td>false</td><td>Align end-of-line <code>//</code> comments</td></tr>
+        <tr><td>alignment.maxPadWidth</td><td>integer</td><td>0</td><td><code>0</code> = no limit; <code>&gt;0</code> = if aligning a group would require inserting more than <code>N</code> spaces of padding, that group is left unaligned</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="output" class="anchor-heading"><code>output</code></h2>
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>output.lineEnding</td><td>"auto" / "crlf" / "lf" / "cr"</td><td>"auto"</td><td><code>auto</code> uses the platform default line ending (CRLF on Windows); the others force CR+LF, LF, or CR</td></tr>
+        <tr><td>output.rightMargin</td><td>integer</td><td>0</td><td>Wrap column. <code>0</code> = disabled. When <code>&gt;0</code>, lines longer than this are wrapped at their declared soft-break points (call arguments, parameter lists, <code>uses</code> commas, binary operators, inheritance lists, and so on)</td></tr>
+        <tr><td>output.maxEmptyLines</td><td>integer</td><td>-1</td><td><code>-1</code> = unlimited; <code>0+</code> = maximum consecutive blank lines</td></tr>
+        <tr><td>output.strictMode</td><td>bool</td><td>true</td><td>When <code>true</code>, an unclassifiable feature is a validation error; when <code>false</code>, unknown constructs pass through untouched</td></tr>
+      </tbody>
+    </table>
+
+    <h3><code>output.emptyLines</code></h3>
+    <p>Integer counts for blank lines at structural boundaries. <code>-1</code>
+    (default) means &ldquo;leave as-is&rdquo;; a value <code>N &gt;= 0</code> ensures
+    exactly <code>N</code> blank lines there.</p>
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>output.emptyLines.beforeVisibility</td><td>Before <code>private</code> / <code>protected</code> / <code>public</code> / <code>published</code> inside a class</td></tr>
+        <tr><td>output.emptyLines.aroundSections</td><td>Around <code>interface</code> / <code>implementation</code> / <code>initialization</code> / <code>finalization</code></td></tr>
+        <tr><td>output.emptyLines.betweenDeclarations</td><td>Between routine declarations</td></tr>
+        <tr><td>output.emptyLines.beforeTypeKeyword</td><td>Before a <code>type</code> section</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="default-config" class="anchor-heading">Full default configuration</h2>
+    <p>This is exactly what <code>-writeDefaultConfig</code> emits (the
+    <strong>Default</strong> profile).</p>
+<pre class="term"><code>{
+  <span class="j">"casing"</span>: {
+    <span class="j">"keywords"</span>: "asis",
+    <span class="j">"numbers"</span>: "asis",
+    <span class="j">"directives"</span>: "asis",
+    <span class="j">"identifiers"</span>: "asis"
+  },
+  <span class="j">"spacing"</span>: {
+    <span class="j">"assignment"</span>: "asis",
+    <span class="j">"comma"</span>: "asis",
+    <span class="j">"colon"</span>: "asis",
+    <span class="j">"semicolon"</span>: "asis",
+    <span class="j">"insideParens"</span>: "asis",
+    <span class="j">"insideBrackets"</span>: "asis",
+    <span class="j">"beforeParens"</span>: "asis",
+    <span class="j">"aroundRange"</span>: "asis",
+    <span class="j">"beforeBracket"</span>: "asis",
+    <span class="j">"genericBrackets"</span>: "asis",
+    <span class="j">"aroundUnaryOperators"</span>: "asis",
+    <span class="j">"aroundBinaryOperators"</span>: "asis",
+    <span class="j">"maxConsecutiveSpaces"</span>: -1
+  },
+  <span class="j">"indent"</span>: {
+    <span class="j">"size"</span>: 2,
+    <span class="j">"tabWidth"</span>: 0,
+    <span class="j">"style"</span>: "asIs",
+    <span class="j">"directives"</span>: "asIs",
+    <span class="j">"continuationSize"</span>: 2,
+    <span class="j">"anchorBased"</span>: false,
+    <span class="j">"maxColumn"</span>: 0,
+    <span class="j">"caseLabels"</span>: true,
+    <span class="j">"caseContent"</span>: true,
+    <span class="j">"caseSingleLine"</span>: true,
+    <span class="j">"caseElseAlignment"</span>: "withLabels"
+  },
+  <span class="j">"lineBreaks"</span>: {
+    <span class="j">"keepUser"</span>: true,
+    <span class="j">"beforeSingleInstr"</span>: "asis",
+    <span class="j">"beforeBegin"</span>: "asis",
+    <span class="j">"betweenElseAndIf"</span>: false,
+    <span class="j">"afterBegin"</span>: false,
+    <span class="j">"afterSectionKeyword"</span>: false,
+    <span class="j">"afterLabel"</span>: "asis",
+    <span class="j">"lineAfterSemicolon"</span>: false,
+    <span class="j">"usesMode"</span>: "preserve"
+  },
+  <span class="j">"reshaping"</span>: {
+    <span class="j">"oneParamPerLineInCalls"</span>: false,
+    <span class="j">"collapseEndElse"</span>: false,
+    <span class="j">"collapseEndElseBegin"</span>: false,
+    <span class="j">"joinMultilineParens"</span>: false,
+    <span class="j">"arrayInitPerLine"</span>: false,
+    <span class="j">"inheritancePerLine"</span>: false,
+    <span class="j">"enumPerLine"</span>: false,
+    <span class="j">"delimitedGroupStyle"</span>: "compact"
+  },
+  <span class="j">"alignment"</span>: {
+    <span class="j">"assignments"</span>: false,
+    <span class="j">"colons"</span>: false,
+    <span class="j">"consts"</span>: false,
+    <span class="j">"trailingComments"</span>: false,
+    <span class="j">"maxPadWidth"</span>: 0
+  },
+  <span class="j">"output"</span>: {
+    <span class="j">"lineEnding"</span>: "auto",
+    <span class="j">"rightMargin"</span>: 0,
+    <span class="j">"maxEmptyLines"</span>: -1,
+    <span class="j">"emptyLines"</span>: {
+      <span class="j">"beforeVisibility"</span>: -1,
+      <span class="j">"aroundSections"</span>: -1,
+      <span class="j">"betweenDeclarations"</span>: -1,
+      <span class="j">"beforeTypeKeyword"</span>: -1
+    },
+    <span class="j">"strictMode"</span>: true
+  }
+}</code></pre>
+
+    <h2 id="safety" class="anchor-heading">Safety guarantees</h2>
+    <p>radFormatter is non-destructive. No token is ever lost: it only adds,
+    removes, or replaces whitespace and line endings, and recases keyword,
+    directive, number, and identifier text. Every format is checked two ways
+    &mdash; a non-whitespace content hash and a re-lexed token fingerprint. If
+    any rule would alter non-whitespace content, the change is discarded and
+    your original source is returned unchanged.</p>
+
+    <h2 id="value-types" class="anchor-heading">Appendix: value types</h2>
+    <p>The value types referenced in the Type columns above. Each entry in an
+    option table links back here.</p>
+
+    <h3 id="case-mode" class="anchor-heading">Case mode <code>(casing.keywords, casing.numbers, casing.directives)</code></h3>
+    <table class="data">
+      <thead><tr><th scope="col">Value</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>"asis"</td><td>Leave as written (default)</td></tr>
+        <tr><td>"lower"</td><td>lowercase</td></tr>
+        <tr><td>"upper"</td><td>UPPERCASE</td></tr>
+        <tr><td>"title"</td><td>Title case (first letter upper, rest lower)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="ident-case-mode" class="anchor-heading">Identifier case mode <code>(casing.identifiers)</code></h3>
+    <table class="data">
+      <thead><tr><th scope="col">Value</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>"asis"</td><td>Leave as written (default)</td></tr>
+        <tr><td>"lower"</td><td>all lowercase</td></tr>
+        <tr><td>"upper"</td><td>all UPPERCASE</td></tr>
+        <tr><td>"firstOccurrence"</td><td>Normalize every occurrence to the casing of the first one seen</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="spacing-option" class="anchor-heading">Spacing option <code>(spacing.assignment, spacing.comma, spacing.colon, spacing.semicolon)</code></h3>
+    <p>Controls whitespace on each side of a token. String values only.</p>
+    <table class="data">
+      <thead><tr><th scope="col">Value</th><th scope="col">Before token</th><th scope="col">After token</th></tr></thead>
+      <tbody>
+        <tr><td>"asis"</td><td>unchanged</td><td>unchanged</td></tr>
+        <tr><td>"none"</td><td>remove</td><td>remove</td></tr>
+        <tr><td>"before"</td><td>ensure one space</td><td>remove</td></tr>
+        <tr><td>"after"</td><td>remove</td><td>ensure one space</td></tr>
+        <tr><td>"both"</td><td>ensure one space</td><td>ensure one space</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="tri-state" class="anchor-heading">Tri-state <code>(yes / no / asis)</code></h3>
+    <p>Used by the toggle-style spacing options and several line-break options.
+    Accepts a JSON <strong>boolean</strong> (<code>true</code> = <code>yes</code>,
+    <code>false</code> = <code>no</code>) or a <strong>string</strong>
+    (<code>"yes"</code>, <code>"no"</code>, <code>"asis"</code>).</p>
+    <table class="data">
+      <thead><tr><th scope="col">Value</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>"asis"</td><td>Preserve the source spacing/break (default for most)</td></tr>
+        <tr><td>"yes" / true</td><td>Ensure the space/break</td></tr>
+        <tr><td>"no" / false</td><td>Remove the space/break</td></tr>
+      </tbody>
+    </table>
+
+  </main>
+</div>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../../index.html" aria-label="RAD Programmer home"><img class="mark" src="../../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radFormatter is part of the <a href="../../index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a> toolset &mdash;
+      developer tooling for the Delphi ecosystem.</p>
+    </div>
+    <div>
+      <h3>Documentation</h3>
+      <ul>
+        <li><a href="radFormatter-cli.html">CLI reference</a></li>
+        <li><a href="config-options.html">Configuration options</a></li>
+        <li><a href="profiles.html">Profiles</a></li>
+        <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="../buy.html">Buy radFormatter</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter/releases">Download</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter">GitHub</a></li>
+        <li><a href="../../about.html">About</a></li>
+        <li><a href="https://github.com/radprogrammer/radformatter/issues">Support</a></li>
+        <li><a href="known-limitations.html">Known limitations</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+{
+  "casing": {
+    "keywords": "lower",
+    "numbers": "asis",
+    "directives": "lower",
+    "identifiers": "asis"
+  },
+  "spacing": {
+    "assignment": "both",
+    "comma": "after",
+    "colon": "after",
+    "semicolon": "after",
+    "insideParens": "no",
+    "insideBrackets": "no",
+    "beforeParens": "no",
+    "aroundRange": "no",
+    "beforeBracket": "no",
+    "genericBrackets": "no",
+    "aroundUnaryOperators": "no",
+    "aroundBinaryOperators": "yes",
+    "maxConsecutiveSpaces": -1
+  },
+  "indent": {
+    "size": 2,
+    "style": "spaces",
+    "directives": "column0",
+    "continuationSize": 2,
+    "anchorBased": false,
+    "maxColumn": 0,
+    "caseLabels": true,
+    "caseContent": true,
+    "caseSingleLine": true,
+    "caseElseAlignment": "withLabels"
+  },
+  "lineBreaks": {
+    "keepUser": false,
+    "beforeSingleInstr": "yes",
+    "beforeBegin": "yes",
+    "betweenElseAndIf": false,
+    "afterBegin": true,
+    "afterSectionKeyword": false,
+    "afterLabel": "asis",
+    "lineAfterSemicolon": true,
+    "usesMode": "onePerLine"
+  },
+  "reshaping": {
+    "oneParamPerLineInCalls": false,
+    "collapseEndElse": false,
+    "collapseEndElseBegin": false,
+    "joinMultilineParens": false,
+    "arrayInitPerLine": false,
+    "inheritancePerLine": false,
+    "enumPerLine": false,
+    "delimitedGroupStyle": "compact"
+  },
+  "alignment": {
+    "assignments": false,
+    "colons": false,
+    "consts": false,
+    "trailingComments": false,
+    "maxPadWidth": 0
+  },
+  "output": {
+    "lineEnding": "auto",
+    "rightMargin": 160,
+    "maxEmptyLines": 1,
+    "emptyLines": {
+      "beforeVisibility": 0,
+      "aroundSections": 1,
+      "betweenDeclarations": 1,
+      "beforeTypeKeyword": 1
+    },
+    "strictMode": true
+  }
+}

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profiles - radFormatter</title>
+<meta name="description" content="radFormatter's four built-in profiles - Default, FormatterExe, Embarcadero, and NoOp - compared side by side, with the same Delphi source formatted under each.">
+<link rel="icon" href="../assets/radformatter.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../assets/radformatter-icon.svg">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+.docs{display:grid;grid-template-columns:230px minmax(0,1fr);gap:48px;padding:48px 0 72px}
+.toc{position:sticky;top:24px;align-self:start;font-size:.88rem}
+.toc h2{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);margin-bottom:.8em}
+.toc ul{list-style:none;margin:0 0 1.6em;padding:0}
+.toc li{margin:0 0 .45em}
+.toc a{text-decoration:none;color:var(--ink)}
+.toc a:hover{color:var(--rad-red)}
+.toc a.sect{font-family:var(--mono);font-size:.84rem}
+main h1{margin-bottom:.3em}
+main h2{font-size:1.35rem;margin-top:2.2em;padding-top:.6em}
+main h3{margin-top:1.8em}
+main h3 code{background:none;padding:0;color:var(--rad-red);font-size:1.05em}
+.crumb{font-family:var(--mono);font-size:.78rem;color:var(--steel);margin:0 0 1.4em}
+.crumb a{color:var(--steel);text-decoration:none}
+.crumb a:hover{color:var(--rad-red)}
+.note{border-left:4px solid var(--sky);background:#fff;border-radius:0 10px 10px 0;padding:14px 18px;margin:20px 0;color:var(--steel);font-size:.93rem}
+.note strong{color:var(--ink)}
+pre.term{margin:16px 0 24px}
+.k{color:var(--sky)}
+table.glance td,table.glance th{text-align:center}
+table.glance td:first-child,table.glance th:first-child{text-align:left;font-family:var(--body);font-size:.9rem;white-space:normal}
+.anchor-heading{scroll-margin-top:24px}
+@media (max-width:860px){
+  .docs{grid-template-columns:1fr;gap:0}
+  .toc{position:static;border:1px solid var(--line);background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:28px}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="../index.html" aria-label="radFormatter home">
+      <img src="../assets/radformatter-logo-reversed.svg" alt="radFormatter" height="34">
+    </a>
+    <nav aria-label="Main">
+      <a href="../index.html">Home</a>
+      <a href="../ide.html">IDE Plugin</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../docs/radFormatter-cli.html">Docs</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+      <a class="cta" href="../buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap docs">
+  <aside class="toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ul>
+      <li><a href="#at-a-glance">At a glance</a></li>
+      <li><a href="#same-code">The same code under each profile</a></li>
+    </ul>
+    <ul>
+      <li><a class="sect" href="#default">Default</a></li>
+      <li><a class="sect" href="#formatterexe">FormatterExe</a></li>
+      <li><a class="sect" href="#embarcadero">Embarcadero</a></li>
+      <li><a class="sect" href="#noop">NoOp</a></li>
+    </ul>
+    <ul>
+      <li><a href="#default-vs-noop">Default vs NoOp</a></li>
+      <li><a href="#choosing">Choosing a profile</a></li>
+    </ul>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="radFormatter-cli.html">CLI reference</a></li>
+      <li><a href="config-options.html">Configuration options</a></li>
+      <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      <li><a href="known-limitations.html">Known limitations</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <p class="crumb"><a href="../index.html">radFormatter</a> / docs / profiles</p>
+    <h1>Profiles</h1>
+
+    <p>A <strong>profile</strong> is a named starting point for configuration.
+    radFormatter ships four built-in profiles. Whatever you pass with
+    <code>-config</code> is overlaid on top of the profile, so you only specify
+    the keys you want to change.</p>
+
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -config team.json -w source/MyUnit.pas</code></pre>
+
+    <p>Omitting <code>-profile</code> uses <strong>Default</strong>. Every option
+    and its values are described in the
+    <a href="config-options.html">configuration options reference</a>; this page
+    summarizes how the four profiles differ and shows each one on the same input.</p>
+
+    <h2 id="at-a-glance" class="anchor-heading">At a glance</h2>
+    <table class="data glance">
+      <thead><tr><th scope="col">Setting</th><th scope="col">Default</th><th scope="col">FormatterExe</th><th scope="col">Embarcadero</th><th scope="col">NoOp</th></tr></thead>
+      <tbody>
+        <tr><td>Keep user line breaks</td><td>yes</td><td>no</td><td>no</td><td>yes</td></tr>
+        <tr><td>Keyword casing</td><td>as-is</td><td>as-is</td><td>lower</td><td>as-is</td></tr>
+        <tr><td>Directive casing</td><td>as-is</td><td>upper</td><td>lower</td><td>as-is</td></tr>
+        <tr><td>Number casing</td><td>as-is</td><td>upper</td><td>as-is</td><td>as-is</td></tr>
+        <tr><td>Identifier casing</td><td>as-is</td><td>first-occurrence</td><td>as-is</td><td>as-is</td></tr>
+        <tr><td>Operator / punctuation spacing</td><td>as-is</td><td>active</td><td>active</td><td>as-is</td></tr>
+        <tr><td><code>begin</code> on its own line + break after</td><td>no</td><td>yes</td><td>yes</td><td>no</td></tr>
+        <tr><td>Break single-instruction control body</td><td>as-is</td><td>yes</td><td>yes</td><td>as-is</td></tr>
+        <tr><td>One statement per line (break after <code>;</code>)</td><td>no</td><td>no</td><td>yes</td><td>no</td></tr>
+        <tr><td><code>uses</code> layout</td><td>preserve</td><td>preserve</td><td>one per line</td><td>preserve</td></tr>
+        <tr><td>Right margin</td><td>off</td><td>80</td><td>160</td><td>off</td></tr>
+        <tr><td>Line ending</td><td>auto</td><td>crlf</td><td>auto</td><td>auto</td></tr>
+        <tr><td>Max empty lines</td><td>unlimited</td><td>1</td><td>1</td><td>unlimited</td></tr>
+        <tr><td>Blank lines around sections</td><td>as-is</td><td>1</td><td>1</td><td>as-is</td></tr>
+        <tr><td>Indent size</td><td>2</td><td>2</td><td>2</td><td>0 (off)</td></tr>
+        <tr><td><code>case</code>-arm indentation</td><td>on</td><td>on</td><td>on</td><td>off</td></tr>
+        <tr><td>Alignment</td><td>off</td><td>off</td><td>off</td><td>off</td></tr>
+        <tr><td>Strict mode</td><td>on</td><td>on</td><td>on</td><td>off</td></tr>
+      </tbody>
+    </table>
+    <p>All four leave alignment off and never reshape calls, enums, arrays, or
+    inheritance lists onto separate lines.</p>
+
+    <h2 id="same-code" class="anchor-heading">The same code under each profile</h2>
+    <p>Given this input:</p>
+<pre class="term"><code><span class="k">unit</span> Demo;
+<span class="k">interface</span>
+<span class="k">uses</span> System.SysUtils, System.Classes;
+<span class="k">implementation</span>
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  IF A&gt;0 THEN DoIt(A);
+  B:=A*2+1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+
+    <h3 id="default" class="anchor-heading"><code>Default</code></h3>
+    <p>Conservative. It reindents to a 2-space structure and applies
+    <code>case</code>-arm layout, but preserves your spacing, casing, and line
+    breaks. For the input above &mdash; already 2-space indented &mdash; the output
+    is unchanged:</p>
+<pre class="term"><code><span class="k">unit</span> Demo;
+<span class="k">interface</span>
+<span class="k">uses</span> System.SysUtils, System.Classes;
+<span class="k">implementation</span>
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  IF A&gt;0 THEN DoIt(A);
+  B:=A*2+1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+    <p>Note that <code>IF A&gt;0</code> keeps its casing and tight spacing, and
+    the single-line <code>if ... then DoIt(A)</code> is left intact. Use Default
+    when you want structural indentation without opinionated reflow.</p>
+
+    <h3 id="formatterexe" class="anchor-heading"><code>FormatterExe</code></h3>
+    <p>Approximates RAD Studio's built-in Formatter.exe: active spacing, blank
+    lines around sections, <code>begin</code>-style control bodies, uppercase
+    directives/numbers, and an 80-column right margin. <strong>Keyword casing is
+    left as-is</strong> (note <code>IF</code> / <code>THEN</code> stay
+    uppercase):</p>
+<pre class="term"><code><span class="k">unit</span> Demo;
+
+<span class="k">interface</span>
+
+<span class="k">uses</span> System.SysUtils, System.Classes;
+
+<span class="k">implementation</span>
+
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  IF A &gt; 0 THEN
+    DoIt(A);
+  B := A * 2 + 1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+
+    <h3 id="embarcadero" class="anchor-heading"><code>Embarcadero</code></h3>
+    <p>The Embarcadero Delphi style guide. Everything FormatterExe does, plus
+    <strong>lowercase keywords and directives</strong> (<code>if</code> /
+    <code>then</code>), one <code>uses</code> entry per line, one statement per
+    line (a break after every statement-terminating semicolon), and a 160-column
+    right margin:</p>
+<pre class="term"><code><span class="k">unit</span> Demo;
+
+<span class="k">interface</span>
+
+<span class="k">uses</span> System.SysUtils,
+  System.Classes;
+
+<span class="k">implementation</span>
+
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  <span class="k">if</span> A &gt; 0 <span class="k">then</span>
+    DoIt(A);
+  B := A * 2 + 1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+    <p>See the <a href="embarcadero-style-guide.html">Embarcadero style guide</a>
+    for the full style-guide mapping.</p>
+
+    <h3 id="noop" class="anchor-heading"><code>NoOp</code></h3>
+    <p>Pass-through. Output matches input byte-for-byte (modulo line-ending
+    normalization). Indentation, <code>case</code>-arm structure, and strict mode
+    are all disabled:</p>
+<pre class="term"><code><span class="k">unit</span> Demo;
+<span class="k">interface</span>
+<span class="k">uses</span> System.SysUtils, System.Classes;
+<span class="k">implementation</span>
+<span class="k">procedure</span> Test(A, B: Integer);
+<span class="k">begin</span>
+  IF A&gt;0 THEN DoIt(A);
+  B:=A*2+1;
+<span class="k">end</span>;
+<span class="k">end</span>.</code></pre>
+
+    <h2 id="default-vs-noop" class="anchor-heading">Default vs NoOp</h2>
+    <p>For the sample above the two look identical, but they are not the same
+    profile. <strong>Default</strong> still reindents (indent size 2) and applies
+    <code>case</code>-arm structure, so mis-indented input is corrected.
+    <strong>NoOp</strong> disables indentation entirely (indent size 0) and turns
+    strict mode off, so it never moves a character.</p>
+    <p>Two good reasons to reach for NoOp:</p>
+    <div class="note"><strong>A guaranteed no-change pass</strong> &mdash; for
+    example, to verify radFormatter's round-trip safety on a file.</div>
+    <div class="note"><strong>A minimal, opt-in team config</strong> &mdash; start
+    from a profile that changes nothing, then enable only the handful of rules
+    your team agrees to enforce (via a small <code>-config</code> overlay) and
+    leave everything else exactly as written. This is the least invasive way to
+    adopt the formatter incrementally.</div>
+
+    <h2 id="choosing" class="anchor-heading">Choosing a profile</h2>
+    <table class="data">
+      <thead><tr><th scope="col">Profile</th><th scope="col">Reach for it when&hellip;</th></tr></thead>
+      <tbody>
+        <tr><td>Default</td><td>You want structural reindent with no opinionated reflow. The safest starting point.</td></tr>
+        <tr><td>FormatterExe</td><td>You want to match RAD Studio's built-in formatter output.</td></tr>
+        <tr><td>Embarcadero</td><td>You want to follow the official Embarcadero style guide.</td></tr>
+        <tr><td>NoOp</td><td>You want a guaranteed no-op &mdash; a baseline for overriding a few keys yourself.</td></tr>
+      </tbody>
+    </table>
+    <p>Whichever you pick, overlay a <code>-config</code> file to adjust
+    individual options; see the
+    <a href="config-options.html">configuration options reference</a>.</p>
+  </main>
+</div>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../../index.html" aria-label="RAD Programmer home"><img class="mark" src="../../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radFormatter is part of the <a href="../../index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a> toolset &mdash;
+      developer tooling for the Delphi ecosystem.</p>
+    </div>
+    <div>
+      <h3>Documentation</h3>
+      <ul>
+        <li><a href="radFormatter-cli.html">CLI reference</a></li>
+        <li><a href="config-options.html">Configuration options</a></li>
+        <li><a href="profiles.html">Profiles</a></li>
+        <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="../buy.html">Buy radFormatter</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter/releases">Download</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter">GitHub</a></li>
+        <li><a href="../../about.html">About</a></li>
+        <li><a href="https://github.com/radprogrammer/radformatter/issues">Support</a></li>
+        <li><a href="known-limitations.html">Known limitations</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

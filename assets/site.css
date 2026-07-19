@@ -1,0 +1,95 @@
+/* Self-hosted fonts (SIL OFL; license files alongside) - no third-party font requests */
+@font-face{font-family:"Montserrat";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/montserrat-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Montserrat";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/montserrat-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Montserrat";font-style:normal;font-weight:800;font-display:swap;src:url("fonts/montserrat-latin-800-normal.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/jetbrains-mono-latin-600-normal.woff2") format("woff2")}
+
+/* radProgrammer shared site styles */
+:root{
+  --ink:#1F2A33;        /* brand tile */
+  --slate:#3A4A57;      /* alignment guide */
+  --steel:#42535F;
+  --rad-red:#E1262E;    /* "rad" */
+  --sky:#2D9CDB;        /* accent bar */
+  --mist:#E7EDF2;       /* light bars */
+  --paper:#F4F6F8;
+  --line:#D6DEE5;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+  --display:"Montserrat",system-ui,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+body{margin:0;font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--sky)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--sky);outline-offset:2px;border-radius:4px}
+img{max-width:100%;height:auto}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0 0 .5em}
+h1{font-size:1.9rem;letter-spacing:-.02em}
+h2{font-size:1.7rem;letter-spacing:-.01em}
+h3{font-size:1.05rem}
+p{margin:.35em 0 1em}
+code,pre{font-family:var(--mono)}
+code{background:var(--mist);padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre code{background:none;padding:0;font-size:inherit}
+
+/* stair-step section marker - echoes the icon glyph */
+h1:has(> .stair),h2:has(> .stair),h3:has(> .stair){display:flex;align-items:center}
+.stair{display:inline-grid;gap:3px;margin-right:12px}
+.stair i{display:block;height:4px;border-radius:2px}
+.stair i:nth-child(1){width:22px;background:var(--rad-red)}
+.stair i:nth-child(2){width:16px;margin-left:8px;background:var(--sky)}
+.stair i:nth-child(3){width:19px;background:var(--steel)}
+
+/* header */
+header.site{background:var(--ink);color:var(--mist)}
+.nav{display:flex;align-items:center;gap:28px;padding:18px 0;flex-wrap:wrap}
+.nav .logo img{display:block;height:34px;width:auto}
+.nav nav{display:flex;gap:22px;margin-left:auto;flex-wrap:wrap;align-items:center}
+.nav nav a{color:var(--mist);text-decoration:none;font-weight:600;font-size:.92rem;font-family:var(--display)}
+.nav nav a:hover{color:#fff;text-decoration:underline}
+.nav .cta{background:var(--rad-red);color:#fff;padding:.5em 1.1em;border-radius:8px}
+.nav .cta:hover{background:#c81f27;text-decoration:none}
+
+/* buttons */
+.btn{display:inline-block;font-family:var(--display);font-weight:700;text-decoration:none;border-radius:9px;padding:.7em 1.4em;font-size:.95rem}
+.btn.primary{background:var(--rad-red);color:#fff}
+.btn.primary:hover{background:#c81f27}
+.btn.ghost{border:2px solid var(--slate);color:var(--mist)}
+.btn.ghost:hover{border-color:var(--mist);color:#fff}
+
+/* terminal block */
+.term{background:var(--ink);color:var(--mist);border-radius:12px;padding:20px 22px;overflow-x:auto;font-family:var(--mono);font-size:.85rem;line-height:1.7;margin:0}
+.term .c{color:#8FA3B1}
+.term .p{color:var(--rad-red);font-weight:600}
+
+/* data tables */
+table.data{width:100%;border-collapse:collapse;margin:18px 0 26px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.9rem}
+table.data th,table.data td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+table.data th{font-family:var(--display);font-size:.82rem;background:var(--paper)}
+table.data tr:last-child td{border-bottom:none}
+table.data td:first-child{font-family:var(--mono);font-size:.84rem;white-space:nowrap}
+@media (max-width:860px){
+  table.data{display:block;overflow-x:auto}
+  table.data td:first-child{white-space:normal}
+}
+
+/* footer */
+footer.site{background:var(--ink);color:#AEC0CD;padding:48px 0 40px;font-size:.9rem;margin-top:auto;width:100%}
+footer.site .cols{display:grid;grid-template-columns:2fr 1fr 1fr;gap:36px}
+footer.site img.mark{height:96px;width:auto;margin-bottom:12px;background:#fff;border-radius:12px;padding:10px}
+footer.site h3{color:#fff;font-size:.95rem}
+footer.site ul{list-style:none;margin:0;padding:0}
+footer.site li{margin-bottom:.5em}
+footer.site a{color:var(--mist);text-decoration:none}
+footer.site a:hover{text-decoration:underline}
+footer.site .fine{border-top:1px solid var(--slate);margin-top:36px;padding-top:18px;font-size:.8rem;color:#8FA3B1}
+@media (max-width:860px){
+  footer.site .cols{grid-template-columns:1fr}
+}

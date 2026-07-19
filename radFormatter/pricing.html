@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editions &amp; pricing — radFormatter</title>
+<meta name="description" content="radFormatter editions and pricing: free Community IDE plugin, Pro and Enterprise for the IDE plugin and CLI. Perpetual licenses that never expire and never phone home, with one year of updates included.">
+<link rel="icon" href="assets/radformatter.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="assets/radformatter-icon.svg">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+section.block{padding:64px 0}
+section.block.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lede{max-width:44em;color:var(--steel)}
+.hero-p{background:linear-gradient(180deg,var(--ink) 0%,#25323d 100%);color:var(--mist);padding:56px 0}
+.hero-p h1{color:#fff;font-size:clamp(1.8rem,4vw,2.4rem);letter-spacing:-.02em}
+.hero-p .sub{color:var(--mist);font-size:1.05rem;max-width:36em}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px}
+.plan{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;flex-direction:column}
+.plan.featured{border-color:var(--rad-red);border-width:2px}
+.plan h3{margin:0 0 2px;font-size:1.15rem}
+.plan .for{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--rad-red);margin-bottom:12px}
+.plan .price{font-family:var(--display);font-weight:800;font-size:1.9rem;letter-spacing:-.02em;margin:6px 0 2px}
+.plan .per{font-size:.85rem;color:var(--steel);margin:0 0 14px}
+.plan ul{list-style:none;margin:0 0 20px;padding:0;font-size:.93rem;color:var(--steel)}
+.plan li{padding-left:22px;position:relative;margin-bottom:.6em}
+.plan li::before{content:"";position:absolute;left:0;top:.55em;width:12px;height:4px;border-radius:2px;background:var(--sky)}
+.plan .btn{margin-top:auto;text-align:center}
+.btn.dark{background:var(--ink);color:#fff}
+.btn.dark:hover{background:#101820}
+.guar{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:30px}
+.gcard{background:var(--ink);border-radius:14px;padding:22px;color:#AEC0CD}
+.gcard h3{color:#fff;margin-top:0}
+.gcard p{margin-bottom:0;font-size:.95rem}
+table.data td:first-child{white-space:normal;font-family:var(--body)}
+@media (max-width:860px){.plans{grid-template-columns:1fr}.guar{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="index.html" aria-label="radFormatter home">
+      <img src="assets/radformatter-logo-reversed.svg" alt="radFormatter" height="34">
+    </a>
+    <nav aria-label="Main">
+      <a href="ide.html">IDE Plugin</a>
+      <a href="pricing.html" aria-current="page">Pricing</a>
+      <a href="docs/radFormatter-cli.html">Docs</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+      <a class="cta" href="buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero-p">
+  <div class="wrap">
+    <h1>Buy it once. It works forever.</h1>
+    <p class="sub">Every radFormatter license is perpetual: no subscription, no
+    expiration, no phone-home, no renewal machinery. A license includes one year
+    of updates &mdash; after that, your build keeps working forever, and you pay
+    again only if you choose to take a newer build.</p>
+  </div>
+</div>
+
+<!-- ================= IDE PLUGIN EDITIONS ================= -->
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>IDE plugin</h2>
+    <p class="lede">A code-signed plugin for RAD Studio, from Delphi 2010
+    through Delphi 13 Florence &mdash; one installer covers them all.
+    <a href="ide.html">See the plugin in action &rarr;</a></p>
+    <div class="plans">
+      <div class="plan">
+        <p class="for">Free</p>
+        <h3>Community</h3>
+        <p class="price">$0</p>
+        <p class="per">for the current release of RAD Studio</p>
+        <ul>
+          <li>Format with <strong>Ctrl+D</strong> using the built-in Embarcadero style</li>
+          <li>Full split-screen config editor included &mdash; explore every option, load and save config files</li>
+          <li>Saved configs drive the CLI and paid editions (custom configs don't apply to Community's Ctrl+D)</li>
+          <li>Free build tracks the current RAD Studio release only</li>
+        </ul>
+        <a class="btn dark" href="https://github.com/radprogrammer/radFormatter/releases">Download free</a>
+      </div>
+      <div class="plan featured">
+        <p class="for">Per user</p>
+        <h3>Pro</h3>
+        <p class="price">$50</p>
+        <p class="per">first IDE version &middot; $20 each additional version</p>
+        <ul>
+          <li>Your own configuration applies everywhere &mdash; <strong>Ctrl+D</strong> formats with your config file</li>
+          <li>Pick exactly the RAD Studio versions you use, including older ones</li>
+          <li>Perpetual license &middot; one year of updates included</li>
+        </ul>
+        <a class="btn primary" href="buy.html">Buy Pro</a>
+      </div>
+      <div class="plan">
+        <p class="for">Teams</p>
+        <h3>Enterprise</h3>
+        <p class="price">$150</p>
+        <p class="per">per user, all supported versions &middot; or $1,500 site license</p>
+        <ul>
+          <li>Everything in Pro, for <strong>every supported IDE version</strong></li>
+          <li>Site license covers all versions supported at time of purchase, organization-wide</li>
+          <li>Covers the purchasing organization and its majority-owned subsidiaries and affiliates</li>
+        </ul>
+        <a class="btn dark" href="buy.html">Buy Enterprise</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CLI EDITIONS ================= -->
+<section class="block alt">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>CLI &mdash; radFormatter.exe</h2>
+    <p class="lede">The 64-bit, code-signed command-line formatter for scripting
+    and CI. <a href="docs/radFormatter-cli.html">Full CLI reference &rarr;</a></p>
+    <div class="plans">
+      <div class="plan">
+        <p class="for">Evaluate</p>
+        <h3>30-day trial</h3>
+        <p class="price">Free</p>
+        <p class="per">time-limited evaluation license</p>
+        <ul>
+          <li>Prove radFormatter in your pipeline before buying</li>
+          <li>Full CLI functionality for 30 days, checked locally &mdash; still no network access</li>
+        </ul>
+        <a class="btn dark" href="https://github.com/radprogrammer/radformatter/issues">Request a trial</a>
+      </div>
+      <div class="plan featured">
+        <p class="for">Per user</p>
+        <h3>Pro</h3>
+        <p class="price">$50</p>
+        <p class="per">per user</p>
+        <ul>
+          <li>Full CLI: format, <code>-check</code>, <code>-diff</code>, profiles, config overlay</li>
+          <li>CI-friendly licensing &mdash; license resolves via environment variable first</li>
+          <li>Perpetual license &middot; one year of updates included</li>
+        </ul>
+        <a class="btn primary" href="buy.html">Buy CLI Pro</a>
+      </div>
+      <div class="plan">
+        <p class="for">Teams</p>
+        <h3>Enterprise</h3>
+        <p class="price">$500</p>
+        <p class="per">site license</p>
+        <ul>
+          <li>Everything in Pro, organization-wide</li>
+          <li>Covers the purchasing organization and its majority-owned subsidiaries and affiliates</li>
+        </ul>
+        <a class="btn dark" href="buy.html">Buy CLI Enterprise</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LICENSE GUARANTEES ================= -->
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>How licensing works</h2>
+    <p class="lede">The license model follows the same philosophy as the
+    formatter itself: predictable, offline, and no surprises.</p>
+    <div class="guar">
+      <div class="gcard">
+        <h3>Never expires</h3>
+        <p>Licenses are perpetual. A build you're entitled to keeps working
+        forever &mdash; there is no lapse state, no kill switch, and no date at
+        which your formatter stops.</p>
+      </div>
+      <div class="gcard">
+        <h3>Never phones home</h3>
+        <p>License validation is entirely local. Neither the plugin nor the CLI
+        makes any network connection &mdash; no activation servers, no license
+        checks, no telemetry.</p>
+      </div>
+      <div class="gcard">
+        <h3>One file, all your versions</h3>
+        <p>A single license file encodes every RAD Studio version you're
+        entitled to. Buy more versions later and you get one updated file, not a
+        pile of keys.</p>
+      </div>
+      <div class="gcard">
+        <h3>A year of updates, then your choice</h3>
+        <p>Every purchase includes updates for one year. After that, nothing
+        changes until <em>you</em> decide a newer build is worth it &mdash; no
+        subscription, no auto-renewal.</p>
+      </div>
+    </div>
+    <table class="data" style="margin-top:34px">
+      <thead><tr><th scope="col">Product</th><th scope="col">License file location</th></tr></thead>
+      <tbody>
+        <tr><td>IDE plugin</td><td><code>%APPDATA%\radFormatter\</code> (per-user, no admin required), with <code>%ProgramData%\radFormatter\</code> as the machine-wide fallback</td></tr>
+        <tr><td>CLI</td><td>Search order: <code>RADFORMATTER_LICENSE</code> environment variable &rarr; <code>--license</code> argument &rarr; next to the exe &rarr; <code>%APPDATA%</code> &rarr; <code>%ProgramData%</code>. Environment-variable-first keeps CI configuration painless</td></tr>
+      </tbody>
+    </table>
+    <p class="lede" style="margin-top:18px">If a license file is missing or
+    invalid, nothing breaks mysteriously: the IDE plugin runs as Community
+    Edition and its options screen explains exactly what's wrong with the
+    license it found; the CLI exits nonzero with a diagnostic listing the paths
+    it checked and the precise reason.</p>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../index.html" aria-label="RAD Programmer home"><img class="mark" src="../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radFormatter is part of the <a href="../index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a> toolset &mdash;
+      developer tooling for the Delphi ecosystem.</p>
+    </div>
+    <div>
+      <h3>Documentation</h3>
+      <ul>
+        <li><a href="docs/radFormatter-cli.html">CLI reference</a></li>
+        <li><a href="docs/config-options.html">Configuration options</a></li>
+        <li><a href="docs/profiles.html">Profiles</a></li>
+        <li><a href="docs/embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="buy.html">Buy radFormatter</a></li>
+        <li><a href="ide.html">IDE plugin</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter/releases">Download</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter">GitHub</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="https://github.com/radprogrammer/radformatter/issues">Support</a></li>
+        <li><a href="docs/known-limitations.html">Known limitations</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc. radFormatter is a closed-source product.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDE plugin — radFormatter</title>
+<meta name="description" content="The radFormatter IDE plugin for RAD Studio: format the current unit or selection with Ctrl+D, live split-screen config editing, and support for every Delphi version from 2010 through 13 Florence with a single installer.">
+<link rel="icon" href="assets/radformatter.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="assets/radformatter-icon.svg">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+section.block{padding:64px 0}
+section.block.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lede{max-width:44em;color:var(--steel)}
+.shot{border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 34px rgba(31,42,51,.12);max-width:100%;height:auto}
+.shotwrap{margin:26px 0 8px}
+.caption{font-family:var(--mono);font-size:.78rem;color:var(--steel);margin:10px 0 0}
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+.kbd{font-family:var(--mono);background:var(--ink);color:var(--mist);border-radius:6px;padding:.15em .55em;font-size:.9em}
+.checks{list-style:none;margin:18px 0 0;padding:0}
+.checks li{padding-left:26px;position:relative;margin-bottom:.7em;color:var(--steel)}
+.checks li::before{content:"";position:absolute;left:0;top:.5em;width:14px;height:4px;border-radius:2px;background:var(--rad-red)}
+.hero-ide{background:linear-gradient(180deg,var(--ink) 0%,#25323d 100%);color:var(--mist);padding:64px 0}
+.hero-ide h1{color:#fff;font-size:clamp(1.8rem,4vw,2.5rem);letter-spacing:-.02em}
+.hero-ide .sub{font-size:1.1rem;color:var(--mist);max-width:34em}
+.hero-ide .pill{display:inline-block;font-family:var(--mono);font-size:.78rem;border:1px solid var(--steel);color:#AEC0CD;border-radius:999px;padding:.2em .8em;margin-bottom:18px}
+.hero-ide .actions{display:flex;gap:14px;margin-top:26px;flex-wrap:wrap}
+.verstrip{font-family:var(--mono);font-size:.8rem;color:#8FA3B1;margin-top:22px}
+.verstrip span{background:#2A3843;border-radius:5px;padding:.15em .55em;margin-right:6px;display:inline-block;margin-bottom:6px}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="index.html" aria-label="radFormatter home">
+      <img src="assets/radformatter-logo-reversed.svg" alt="radFormatter" height="34">
+    </a>
+    <nav aria-label="Main">
+      <a href="ide.html" aria-current="page">IDE Plugin</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="docs/radFormatter-cli.html">Docs</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+      <a class="cta" href="buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hero-ide">
+  <div class="wrap">
+    <span class="pill">RAD Studio plugin &middot; Delphi 2010 &rarr; 13 Florence</span>
+    <h1>radFormatter, inside your IDE.</h1>
+    <p class="sub">Press <span class="kbd">Ctrl+D</span> and the current unit is
+    formatted in place &mdash; or select a block first and only the selection is
+    formatted. Same engine, same config file, and the same guarantee as the CLI:
+    non-destructive, validated, and fully offline.</p>
+    <div class="actions">
+      <a class="btn primary" href="pricing.html">Editions &amp; pricing</a>
+      <a class="btn ghost" href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+    </div>
+    <p class="verstrip">One installer covers every supported IDE:
+      <span>2010</span><span>XE&ndash;XE8</span><span>10.x</span><span>11</span><span>12</span><span>13 Florence</span>
+    </p>
+  </div>
+</div>
+
+<!-- ================= IN THE IDE ================= -->
+<section class="block">
+  <div class="wrap split">
+    <div class="shotwrap">
+      <img class="shot" src="assets/ide-options.png" width="770" height="644"
+        alt="RAD Studio Options dialog showing the RAD Formatter page under Third Party: a Configuration group with the active config file path, Browse and Edit Options buttons, and a Keyboard Shortcut field set to Ctrl+D">
+      <p class="caption">Tools &gt; Options &gt; Third Party &gt; RAD Formatter</p>
+    </div>
+    <div>
+      <h2>At home in Tools &gt; Options</h2>
+      <p class="lede">The plugin configures like any well-behaved IDE citizen.
+      One options page shows the active config file, lets you
+      <strong>Browse</strong> to a different one, and opens the full
+      configuration editor with <strong>Edit Options</strong>.</p>
+      <ul class="checks">
+        <li>Format the current unit with <span class="kbd">Ctrl+D</span> &mdash;
+        or override the shortcut with any key combination you prefer.</li>
+        <li>With an active selection, only the selected text is formatted.</li>
+        <li>The IDE plugin and the CLI read the same
+        <code>radFormatter.json</code> &mdash; commit one config and the editor,
+        the command line, and CI all format identically.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONFIG EDITOR ================= -->
+<section class="block alt">
+  <div class="wrap">
+    <h2>See every option before you commit to it</h2>
+    <p class="lede">The configuration editor is a split-screen playground: your
+    editable source on the left, the formatted result on the right. Change any
+    option and the preview reformats instantly, so you can watch exactly what
+    each setting does &mdash; across tabs for casing, spacing, indent, line
+    breaks, reshaping, alignment, and output.</p>
+    <div class="shotwrap">
+      <img class="shot" src="assets/ide-config-editor.png" width="1286" height="693"
+        alt="RAD Formatter Options editor: tabs for Casing, Spacing, Indent, LineBreaks, Reshaping, Alignment and Output on the left with spacing dropdowns, and a split-screen source view showing editable Delphi source beside its formatted result, with a Format button and SyntaxHighlight checkbox">
+      <p class="caption">Live preview: edit source on the left, see the formatted result on the right</p>
+    </div>
+    <ul class="checks">
+      <li>Paste your own code into the left pane and press
+      <strong>Format</strong> whenever you want to re-run it manually.</li>
+      <li><strong>SyntaxHighlight</strong> is on by default; switch it off for a
+      plain-text view or a slightly faster format.</li>
+      <li>Load and save config files directly from the editor &mdash; which
+      makes it the <strong>visual config editor for CLI users</strong> too,
+      since <code>radFormatter.exe</code> uses the identical file format.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= TRUST ================= -->
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>The same guarantees as the CLI</h2>
+    <p class="lede">The plugin runs the same formatter kernel: every format is
+    validated with a content hash and token fingerprint before it touches your
+    editor buffer, and the plugin makes no network connections of any kind &mdash;
+    no telemetry, no license phone-home. The plugin and its installer are
+    code-signed.</p>
+  </div>
+</section>
+
+<!-- ================= EDITIONS ================= -->
+<section class="block alt">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Editions</h2>
+    <p class="lede"><strong>Community Edition is free</strong> for the current
+    release of RAD Studio: <span class="kbd">Ctrl+D</span> formats with the
+    built-in Embarcadero style, and the full config editor is included for
+    exploring options and editing config files (its saved configs drive the CLI
+    and paid editions). <strong>Pro</strong> unlocks your own configuration and
+    your choice of IDE versions; <strong>Enterprise</strong> covers every
+    supported version, per user or site-wide.</p>
+    <p style="margin-top:18px"><a class="btn primary" href="pricing.html">Compare editions &amp; pricing</a></p>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../index.html" aria-label="RAD Programmer home"><img class="mark" src="../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radFormatter is part of the <a href="../index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a> toolset &mdash;
+      developer tooling for the Delphi ecosystem.</p>
+    </div>
+    <div>
+      <h3>Documentation</h3>
+      <ul>
+        <li><a href="docs/radFormatter-cli.html">CLI reference</a></li>
+        <li><a href="docs/config-options.html">Configuration options</a></li>
+        <li><a href="docs/profiles.html">Profiles</a></li>
+        <li><a href="docs/embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="buy.html">Buy radFormatter</a></li>
+        <li><a href="pricing.html">Editions &amp; pricing</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter/releases">Download</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter">GitHub</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="https://github.com/radprogrammer/radformatter/issues">Support</a></li>
+        <li><a href="docs/known-limitations.html">Known limitations</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

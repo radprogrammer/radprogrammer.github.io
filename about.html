@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — RAD Programmer</title>
+<meta name="description" content="RAD Programmer is the Delphi tooling brand of Ideas Awakened, Inc., built by Darian Miller — Embarcadero MVP, shipping software since the MS-DOS days.">
+<link rel="icon" type="image/svg+xml" href="assets/radprogrammer-logo.svg">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.about-hero{background:linear-gradient(180deg,#fff 0%,var(--paper) 100%);border-bottom:1px solid var(--line);padding:64px 0}
+.about-hero .cols{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center}
+.about-hero h1{font-size:clamp(1.9rem,4vw,2.6rem);letter-spacing:-.02em}
+.about-hero .mascot img{max-height:220px;width:auto}
+section.block{padding:56px 0}
+section.block.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lede{max-width:44em;color:var(--steel)}
+.facts{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 0;font-family:var(--mono);font-size:.8rem}
+.facts span{background:var(--mist);border:1px solid var(--line);border-radius:999px;padding:.35em .95em}
+.brandmark-head{font-family:var(--display);font-weight:800;font-size:1.15rem;color:#fff;text-decoration:none}
+.brandmark-head b{color:var(--rad-red)}
+@media (max-width:860px){.about-hero .cols{grid-template-columns:1fr}.about-hero .mascot{display:none}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brandmark-head" href="index.html"><b>RAD</b>&nbsp;Programmer</a>
+    <nav aria-label="Main">
+      <a href="radFormatter/index.html">radFormatter</a>
+      <a href="about.html" aria-current="page">About</a>
+      <a href="https://github.com/radprogrammer">GitHub</a>
+      <a class="cta" href="radFormatter/buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<div class="about-hero">
+  <div class="wrap cols">
+    <div>
+      <h1>Hi &mdash; I'm Darian.</h1>
+      <p class="lede">RAD Programmer is the Delphi tooling brand of Ideas
+      Awakened, Inc. In practice, that means me: <strong>Darian Miller</strong>,
+      an Embarcadero MVP who has been shipping software since the MS-DOS days
+      &mdash; through the Windows desktop era, client/server, and into today's
+      mix of web, mobile, and cloud &mdash; with Delphi as my primary tool for
+      most of that ride, and still having fun with it.</p>
+      <p class="facts">
+        <span>Embarcadero MVP</span>
+        <span>Shipping since MS-DOS</span>
+        <span>Delphi first, always</span>
+      </p>
+    </div>
+    <div class="mascot"><img src="assets/radprogrammer-logo.svg" alt=""></div>
+  </div>
+</div>
+
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Why RAD Programmer exists</h2>
+    <p class="lede">Delphi codebases live a long time &mdash; decades, routinely
+    &mdash; and the developers who maintain them deserve tooling built with
+    respect for that source. That's the entire premise here: tools that are
+    provably safe before they are powerful, that run fully offline because your
+    code is nobody else's business, and that you buy once instead of renting
+    &mdash; no subscriptions, no phone-home, no surprises.</p>
+    <p class="lede" style="margin-top:14px">radFormatter is the first of these
+    tools. More are in development, for code analysis, exploration, and
+    automation.</p>
+  </div>
+</section>
+
+<section class="block alt">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Around the community</h2>
+    <p class="lede">If you've been around the Delphi world, we may have already
+    crossed paths: I write about Delphi development on my blog at <a href="https://www.ideasawakened.com">ideasawakened.com</a>, and you'll
+    find me on my <a href="https://t.me/delphidevelopers">Delphi Developer
+    Group on Telegram</a> &mdash; with over 1,700 members and is a great place to ask or
+    answer Delphi questions in a live-chat setting.</p>
+    <p class="lede" style="margin-top:14px">On GitHub, I publish open source at various places including:
+      <ul>
+      <li>my personal account: <a href="https://github.com/darianmiller">github.com/darianmiller</a></li>
+      <li>Ideas Awakened repos mostly related to blog posts: <a href="https://github.com/ideasawakened/">github.com/ideasawakened</a></li>
+      This includes a popular list of Delphi versions found at this <a href="https://github.com/ideasawakened/DelphiKB/wiki/Delphi-Master-Release-List">wiki page</a>
+      <li>I recently created the <a href="https://github.com/continuous-delphi">Continuous Delphi Organization</a> &mdash;
+      which is building a growing collection of free, MIT-licensed tooling for Delphi developers: from command-line builds,
+      CI validation, and PowerShell utilities to lexers, parsers, and IDE plugins, all aimed at raising the engineering bar for long-lived Delphi systems.</li>
+      <li>RAD Programmer's commercial tools live at <a href="https://github.com/radprogrammer">github.com/radprogrammer</a></li>
+      </ul>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>The company</h2>
+    <p class="lede"><strong>Ideas Awakened, Inc.</strong> is the U.S. company
+    behind the RAD Programmer brand &mdash; the legal entity you'll see on
+    invoices, licenses, and the fine print. Following an exit from the
+    private-equity purchase at my previous software company, Ideas Awakened is
+    securely funded and building for the long term &mdash; which is exactly
+    what you want to hear from someone selling perpetual licenses.</p>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>
