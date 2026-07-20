@@ -25,8 +25,8 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+$",
-      "description": "Config schema version (MAJOR.MINOR). Governs reader compatibility; independent of the product version."
+      "pattern": "^2\\.[0-9]+$",
+      "description": "Config schema version (MAJOR.MINOR). This schema describes major 2.x; a config for a different major should reference that major's schema. Governs reader compatibility; independent of the product version."
     },
     "$schema": {
       "type": "string",
@@ -192,7 +192,8 @@
         },
         "maxConsecutiveSpaces": {
           "type": "integer",
-          "description": "Maximum consecutive interior spaces (0 = unlimited)."
+          "minimum": -1,
+          "description": "Maximum consecutive interior spaces (-1 = no limit)."
         }
       }
     },
@@ -202,10 +203,12 @@
       "properties": {
         "size": {
           "type": "integer",
+          "minimum": 0,
           "description": "Indent width in spaces."
         },
         "tabWidth": {
           "type": "integer",
+          "minimum": 0,
           "description": "Tab display width."
         },
         "style": {
@@ -228,6 +231,7 @@
         },
         "continuationSize": {
           "type": "integer",
+          "minimum": 0,
           "description": "Extra indent for wrapped continuation lines."
         },
         "anchorBased": {
@@ -236,6 +240,7 @@
         },
         "maxColumn": {
           "type": "integer",
+          "minimum": 0,
           "description": "Cap computed indent at this column (0 = uncapped)."
         },
         "caseLabels": {
@@ -383,6 +388,7 @@
         },
         "maxPadWidth": {
           "type": "integer",
+          "minimum": 0,
           "description": "Maximum padding width for alignment."
         }
       }
@@ -403,31 +409,37 @@
         },
         "rightMargin": {
           "type": "integer",
+          "minimum": 0,
           "description": "Right margin for wrapping (0 = off)."
         },
         "maxEmptyLines": {
           "type": "integer",
-          "description": "Maximum consecutive empty lines."
+          "minimum": -1,
+          "description": "Maximum consecutive empty lines (-1 = no limit)."
         },
         "emptyLines": {
           "type": "object",
-          "description": "Empty-line counts at structural positions.",
+          "description": "Empty-line counts at structural positions (-1 = leave source unchanged).",
           "properties": {
             "beforeVisibility": {
               "type": "integer",
-              "description": "Empty lines before a visibility section."
+              "minimum": -1,
+              "description": "Empty lines before a visibility section (-1 = leave as source)."
             },
             "aroundSections": {
               "type": "integer",
-              "description": "Empty lines around sections."
+              "minimum": -1,
+              "description": "Empty lines around sections (-1 = leave as source)."
             },
             "betweenDeclarations": {
               "type": "integer",
-              "description": "Empty lines between declarations."
+              "minimum": -1,
+              "description": "Empty lines between declarations (-1 = leave as source)."
             },
             "beforeTypeKeyword": {
               "type": "integer",
-              "description": "Empty lines before a type keyword."
+              "minimum": -1,
+              "description": "Empty lines before a type keyword (-1 = leave as source)."
             }
           }
         },
