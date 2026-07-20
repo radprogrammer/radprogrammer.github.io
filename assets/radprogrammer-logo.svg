@@ -14,6 +14,17 @@
    viewBox="0 0 282.22223 282.22223"
    height="282.22223mm"
    width="282.22223mm">
+  <style
+     id="radprogrammer-logo-color-scheme"><![CDATA[
+:root,
+svg {
+  color-scheme: only light;
+  forced-color-adjust: none;
+}
+svg * {
+  forced-color-adjust: none;
+}
+]]></style>
   <defs
      id="defs2">
     <clipPath
@@ -103,10 +114,6 @@
        id="g841"
        inkscape:label="Cutout - Mascot with Laptop"
        transform="matrix(0.35277777,0,0,-0.35277777,-32.253965,267.35516)">
-      <path
-         d="M 0,0 H 800 V 800 H 0 Z"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
-         id="path843" />
       <g
          id="g845">
         <g
