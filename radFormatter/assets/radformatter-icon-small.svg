@@ -1,4 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 132" width="132" height="132">
+<style><![CDATA[
+:root,
+svg {
+  color-scheme: only light;
+  forced-color-adjust: none;
+}
+svg * {
+  forced-color-adjust: none;
+}
+]]></style>
 <rect x="0" y="0" width="132" height="132" rx="29" fill="#1F2A33"/>
 <rect x="30.0" y="42.0" width="48.0" height="15.0" rx="7.5" fill="#E1262E"/>
 <rect x="46.0" y="70.0" width="40.0" height="15.0" rx="7.5" fill="#E7EDF2"/>
