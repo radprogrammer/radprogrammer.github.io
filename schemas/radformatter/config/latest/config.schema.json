@@ -1,0 +1,473 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://radprogrammer.com/schemas/radformatter/config/latest/config.schema.json",
+  "title": "radFormatter configuration",
+  "description": "Configuration for the radFormatter Delphi source formatter (https://radprogrammer.com). schemaVersion (MAJOR.MINOR) governs reader compatibility and is independent of the product version.",
+  "type": "object",
+  "definitions": {
+    "triState": {
+      "description": "Tri-state option: boolean true/false, or the strings \"yes\"/\"no\"/\"asis\" (\"asis\" preserves the source).",
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "enum": [
+            "asis",
+            "yes",
+            "no"
+          ]
+        }
+      ]
+    }
+  },
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Config schema version (MAJOR.MINOR). Governs reader compatibility; independent of the product version."
+    },
+    "$schema": {
+      "type": "string",
+      "description": "Optional URL of this JSON Schema (for editor autocomplete/validation)."
+    },
+    "casing": {
+      "type": "object",
+      "description": "Token text casing.",
+      "properties": {
+        "keywords": {
+          "type": "string",
+          "description": "Casing for reserved words.",
+          "enum": [
+            "asis",
+            "lower",
+            "upper",
+            "title"
+          ]
+        },
+        "numbers": {
+          "type": "string",
+          "description": "Casing for numeric literals (hex digits / exponent).",
+          "enum": [
+            "asis",
+            "lower",
+            "upper",
+            "title"
+          ]
+        },
+        "directives": {
+          "type": "string",
+          "description": "Casing for directives (e.g. stdcall, virtual).",
+          "enum": [
+            "asis",
+            "lower",
+            "upper",
+            "title"
+          ]
+        },
+        "identifiers": {
+          "type": "string",
+          "description": "Casing for identifiers.",
+          "enum": [
+            "asis",
+            "upper",
+            "lower",
+            "firstOccurrence"
+          ]
+        }
+      }
+    },
+    "spacing": {
+      "type": "object",
+      "description": "Spacing around punctuation and operators.",
+      "properties": {
+        "assignment": {
+          "type": "string",
+          "description": "Spaces around :=",
+          "enum": [
+            "asis",
+            "none",
+            "before",
+            "after",
+            "both"
+          ]
+        },
+        "comma": {
+          "type": "string",
+          "description": "Spaces around commas.",
+          "enum": [
+            "asis",
+            "none",
+            "before",
+            "after",
+            "both"
+          ]
+        },
+        "colon": {
+          "type": "string",
+          "description": "Spaces around colons.",
+          "enum": [
+            "asis",
+            "none",
+            "before",
+            "after",
+            "both"
+          ]
+        },
+        "semicolon": {
+          "type": "string",
+          "description": "Spaces around semicolons.",
+          "enum": [
+            "asis",
+            "none",
+            "before",
+            "after",
+            "both"
+          ]
+        },
+        "insideParens": {
+          "description": "Spaces just inside ( ).",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "insideBrackets": {
+          "description": "Spaces just inside [ ].",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "beforeParens": {
+          "description": "Space before ( in calls / declarations.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "aroundRange": {
+          "description": "Spaces around the .. range operator.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "beforeBracket": {
+          "description": "Space before [ .",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "genericBrackets": {
+          "description": "Spaces around generic < > brackets.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "aroundUnaryOperators": {
+          "description": "Spaces around unary operators.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "aroundBinaryOperators": {
+          "description": "Spaces around binary operators.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "maxConsecutiveSpaces": {
+          "type": "integer",
+          "description": "Maximum consecutive interior spaces (0 = unlimited)."
+        }
+      }
+    },
+    "indent": {
+      "type": "object",
+      "description": "Indentation.",
+      "properties": {
+        "size": {
+          "type": "integer",
+          "description": "Indent width in spaces."
+        },
+        "tabWidth": {
+          "type": "integer",
+          "description": "Tab display width."
+        },
+        "style": {
+          "type": "string",
+          "description": "Indent character strategy.",
+          "enum": [
+            "spaces",
+            "tabs",
+            "asIs"
+          ]
+        },
+        "directives": {
+          "type": "string",
+          "description": "Indentation of compiler directives.",
+          "enum": [
+            "asIs",
+            "column0",
+            "structural"
+          ]
+        },
+        "continuationSize": {
+          "type": "integer",
+          "description": "Extra indent for wrapped continuation lines."
+        },
+        "anchorBased": {
+          "type": "boolean",
+          "description": "Anchor continuation indent to an opening token."
+        },
+        "maxColumn": {
+          "type": "integer",
+          "description": "Cap computed indent at this column (0 = uncapped)."
+        },
+        "caseLabels": {
+          "type": "boolean",
+          "description": "Indent case-arm labels under the case."
+        },
+        "caseContent": {
+          "type": "boolean",
+          "description": "Indent case-arm bodies."
+        },
+        "caseSingleLine": {
+          "type": "boolean",
+          "description": "Allow single-line case-arm bodies."
+        },
+        "caseElseAlignment": {
+          "type": "string",
+          "description": "Alignment of the case else.",
+          "enum": [
+            "withLabels",
+            "withCase"
+          ]
+        }
+      }
+    },
+    "lineBreaks": {
+      "type": "object",
+      "description": "Line breaks and empty-line insertion.",
+      "properties": {
+        "keepUser": {
+          "type": "boolean",
+          "description": "Preserve user line breaks where allowed."
+        },
+        "beforeSingleInstr": {
+          "description": "Break before a single controlled instruction.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "beforeBegin": {
+          "description": "Break before begin.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "betweenElseAndIf": {
+          "type": "boolean",
+          "description": "Break between else and a following if."
+        },
+        "afterBegin": {
+          "type": "boolean",
+          "description": "Force a break after begin."
+        },
+        "afterSectionKeyword": {
+          "type": "boolean",
+          "description": "Force a break after a section keyword (var/const/type)."
+        },
+        "afterLabel": {
+          "description": "Break after a label.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/triState"
+            }
+          ]
+        },
+        "lineAfterSemicolon": {
+          "type": "boolean",
+          "description": "Force a line break after each semicolon."
+        },
+        "usesMode": {
+          "type": "string",
+          "description": "Uses-clause layout.",
+          "enum": [
+            "preserve",
+            "singleLine",
+            "onePerLine"
+          ]
+        }
+      }
+    },
+    "reshaping": {
+      "type": "object",
+      "description": "Structural reshaping.",
+      "properties": {
+        "oneParamPerLineInCalls": {
+          "type": "boolean",
+          "description": "One argument per line in calls."
+        },
+        "collapseEndElse": {
+          "type": "boolean",
+          "description": "Collapse end / else onto one line."
+        },
+        "collapseEndElseBegin": {
+          "type": "boolean",
+          "description": "Collapse end else begin."
+        },
+        "joinMultilineParens": {
+          "type": "boolean",
+          "description": "Join multi-line parenthesized groups."
+        },
+        "arrayInitPerLine": {
+          "type": "boolean",
+          "description": "One element per line in array initializers."
+        },
+        "inheritancePerLine": {
+          "type": "boolean",
+          "description": "One ancestor per line in class heritage."
+        },
+        "enumPerLine": {
+          "type": "boolean",
+          "description": "One value per line in enum declarations."
+        },
+        "delimitedGroupStyle": {
+          "type": "string",
+          "description": "Compact vs Allman for delimited groups.",
+          "enum": [
+            "compact",
+            "allman"
+          ]
+        }
+      }
+    },
+    "alignment": {
+      "type": "object",
+      "description": "Column alignment.",
+      "properties": {
+        "assignments": {
+          "type": "boolean",
+          "description": "Align := across adjacent lines."
+        },
+        "colons": {
+          "type": "boolean",
+          "description": "Align colons across adjacent declarations."
+        },
+        "consts": {
+          "type": "boolean",
+          "description": "Align const values."
+        },
+        "trailingComments": {
+          "type": "boolean",
+          "description": "Align trailing comments."
+        },
+        "maxPadWidth": {
+          "type": "integer",
+          "description": "Maximum padding width for alignment."
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "description": "Output / rendering.",
+      "properties": {
+        "lineEnding": {
+          "type": "string",
+          "description": "Line ending.",
+          "enum": [
+            "auto",
+            "crlf",
+            "lf",
+            "cr"
+          ]
+        },
+        "rightMargin": {
+          "type": "integer",
+          "description": "Right margin for wrapping (0 = off)."
+        },
+        "maxEmptyLines": {
+          "type": "integer",
+          "description": "Maximum consecutive empty lines."
+        },
+        "emptyLines": {
+          "type": "object",
+          "description": "Empty-line counts at structural positions.",
+          "properties": {
+            "beforeVisibility": {
+              "type": "integer",
+              "description": "Empty lines before a visibility section."
+            },
+            "aroundSections": {
+              "type": "integer",
+              "description": "Empty lines around sections."
+            },
+            "betweenDeclarations": {
+              "type": "integer",
+              "description": "Empty lines between declarations."
+            },
+            "beforeTypeKeyword": {
+              "type": "integer",
+              "description": "Empty lines before a type keyword."
+            }
+          }
+        },
+        "strictMode": {
+          "type": "boolean",
+          "description": "Fail on unclassified constructs (validation)."
+        }
+      }
+    },
+    "conditional": {
+      "type": "object",
+      "description": "Conditional (Active-branch-only) build context.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable Active-branch-only conditional formatting."
+        },
+        "compilerVersion": {
+          "type": "string",
+          "description": "Compiler version for branch selection."
+        },
+        "platform": {
+          "type": "string",
+          "description": "Target platform for branch selection."
+        },
+        "defines": {
+          "type": "array",
+          "description": "Active conditional defines.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "includePaths": {
+          "type": "array",
+          "description": "Include-file search paths.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
