@@ -193,7 +193,7 @@
         "maxConsecutiveSpaces": {
           "type": "integer",
           "minimum": -1,
-          "description": "Maximum consecutive interior spaces (-1 = no limit)."
+          "description": "Maximum consecutive interior spaces (-1 or 0 = no limit; any value < 1 disables the cap)."
         }
       }
     },
