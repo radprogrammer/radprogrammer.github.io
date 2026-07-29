@@ -107,8 +107,8 @@ pre.term{margin:16px 0 24px}
     <p><strong>CST-aware.</strong> Indentation, <code>case</code> structure,
     generic parameters, and nested control flow are driven by real parse data,
     not line heuristics.</p>
-    <p><strong>58 configuration options</strong> across seven sections (casing,
-    spacing, indent, line breaks, reshaping, alignment, output). Commit one
+    <p><strong>65 configuration options</strong> across eight sections (casing,
+    spacing, indent, line breaks, reshaping, alignment, output, conditional). Commit one
     <code>radFormatter.json</code> and every developer and CI job formats
     identically. See the
     <a href="config-options.html">configuration options reference</a>.</p>
@@ -150,7 +150,7 @@ radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
         <tr><td>-compilerVersion &lt;ver&gt;</td><td>Compiler version for <code>activeBranch</code> mode (e.g. <code>"Delphi 12"</code> or <code>VER360</code>)</td></tr>
         <tr><td>-includePath &lt;dir&gt;</td><td>Include search dir for <code>{$I}</code> under <code>activeBranch</code> mode (repeatable)</td></tr>
         <tr><td>-buildContext &lt;file&gt;</td><td>Build-context JSON (defines/platform/version/include paths) as the <code>activeBranch</code> base; explicit flags override it</td></tr>
-        <tr><td>-project &lt;file.dproj&gt;</td><td>Derive defines / include paths / platform / compiler version for <code>activeBranch</code> mode from a Delphi project. Mutually exclusive with <code>-buildContext</code></td></tr>
+        <tr><td>-project &lt;file.dproj&gt;</td><td>Derive defines / include paths / platform / compiler version for <code>activeBranch</code> mode from a Delphi project. Mutually exclusive with <code>-buildContext</code> (both supply the conditional base)</td></tr>
         <tr><td>-projectConfig &lt;name&gt;</td><td>Project build config to read with <code>-project</code> (e.g. <code>Debug</code>, <code>Release</code>)</td></tr>
         <tr><td>-projectPlatform &lt;name&gt;</td><td>Project platform to read with <code>-project</code> (e.g. <code>Win32</code>, <code>Win64</code>)</td></tr>
       </tbody>

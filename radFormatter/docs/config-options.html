@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Configuration options - radFormatter</title>
-<meta name="description" content="Complete reference for all 58 radFormatter configuration options across seven sections: casing, spacing, indent, lineBreaks, reshaping, alignment, and output.">
+<meta name="description" content="Complete reference for all 65 radFormatter configuration options across eight sections: casing, spacing, indent, lineBreaks, reshaping, alignment, output, and conditional.">
 <link rel="canonical" href="https://radprogrammer.com/radFormatter/docs/config-options.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RAD Programmer">
 <meta property="og:title" content="Configuration options - radFormatter">
-<meta property="og:description" content="Complete reference for all 58 radFormatter configuration options across seven sections: casing, spacing, indent, lineBreaks, reshaping, alignment, and output.">
+<meta property="og:description" content="Complete reference for all 65 radFormatter configuration options across eight sections: casing, spacing, indent, lineBreaks, reshaping, alignment, output, and conditional.">
 <meta property="og:url" content="https://radprogrammer.com/radFormatter/docs/config-options.html">
 <meta property="og:image" content="https://radprogrammer.com/radFormatter/assets/og-radformatter.png">
 <meta property="og:image:width" content="1200">
@@ -102,10 +102,10 @@ pre.term{margin:16px 0 24px}
     applies the chosen profile's defaults &mdash; with no profile selected, that
     is the built-in <strong>Default</strong> profile.</p>
 
-    <p>There are <strong>58 options across seven sections</strong>:
+    <p>There are <strong>65 options across eight sections</strong>:
     <code>casing</code>, <code>spacing</code>, <code>indent</code>,
-    <code>lineBreaks</code>, <code>reshaping</code>, <code>alignment</code>, and
-    <code>output</code>.</p>
+    <code>lineBreaks</code>, <code>reshaping</code>, <code>alignment</code>,
+    <code>output</code>, and <code>conditional</code>.</p>
 
     <p>Generate a fully populated config with the current defaults using the CLI:</p>
 <pre class="term"><code><span class="p">&gt;</span> radFormatter -writeDefaultConfig radFormatter.json</code></pre>
@@ -168,6 +168,7 @@ pre.term{margin:16px 0 24px}
       <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
       <tbody>
         <tr><td>indent.size</td><td>integer</td><td>2</td><td>Spaces per depth level. <strong>Applies to space indentation only</strong> &mdash; ignored when the effective style is tabs (the editor's tab stop owns the visual width). <code>0</code> disables reindentation</td></tr>
+        <tr><td>indent.tabWidth</td><td>integer</td><td>0</td><td>Display width (in columns) used only to <strong>measure</strong> existing tab-indented source when computing visual columns for right-margin / soft-break decisions. <code>0</code> = same as <code>indent.size</code>; <code>&gt;0</code> = an explicit editor tab-stop width. Does not affect emitted indentation</td></tr>
         <tr><td>indent.style</td><td>"spaces" | "tabs" | "asIs"</td><td>"asIs"</td><td>Indent character: <code>spaces</code> always uses spaces; <code>tabs</code> uses one tab per structural level (continuation/alignment stay spaces); <code>asIs</code> (Default) preserves the source's indent character &mdash; the first line with leading indentation decides (leading tab &rarr; tabs, leading space &rarr; spaces), none &rarr; spaces. Depth is always recomputed; only the character is preserved</td></tr>
         <tr><td>indent.directives</td><td>"asIs" | "column0" | "structural"</td><td>"asIs"</td><td>Compiler-directive indentation: <code>asIs</code> preserves source indent (Default); <code>column0</code> forces the left margin (FormatterExe/Embarcadero); <code>structural</code> indents to surrounding depth</td></tr>
         <tr><td>indent.continuationSize</td><td>integer</td><td>2</td><td>Extra spaces added to wrapped / continuation lines</td></tr>
