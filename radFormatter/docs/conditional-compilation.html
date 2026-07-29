@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conditional compilation - radFormatter</title>
+<meta name="description" content="How radFormatter formats Delphi code guarded by {$IFDEF}/{$IF} directives: why it is hard, the three conditional modes (activeBranch, allBranches, preserveConditionals), the activeBranch build context, and deriving context from a .dproj project.">
+<link rel="canonical" href="https://radprogrammer.com/radFormatter/docs/conditional-compilation.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RAD Programmer">
+<meta property="og:title" content="Conditional compilation - radFormatter">
+<meta property="og:description" content="How radFormatter formats Delphi code guarded by {$IFDEF}/{$IF} directives: why it is hard, the three conditional modes, the activeBranch build context, and deriving context from a .dproj project.">
+<meta property="og:url" content="https://radprogrammer.com/radFormatter/docs/conditional-compilation.html">
+<meta property="og:image" content="https://radprogrammer.com/radFormatter/assets/og-radformatter.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="../assets/radformatter.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../assets/radformatter-icon.svg">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+.docs{display:grid;grid-template-columns:230px minmax(0,1fr);gap:48px;padding:48px 0 72px}
+.toc{position:sticky;top:24px;align-self:start;font-size:.88rem}
+.toc h2{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);margin-bottom:.8em}
+.toc ul{list-style:none;margin:0 0 1.6em;padding:0}
+.toc li{margin:0 0 .45em}
+.toc a{text-decoration:none;color:var(--ink)}
+.toc a:hover{color:var(--rad-red)}
+main h1{margin-bottom:.3em}
+main h2{font-size:1.35rem;margin-top:2.2em;padding-top:.6em}
+main h2 code{font-size:1.05em;background:none;padding:0;color:var(--rad-red)}
+main h3{margin-top:1.8em}
+main h3 code{background:none;padding:0}
+.crumb{font-family:var(--mono);font-size:.78rem;color:var(--steel);margin:0 0 1.4em}
+.crumb a{color:var(--steel);text-decoration:none}
+.crumb a:hover{color:var(--rad-red)}
+.note{border-left:4px solid var(--sky);background:#fff;border-radius:0 10px 10px 0;padding:14px 18px;margin:20px 0;color:var(--steel);font-size:.93rem}
+.note strong{color:var(--ink)}
+.lede{font-size:1.08rem;color:var(--steel);max-width:44em}
+pre.term{margin:8px 0 8px}
+.example{margin:20px 0 26px}
+.example .cap{font-family:var(--mono);font-size:.78rem;letter-spacing:.02em;color:var(--steel);margin:0 0 6px;text-transform:uppercase}
+.term .d{color:#E7B15A}
+.term .c{color:#8FA3B1}
+.term .j{color:#8FBEDD}
+.term .p{color:var(--rad-red);font-weight:600}
+.anchor-heading{scroll-margin-top:24px}
+@media (max-width:860px){
+  .docs{grid-template-columns:1fr;gap:0}
+  .toc{position:static;border:1px solid var(--line);background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:28px}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="../index.html" aria-label="radFormatter home">
+      <img src="../assets/radformatter-logo-reversed.svg" alt="radFormatter" height="34">
+    </a>
+    <nav aria-label="Main">
+      <a href="../index.html">Home</a>
+      <a href="../ide.html">IDE Plugin</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../docs/radFormatter-cli.html">Docs</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">Download</a>
+      <a class="cta" href="../buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap docs">
+  <aside class="toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ul>
+      <li><a href="#why-hard">Why it is hard</a></li>
+      <li><a href="#invariant">The one guarantee</a></li>
+      <li><a href="#modes">The three modes</a></li>
+      <li><a href="#choosing">Choosing a mode</a></li>
+      <li><a href="#build-context">The build context</a></li>
+      <li><a href="#project">Deriving context from a project</a></li>
+      <li><a href="#undecidable">Undecidable <code>{$IF}</code> and straddles</a></li>
+      <li><a href="#includes">Include files (<code>{$I}</code>)</a></li>
+      <li><a href="#reference">Config &amp; CLI reference</a></li>
+    </ul>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="radFormatter-cli.html">CLI reference</a></li>
+      <li><a href="config-options.html">Configuration options</a></li>
+      <li><a href="profiles.html">Profiles</a></li>
+      <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      <li><a href="known-limitations.html">Known limitations</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <p class="crumb"><a href="../index.html">radFormatter</a> / docs / conditional-compilation</p>
+    <h1>Conditional compilation</h1>
+
+    <p class="lede">Code guarded by compiler directives &mdash;
+    <code>{$IFDEF}</code>, <code>{$IF}</code>, <code>{$ELSE}</code>,
+    <code>{$ENDIF}</code> &mdash; is the hardest thing any Delphi formatter has to
+    lay out. This page explains why, what radFormatter guarantees, and how to
+    steer it with the three conditional modes and a build context.</p>
+
+    <h2 id="why-hard" class="anchor-heading">Why it is hard</h2>
+    <p>A file with <code>{$IFDEF}</code> branches is not one program &mdash; it is
+    several overlapping programs that share the same lines of text. Two branches of
+    a single <code>{$IFDEF}</code> can end a statement differently, open a block in
+    one arm and close it in another, or give the same shared body two structurally
+    different parents depending on which symbols are defined. There is no single
+    syntax tree that is simultaneously correct for every build, so there is no
+    single "correct" layout either.</p>
+    <p>This is a fundamental limit, not a backlog item: <strong>no Delphi formatter
+    handles conditional code perfectly</strong>, including RAD Studio's own
+    Formatter.exe. radFormatter treats conditionally compiled code as
+    <strong>best-effort in every mode</strong> and is explicit about the trade-off
+    each mode makes, so you can pick the behavior you want rather than be
+    surprised.</p>
+
+    <h2 id="invariant" class="anchor-heading">The one guarantee</h2>
+    <p>Whatever mode you choose, radFormatter <strong>never joins, splits, aligns,
+    or wraps a line across a conditional boundary</strong>. A directive line and
+    the code on either side of it are never merged or reflowed into one another.
+    Combined with the non-destructive safety check (a whitespace-excluded content
+    hash plus a re-lexed token fingerprint), that means conditional code can never
+    be silently corrupted &mdash; at worst a region is left unformatted.</p>
+
+    <h2 id="modes" class="anchor-heading">The three modes</h2>
+    <p>The strategy is set by <code>conditional.mode</code> in your config (or the
+    CLI <code>-conditionalMode</code> flag). All three <em>parse</em>; they differ
+    in how directives are tokenized.</p>
+
+    <h3 id="mode-active"><code>activeBranch</code> &mdash; the default</h3>
+    <p>Directives are resolved against a <a href="#build-context">build
+    context</a> (your defines, target platform, compiler version, and include
+    paths), and <strong>only the active branch is parsed and formatted</strong>.
+    The active code formats robustly; <strong>inactive branches are preserved
+    exactly as written</strong>, together with their bounding directives &mdash;
+    they are not reformatted and may not match the surrounding indentation.</p>
+    <div class="example">
+      <p class="cap">Input &mdash; as authored</p>
+<pre class="term"><code>procedure TLogger.Emit(const S: string);
+begin
+<span class="d">{$IFDEF VERBOSE}</span>
+      WriteLn('verbose: ' + S);
+<span class="d">{$ELSE}</span>
+      WriteLn(S);
+<span class="d">{$ENDIF}</span>
+end;</code></pre>
+      <p class="cap">activeBranch, with <code>VERBOSE</code> defined</p>
+<pre class="term"><code>procedure TLogger.Emit(const S: string);
+begin
+<span class="d">{$IFDEF VERBOSE}</span>
+  WriteLn('verbose: ' + S);   <span class="c">// active branch: reindented to structure</span>
+<span class="d">{$ELSE}</span>
+      WriteLn(S);             <span class="c">// inactive branch: preserved verbatim</span>
+<span class="d">{$ENDIF}</span>
+end;</code></pre>
+    </div>
+    <p>This is the only mode aligned with the parser's core invariant (the parser
+    is designed to run on a conditional-filtered token stream), which is why it is
+    the default. For the best result, give it an accurate build context &mdash; see
+    below. With no context it falls back to deterministic defaults (the parser's
+    latest known compiler version and <code>Win32Target</code>), which is usually
+    fine but may select a different branch than your build would.</p>
+
+    <h3 id="mode-all"><code>allBranches</code></h3>
+    <p>Every branch is read together as a single raw stream, with no conditional
+    processing (this was the default in earlier builds). Because mutually exclusive
+    branches are parsed at once, code that is only valid in one specific build can
+    mis-structure the parse &mdash; and therefore the layout &mdash; of the
+    surrounding region. Reconcilable splits are handled; irreducible ones are
+    preserved verbatim as opaque islands. No build context is used.</p>
+    <div class="note">An <code>allBranches</code> layout you do not like is
+    best-effort <em>by policy</em>, not a bug. The answer is almost always
+    &ldquo;switch to <code>activeBranch</code>&rdquo; (the default) with a good
+    build context.</div>
+
+    <h3 id="mode-preserve"><code>preserveConditionals</code></h3>
+    <p>Every line that holds a conditional directive, or lies between an opener and
+    its matching closer, is left <strong>exactly as authored</strong>; everything
+    <strong>outside</strong> conditional regions is reformatted normally. It is the
+    most conservative choice &mdash; nothing inside a conditional region is touched
+    &mdash; and it is what the pass-through <a href="profiles.html">NoOp</a> profile
+    pins. No build context is used.</p>
+    <div class="example">
+      <p class="cap">preserveConditionals &mdash; conditional lines untouched, surrounding code reformatted</p>
+<pre class="term"><code><span class="d">{$IFDEF LOGGING}</span>
+      Log( 'hello' );        <span class="c">// inside a conditional region: left verbatim</span>
+<span class="d">{$ENDIF}</span>
+DoStuff( x,y );              <span class="c">// outside: reformatted normally -&gt; DoStuff(x, y);</span></code></pre>
+    </div>
+
+    <h2 id="choosing" class="anchor-heading">Choosing a mode</h2>
+    <table class="data">
+      <thead><tr><th scope="col">Mode</th><th scope="col">Formats</th><th scope="col">Build context</th><th scope="col">Best for</th></tr></thead>
+      <tbody>
+        <tr><td><code>activeBranch</code></td><td>The active branch; inactive branches preserved verbatim</td><td>Used</td><td>Almost everything &mdash; the default. Give it your real build context for clean results.</td></tr>
+        <tr><td><code>allBranches</code></td><td>All branches together, best-effort</td><td>Ignored</td><td>Legacy behavior; rarely what you want on conditional-heavy code.</td></tr>
+        <tr><td><code>preserveConditionals</code></td><td>Only code outside conditional regions</td><td>Ignored</td><td>Maximum caution &mdash; never touch anything inside a directive.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="build-context" class="anchor-heading">The build context (<code>activeBranch</code> only)</h2>
+    <p>To decide which branch is active, <code>activeBranch</code> needs to know how
+    your project builds. Four inputs feed the fold; they live in the
+    <code>conditional</code> section of your config so the IDE and the CLI resolve
+    the <em>same</em> branch for a given file (a checked-in setting, never an
+    environment default that would let format-on-save and a CI <code>-check</code>
+    disagree).</p>
+    <table class="data">
+      <thead><tr><th scope="col">Input</th><th scope="col">Meaning</th><th scope="col">Empty default</th></tr></thead>
+      <tbody>
+        <tr><td><code>compilerVersion</code></td><td>Compiler version as a product name (<code>"Delphi 12"</code>), an alias, or a <code>VERxxx</code> define</td><td>The parser's latest known version</td></tr>
+        <tr><td><code>platform</code></td><td>Target-platform enum name (<code>Win32Target</code>, <code>Win64Target</code>, &hellip;)</td><td><code>Win32Target</code></td></tr>
+        <tr><td><code>defines</code></td><td>Conditional symbols to define (<code>NAME</code> or <code>NAME=VALUE</code>; folding is name-only)</td><td>none</td></tr>
+        <tr><td><code>includePaths</code></td><td>Extra directories searched for <code>{$I}</code> include files that gate conditionals</td><td>the source file's own directory</td></tr>
+      </tbody>
+    </table>
+    <p class="cap" style="font-family:var(--mono);font-size:.78rem;color:var(--steel);margin:18px 0 6px">Config &mdash; radFormatter.json</p>
+<pre class="term"><code>{
+  <span class="j">"conditional"</span>: {
+    <span class="j">"mode"</span>: "activeBranch",
+    <span class="j">"compilerVersion"</span>: "Delphi 12",
+    <span class="j">"platform"</span>: "Win64Target",
+    <span class="j">"defines"</span>: ["DEBUG", "MYFEATURE"],
+    <span class="j">"includePaths"</span>: ["./inc"]
+  }
+}</code></pre>
+    <p class="cap" style="font-family:var(--mono);font-size:.78rem;color:var(--steel);margin:18px 0 6px">The same, on the CLI</p>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -conditionalMode activeBranch \
+    -compilerVersion "Delphi 12" -platform Win64Target \
+    -define DEBUG -define MYFEATURE -includePath ./inc \
+    source/MyUnit.pas</code></pre>
+    <div class="note">Deterministic by design: with zero configuration the fold
+    still resolves the same way everywhere (latest known version,
+    <code>Win32Target</code>), so the IDE and CLI produce identical output for the
+    same file.</div>
+
+    <h2 id="project" class="anchor-heading">Deriving context from a project (<code>-project</code>)</h2>
+    <p>Rather than list defines and include paths by hand, point radFormatter at a
+    Delphi project and let it derive the whole context &mdash; defines, include
+    paths, target platform, and a best-effort compiler version &mdash; from the
+    <code>.dproj</code>, resolving the MSBuild condition chain and
+    <code>$(DCC_Define)</code> accumulation for the selected configuration and
+    platform.</p>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -project MyApp.dproj -projectConfig Release -projectPlatform Win64 -d source -r</code></pre>
+    <p>In the IDE, the active project's context is used automatically &mdash; the
+    same extraction code backs both, so the IDE and CLI resolve identical context
+    for the same project. A few rules:</p>
+    <ul>
+      <li><strong>A project context wins.</strong> When a project supplies the
+      context (IDE active project, or CLI <code>-project</code> /
+      <code>-buildContext</code>), it is used verbatim and the config's conditional
+      context is ignored &mdash; a shared default could activate branches your
+      project never builds. The config context is the no-project fallback only.</li>
+      <li><code>-project</code> and <code>-buildContext</code> are
+      <strong>mutually exclusive</strong> (both supply the base). Explicit
+      <code>-define</code> / <code>-includePath</code> / <code>-platform</code> /
+      <code>-compilerVersion</code> flags still layer on top as a per-invocation
+      supplement.</li>
+      <li>Only conditional-folding inputs are read. Unit-scope names
+      (<code>DCC_Namespace</code>) and library search paths are AST concerns and are
+      deliberately not read.</li>
+      <li><code>-project</code> is <strong>inert unless the mode is
+      <code>activeBranch</code></strong> (radFormatter prints a warning otherwise).</li>
+    </ul>
+
+    <h2 id="undecidable" class="anchor-heading">Undecidable <code>{$IF}</code> and straddles</h2>
+    <p><code>activeBranch</code> is honest about what it cannot decide. If an
+    <code>{$IF}</code> / <code>{$ELSEIF}</code> controlling expression cannot be
+    resolved from the build context (for example, a comparison against a constant
+    the context does not pin down), radFormatter <strong>preserves the whole region
+    verbatim</strong> &mdash; every branch, opener through closer &mdash; instead of
+    silently committing to one.</p>
+    <div class="example">
+      <p class="cap">Undecidable <code>{$IF}</code> &mdash; whole region preserved</p>
+<pre class="term"><code><span class="d">{$IF MyTuningConstant &gt; 10}</span>   <span class="c">// value not known from the build context</span>
+      UseLargeBuffers;
+<span class="d">{$ELSE}</span>
+      UseSmallBuffers;
+<span class="d">{$ENDIF}</span></code></pre>
+    </div>
+    <p>Defined-ness, on the other hand, is <em>always</em> decidable:
+    <code>{$IFDEF Sym}</code> and <code>{$IF DEFINED(Sym)}</code> fold normally even
+    when <code>Sym</code> is unknown (an unknown symbol is simply not defined).</p>
+    <p>The hardest case is a <strong>straddle</strong> &mdash; a single shared body
+    that has two structurally different parents across a directive boundary (a
+    shared <code>begin..end</code> that is an anonymous-method body in one branch and
+    a <code>for</code>-loop body in the other, say). These cannot be reconciled into
+    one tree, so they are kept as verbatim opaque islands: fingerprint-stable and
+    safe, with indentation left best-effort.</p>
+
+    <h2 id="includes" class="anchor-heading">Include files (<code>{$I}</code>)</h2>
+    <p>When a <code>{$I foo.inc}</code> gates conditionals, radFormatter expands the
+    include's tokens internally to evaluate directives &mdash; but the output shows
+    <strong>only the <code>{$I}</code> directive itself</strong>, never the spliced
+    include body. Includes resolve against the source file's own directory automatically;
+    use <code>includePaths</code> (or a project) to cover includes that live elsewhere.
+    With no path and no include dirs, an unresolved <code>{$I}</code> simply passes
+    through as text.</p>
+
+    <h2 id="reference" class="anchor-heading">Config &amp; CLI reference</h2>
+    <p>The full option and flag definitions live in the
+    <a href="config-options.html#conditional">configuration options reference</a>
+    and the <a href="radFormatter-cli.html#options">CLI reference</a>; the
+    conditional-specific subset is collected here.</p>
+    <table class="data">
+      <thead><tr><th scope="col">Config key</th><th scope="col">CLI flag</th><th scope="col">Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>conditional.mode</code></td><td><code>-conditionalMode &lt;mode&gt;</code></td><td><code>activeBranch</code> (default) / <code>allBranches</code> / <code>preserveConditionals</code></td></tr>
+        <tr><td><code>conditional.compilerVersion</code></td><td><code>-compilerVersion &lt;ver&gt;</code></td><td><code>activeBranch</code> only; e.g. <code>"Delphi 12"</code> or <code>VER360</code></td></tr>
+        <tr><td><code>conditional.platform</code></td><td><code>-platform &lt;name&gt;</code></td><td><code>activeBranch</code> only; e.g. <code>Win32Target</code>, <code>Win64Target</code></td></tr>
+        <tr><td><code>conditional.defines</code></td><td><code>-define &lt;NAME[=VALUE]&gt;</code></td><td><code>activeBranch</code> only; repeatable on the CLI</td></tr>
+        <tr><td><code>conditional.includePaths</code></td><td><code>-includePath &lt;dir&gt;</code></td><td><code>activeBranch</code> only; repeatable on the CLI</td></tr>
+        <tr><td>&mdash;</td><td><code>-buildContext &lt;file&gt;</code></td><td>Build-context JSON as the base; mutually exclusive with <code>-project</code></td></tr>
+        <tr><td>&mdash;</td><td><code>-project &lt;file.dproj&gt;</code></td><td>Derive the context from a Delphi project; <code>activeBranch</code> only</td></tr>
+        <tr><td>&mdash;</td><td><code>-projectConfig &lt;name&gt;</code></td><td>Project build config to read with <code>-project</code> (e.g. <code>Debug</code>, <code>Release</code>)</td></tr>
+        <tr><td>&mdash;</td><td><code>-projectPlatform &lt;name&gt;</code></td><td>Project platform to read with <code>-project</code> (e.g. <code>Win32</code>, <code>Win64</code>)</td></tr>
+      </tbody>
+    </table>
+    <p>See also <a href="known-limitations.html#conditional">Known limitations</a>
+    for the short version, and <a href="profiles.html">Profiles</a> for how each
+    built-in profile sets <code>conditional.mode</code>.</p>
+  </main>
+</div>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../../index.html" aria-label="RAD Programmer home"><img class="mark" src="../../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radFormatter is part of the <a href="../../index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a> toolset &mdash;
+      developer tooling for the Delphi ecosystem.</p>
+    </div>
+    <div>
+      <h3>Documentation</h3>
+      <ul>
+        <li><a href="radFormatter-cli.html">CLI reference</a></li>
+        <li><a href="config-options.html">Configuration options</a></li>
+        <li><a href="conditional-compilation.html">Conditional compilation</a></li>
+        <li><a href="profiles.html">Profiles</a></li>
+        <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="../buy.html">Buy radFormatter</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter/releases">Download</a></li>
+        <li><a href="https://github.com/radprogrammer/radFormatter">GitHub</a></li>
+        <li><a href="../../about.html">About</a></li>
+        <li><a href="https://github.com/radprogrammer/radformatter/issues">Support</a></li>
+        <li><a href="known-limitations.html">Known limitations</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -82,6 +82,7 @@ pre.term{margin:16px 0 24px}
     <h2>Documentation</h2>
     <ul>
       <li><a href="config-options.html">Configuration options</a></li>
+      <li><a href="conditional-compilation.html">Conditional compilation</a></li>
       <li><a href="profiles.html">Profiles</a></li>
       <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
       <li><a href="known-limitations.html">Known limitations</a></li>
@@ -144,7 +145,7 @@ radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
         <tr><td>-profile &lt;n&gt;</td><td>Base profile: <code>Default</code>, <code>FormatterExe</code>, <code>Embarcadero</code>, or <code>NoOp</code></td></tr>
         <tr><td>-config &lt;file&gt;</td><td>JSON config file, overlaid on the selected profile</td></tr>
         <tr><td>-writeDefaultConfig &lt;file&gt;</td><td>Write the default config JSON to <code>&lt;file&gt;</code> and exit</td></tr>
-        <tr><td>-conditionalMode &lt;mode&gt;</td><td>How <code>{$IFDEF}</code>/<code>{$IF}</code> branches are handled: <code>activeBranch</code> (default), <code>allBranches</code>, or <code>preserveConditionals</code> (see <a href="known-limitations.html">Conditional compilation</a>)</td></tr>
+        <tr><td>-conditionalMode &lt;mode&gt;</td><td>How <code>{$IFDEF}</code>/<code>{$IF}</code> branches are handled: <code>activeBranch</code> (default), <code>allBranches</code>, or <code>preserveConditionals</code> (see <a href="conditional-compilation.html">Conditional compilation</a>)</td></tr>
         <tr><td>-define &lt;NAME[=VALUE]&gt;</td><td>Add a conditional define for <code>activeBranch</code> mode (repeatable)</td></tr>
         <tr><td>-platform &lt;name&gt;</td><td>Target platform for <code>activeBranch</code> mode (e.g. <code>Win32Target</code>, <code>Win64Target</code>)</td></tr>
         <tr><td>-compilerVersion &lt;ver&gt;</td><td>Compiler version for <code>activeBranch</code> mode (e.g. <code>"Delphi 12"</code> or <code>VER360</code>)</td></tr>
@@ -314,6 +315,7 @@ radFormatter -check -config radFormatter.json -d source -r</code></pre>
       <ul>
         <li><a href="radFormatter-cli.html">CLI reference</a></li>
         <li><a href="config-options.html">Configuration options</a></li>
+        <li><a href="conditional-compilation.html">Conditional compilation</a></li>
         <li><a href="profiles.html">Profiles</a></li>
         <li><a href="embarcadero-style-guide.html">Embarcadero style guide</a></li>
       </ul>
