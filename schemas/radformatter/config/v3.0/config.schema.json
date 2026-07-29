@@ -263,6 +263,24 @@
             "withLabels",
             "withCase"
           ]
+        },
+        "commentSingleLine": {
+          "type": "string",
+          "description": "Single-line (// or single-line block) own-line comment indent: structural (re-indent to the enclosing content level), anchored (delta-shift by the same amount its following statement moved; falls back to asIs when there is no following statement), or asIs (preserve the source column).",
+          "enum": [
+            "structural",
+            "anchored",
+            "asIs"
+          ]
+        },
+        "commentMultiLine": {
+          "type": "string",
+          "description": "Multi-line { } / (* *) comment indent: structural (re-indent opener, re-home closer), anchored (delta-shift the opener to track its anchor; closer left verbatim), or asIs (preserve opener column, leave closer verbatim).",
+          "enum": [
+            "structural",
+            "anchored",
+            "asIs"
+          ]
         }
       }
     },
@@ -400,12 +418,13 @@
       "properties": {
         "lineEnding": {
           "type": "string",
-          "description": "Line ending.",
+          "description": "Line ending: platform (the platform default, CRLF on Windows, regardless of the source), crlf/lf/cr (force that terminator), or detect (match the source file's first line break, applied uniformly).",
           "enum": [
-            "auto",
+            "platform",
             "crlf",
             "lf",
-            "cr"
+            "cr",
+            "detect"
           ]
         },
         "rightMargin": {
@@ -456,11 +475,11 @@
       "properties": {
         "mode": {
           "type": "string",
-          "description": "Conditional-directive strategy: activeBranch (fold to the active branch), allBranches (parse every branch), or asIs (leave conditional lines verbatim).",
+          "description": "Conditional-directive strategy: activeBranch (fold to the active branch per build context), allBranches (parse every branch as one stream), or preserveConditionals (leave conditional lines verbatim while reformatting surrounding code).",
           "enum": [
             "activeBranch",
             "allBranches",
-            "asIs"
+            "preserveConditionals"
           ]
         },
         "compilerVersion": {

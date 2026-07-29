@@ -101,7 +101,7 @@ table.glance td:first-child,table.glance th:first-child{text-align:left;font-fam
     <code>-config</code> is overlaid on top of the profile, so you only specify
     the keys you want to change.</p>
 
-<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -config team.json -w source/MyUnit.pas</code></pre>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -config team.json source/MyUnit.pas</code></pre>
 
     <p>Omitting <code>-profile</code> uses <strong>Default</strong>. Every option
     and its values are described in the
@@ -123,7 +123,8 @@ table.glance td:first-child,table.glance th:first-child{text-align:left;font-fam
         <tr><td>One statement per line (break after <code>;</code>)</td><td>no</td><td>no</td><td>yes</td><td>no</td></tr>
         <tr><td><code>uses</code> layout</td><td>preserve</td><td>preserve</td><td>one per line</td><td>preserve</td></tr>
         <tr><td>Right margin</td><td>off</td><td>80</td><td>160</td><td>off</td></tr>
-        <tr><td>Line ending</td><td>auto</td><td>crlf</td><td>auto</td><td>auto</td></tr>
+        <tr><td>Line ending</td><td>platform</td><td>crlf</td><td>platform</td><td>detect</td></tr>
+        <tr><td>Conditional mode</td><td>active branch</td><td>active branch</td><td>active branch</td><td>preserve conditionals</td></tr>
         <tr><td>Max empty lines</td><td>unlimited</td><td>1</td><td>1</td><td>unlimited</td></tr>
         <tr><td>Blank lines around sections</td><td>as-is</td><td>1</td><td>1</td><td>as-is</td></tr>
         <tr><td>Indent size</td><td>2</td><td>2</td><td>2</td><td>0 (off)</td></tr>

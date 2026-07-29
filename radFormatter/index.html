@@ -316,7 +316,7 @@ section.block.alt{background:#fff;border-top:1px solid var(--line);border-bottom
     <p class="lede">A profile is a named starting point. Whatever you pass with
     <code>-config</code> is overlaid on top, so you only specify what you want to
     change &mdash; from &ldquo;touch nothing&rdquo; to the full Embarcadero style guide.
-    Underneath are <strong>57 options across seven sections</strong>, all in one
+    Underneath are <strong>58 options across seven sections</strong>, all in one
     <code>radFormatter.json</code>. Commit it and every developer and CI job
     formats identically.</p>
     <p class="striplabel">The seven option sections &mdash; click any to browse its reference</p>
@@ -357,7 +357,7 @@ section.block.alt{background:#fff;border-top:1px solid var(--line);border-bottom
       </tbody>
     </table>
     <p style="margin-top:18px;display:flex;gap:28px;flex-wrap:wrap">
-      <a href="docs/config-options.html">Browse all 57 options &rarr;</a>
+      <a href="docs/config-options.html">Browse all 58 options &rarr;</a>
       <a href="docs/profiles.html">See all four profiles on the same input &rarr;</a>
     </p>
   </div>
@@ -367,16 +367,16 @@ section.block.alt{background:#fff;border-top:1px solid var(--line);border-bottom
 <section class="block" id="cli">
   <div class="wrap">
     <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>A CLI that fits your workflow</h2>
-    <p class="lede">Format a file to stdout, rewrite a whole tree in place, or gate a
+    <p class="lede">Format a file in place, rewrite a whole tree, or gate a
     pull request &mdash; with the same config everywhere.</p>
     <div class="cli-cols">
       <div>
         <h3>Everyday use</h3>
-<pre class="term"><code><span class="c"># Format one file to stdout (source untouched)</span>
+<pre class="term"><code><span class="c"># Format one file in place</span>
 <span class="p">&gt;</span> radFormatter source/MyUnit.pas
 
 <span class="c"># Format a whole tree in place, with backups</span>
-<span class="p">&gt;</span> radFormatter -d source -r -w -b
+<span class="p">&gt;</span> radFormatter -d source -r -b
 
 <span class="c"># Generate a starter configuration</span>
 <span class="p">&gt;</span> radFormatter -writeDefaultConfig radFormatter.json</code></pre>

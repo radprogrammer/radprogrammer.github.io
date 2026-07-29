@@ -22,6 +22,7 @@
   },
   "indent": {
     "size": 2,
+    "tabWidth": 0,
     "style": "spaces",
     "directives": "column0",
     "continuationSize": 2,
@@ -61,7 +62,7 @@
     "maxPadWidth": 0
   },
   "output": {
-    "lineEnding": "auto",
+    "lineEnding": "platform",
     "rightMargin": 160,
     "maxEmptyLines": 1,
     "emptyLines": {
@@ -71,5 +72,12 @@
       "beforeTypeKeyword": 1
     },
     "strictMode": true
+  },
+  "conditional": {
+    "mode": "activeBranch",
+    "compilerVersion": "",
+    "platform": "",
+    "defines": [],
+    "includePaths": []
   }
 }

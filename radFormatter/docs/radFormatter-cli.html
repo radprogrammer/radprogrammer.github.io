@@ -107,7 +107,7 @@ pre.term{margin:16px 0 24px}
     <p><strong>CST-aware.</strong> Indentation, <code>case</code> structure,
     generic parameters, and nested control flow are driven by real parse data,
     not line heuristics.</p>
-    <p><strong>57 configuration options</strong> across seven sections (casing,
+    <p><strong>58 configuration options</strong> across seven sections (casing,
     spacing, indent, line breaks, reshaping, alignment, output). Commit one
     <code>radFormatter.json</code> and every developer and CI job formats
     identically. See the
@@ -123,8 +123,8 @@ pre.term{margin:16px 0 24px}
     <p class="filetypes"><span>.pas</span><span>.dpr</span><span>.dpk</span><span>.dpkw</span><span>.inc</span></p>
 
     <h2 id="usage" class="anchor-heading">Usage</h2>
-<pre class="term"><code>radFormatter &lt;file|pattern&gt; [&lt;file|pattern&gt; ...] [-w] [-b] [-profile &lt;n&gt;] [-config &lt;file&gt;]
-radFormatter -d &lt;directory&gt; [-r] [-w] [-b] [-profile &lt;n&gt;] [-config &lt;file&gt;]
+<pre class="term"><code>radFormatter &lt;file|pattern&gt; [&lt;file|pattern&gt; ...] [-b] [-profile &lt;n&gt;] [-config &lt;file&gt;]
+radFormatter -d &lt;directory&gt; [-r] [-b] [-profile &lt;n&gt;] [-config &lt;file&gt;]
 radFormatter &lt;file|pattern&gt; [...] -check [-profile &lt;n&gt;] [-config &lt;file&gt;]
 radFormatter &lt;file|pattern&gt; [...] -diff  [-profile &lt;n&gt;] [-config &lt;file&gt;]
 radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
@@ -134,48 +134,76 @@ radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
     <table class="data">
       <thead><tr><th scope="col">Flag</th><th scope="col">Description</th></tr></thead>
       <tbody>
-        <tr><td>-w</td><td>Write formatted output back to the file (required when formatting more than one file)</td></tr>
         <tr><td>-b</td><td>Create a <code>.bak</code> backup of each file before overwriting</td></tr>
         <tr><td>-check</td><td>Report files that need formatting; exit code <code>1</code> if any do (does not modify files)</td></tr>
         <tr><td>-diff</td><td>Print a unified diff of what formatting would change; exit code <code>1</code> if any (does not modify files)</td></tr>
+        <tr><td>-onParseError &lt;policy&gt;</td><td>What to do when a file cannot be parsed into a compilation unit: <code>skip</code> (default &mdash; leave it unformatted, warn to stderr, keep going) or <code>fail</code> (leave it unformatted and exit non-zero). Applies to formatting, <code>-check</code>, and <code>-diff</code></td></tr>
         <tr><td>-d &lt;directory&gt;</td><td>Format all supported files found in this directory</td></tr>
         <tr><td>-r</td><td>Recurse into subdirectories (with <code>-d</code> or a glob pattern)</td></tr>
         <tr><td>-exclude &lt;patterns&gt;</td><td>Semicolon-separated exclude patterns (file names or wildcards); cumulative across repeated <code>-exclude</code> flags</td></tr>
         <tr><td>-profile &lt;n&gt;</td><td>Base profile: <code>Default</code>, <code>FormatterExe</code>, <code>Embarcadero</code>, or <code>NoOp</code></td></tr>
         <tr><td>-config &lt;file&gt;</td><td>JSON config file, overlaid on the selected profile</td></tr>
         <tr><td>-writeDefaultConfig &lt;file&gt;</td><td>Write the default config JSON to <code>&lt;file&gt;</code> and exit</td></tr>
+        <tr><td>-conditionalMode &lt;mode&gt;</td><td>How <code>{$IFDEF}</code>/<code>{$IF}</code> branches are handled: <code>activeBranch</code> (default), <code>allBranches</code>, or <code>preserveConditionals</code> (see <a href="known-limitations.html">Conditional compilation</a>)</td></tr>
+        <tr><td>-define &lt;NAME[=VALUE]&gt;</td><td>Add a conditional define for <code>activeBranch</code> mode (repeatable)</td></tr>
+        <tr><td>-platform &lt;name&gt;</td><td>Target platform for <code>activeBranch</code> mode (e.g. <code>Win32Target</code>, <code>Win64Target</code>)</td></tr>
+        <tr><td>-compilerVersion &lt;ver&gt;</td><td>Compiler version for <code>activeBranch</code> mode (e.g. <code>"Delphi 12"</code> or <code>VER360</code>)</td></tr>
+        <tr><td>-includePath &lt;dir&gt;</td><td>Include search dir for <code>{$I}</code> under <code>activeBranch</code> mode (repeatable)</td></tr>
+        <tr><td>-buildContext &lt;file&gt;</td><td>Build-context JSON (defines/platform/version/include paths) as the <code>activeBranch</code> base; explicit flags override it</td></tr>
+        <tr><td>-project &lt;file.dproj&gt;</td><td>Derive defines / include paths / platform / compiler version for <code>activeBranch</code> mode from a Delphi project. Mutually exclusive with <code>-buildContext</code></td></tr>
+        <tr><td>-projectConfig &lt;name&gt;</td><td>Project build config to read with <code>-project</code> (e.g. <code>Debug</code>, <code>Release</code>)</td></tr>
+        <tr><td>-projectPlatform &lt;name&gt;</td><td>Project platform to read with <code>-project</code> (e.g. <code>Win32</code>, <code>Win64</code>)</td></tr>
       </tbody>
     </table>
-    <p>Wildcards (<code>*</code>, <code>?</code>) are supported in file arguments.</p>
+    <p>Wildcards (<code>*</code>, <code>?</code>) are supported in file arguments.
+    The conditional flags apply only to <code>activeBranch</code> mode;
+    <code>allBranches</code> and <code>preserveConditionals</code> ignore the
+    build context.</p>
 
     <h2 id="output-safety" class="anchor-heading">Output and safety rules</h2>
-    <div class="note"><strong>Single file, no <code>-w</code>:</strong> the
-    formatted result is written to <strong>stdout</strong> (your original file
-    is untouched).</div>
-    <div class="note"><strong>Multiple files:</strong> <code>-w</code> is
-    required (stdout cannot represent more than one file). This restriction is
-    lifted for <code>-check</code> and <code>-diff</code>.</div>
-    <div class="note"><code>-check</code> and <code>-diff</code> are mutually
-    exclusive, and neither can be combined with <code>-w</code>.</div>
-    <div class="note"><strong>Auto config:</strong> when <code>-config</code> is
-    not given, radFormatter looks for a <code>radFormatter.json</code> next to
-    the executable and uses it if present.</div>
+    <ul>
+      <li><strong>Format in place (default):</strong> every successful run
+      rewrites the source file(s) directly &mdash; a single file, multiple files,
+      and <code>-d</code>/<code>-d -r</code> all format in place with no flag
+      required. Use <code>-b</code> to keep a <code>.bak</code> backup.</li>
+      <li><strong>Inspect without modifying:</strong> use <code>-check</code>
+      (report which files need formatting; exit code <code>1</code> if any) or
+      <code>-diff</code> (print a unified diff). Both are read-only and never
+      write.</li>
+      <li><code>-check</code> and <code>-diff</code> are mutually exclusive.</li>
+      <li><strong>Files radFormatter cannot format are their own category:</strong>
+      one that cannot be parsed into a compilation unit (an incomplete unit, or
+      <code>{$IFDEF}</code> branches that cannot be resolved without a build
+      context) <strong>or</strong> a detected non-Delphi dialect (Free Pascal
+      <code>{$mode}</code> with unsupported constructs) is left
+      <strong>unformatted</strong> and reported to stderr &mdash; never silently
+      counted as &ldquo;already formatted&rdquo;, and never rewritten best-effort.
+      <code>-onParseError skip</code> (default) warns and continues (exit
+      unaffected); <code>-onParseError fail</code> treats it as an error (exit
+      <code>1</code>). Under <code>-check</code>/<code>-diff</code> it is listed
+      as <em>skipped (could not parse)</em> or <em>skipped (unsupported
+      dialect)</em>, distinct from &ldquo;would format&rdquo; and from &ldquo;no
+      change.&rdquo;</li>
+      <li><strong>Auto config:</strong> when <code>-config</code> is not given,
+      radFormatter looks for a <code>radFormatter.json</code> next to the
+      executable and uses it if present.</li>
+    </ul>
 
     <h2 id="examples" class="anchor-heading">Examples</h2>
-    <p>Format a single file to stdout using the Default profile:</p>
+    <p>Format a single file in place using the Default profile:</p>
 <pre class="term"><code><span class="p">&gt;</span> radFormatter source/MyUnit.pas</code></pre>
     <p>Format a whole tree in place:</p>
-<pre class="term"><code><span class="p">&gt;</span> radFormatter -d source -r -w</code></pre>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -d source -r</code></pre>
     <p>Format matching files in place, with backups:</p>
-<pre class="term"><code><span class="p">&gt;</span> radFormatter -d source -r -w -b *.pas</code></pre>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -d source -r -b *.pas</code></pre>
     <p>Check formatting in CI without modifying files:</p>
 <pre class="term"><code><span class="p">&gt;</span> radFormatter -check -config radFormatter.json -d source -r</code></pre>
     <p>Show what would change:</p>
 <pre class="term"><code><span class="p">&gt;</span> radFormatter -diff -config radFormatter.json source/MyUnit.pas</code></pre>
     <p>Format a tree, excluding generated and vendored code:</p>
-<pre class="term"><code><span class="p">&gt;</span> radFormatter -d source -r -w -exclude "generated;vendor;*.g.pas" *.pas</code></pre>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -d source -r -exclude "generated;vendor;*.g.pas" *.pas</code></pre>
     <p>Use a profile with project overrides:</p>
-<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -config team.json -w source/MyUnit.pas</code></pre>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -config team.json source/MyUnit.pas</code></pre>
     <p>Generate a starter configuration:</p>
 <pre class="term"><code><span class="p">&gt;</span> radFormatter -writeDefaultConfig radFormatter.json</code></pre>
 
@@ -193,10 +221,36 @@ radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
         <tr><td><a href="config-options.html#reshaping">reshaping</a></td><td>Per-line reflow of call args, enums, arrays, inheritance; end/else collapsing; delimited group style</td></tr>
         <tr><td><a href="config-options.html#alignment">alignment</a></td><td>Column-align assignments, colons, consts, and trailing comments</td></tr>
         <tr><td><a href="config-options.html#output">output</a></td><td>Line endings, right margin, empty-line control, strict mode</td></tr>
+        <tr><td><a href="config-options.html#conditional">conditional</a></td><td><code>{$IFDEF}</code>/<code>{$IF}</code> handling mode and the <code>activeBranch</code> build context (defines, platform, compiler version, include paths)</td></tr>
       </tbody>
     </table>
     <p>See the <a href="config-options.html">configuration options reference</a>
     for the full option reference, value types, defaults, and a complete example.</p>
+
+    <h3 id="per-directory-config">Per-directory config (<code>radFormatter.json</code>)</h3>
+    <p>When you format a directory tree with <code>-d</code>, radFormatter also
+    looks for a <code>radFormatter.json</code> in each folder it walks. A config
+    found in a folder applies to that folder <strong>and every subfolder beneath
+    it</strong>, on top of your <code>-profile</code> + <code>-config</code> +
+    command-line settings. A <code>radFormatter.json</code> deeper in the tree
+    overlays one higher up, so each project (or subtree) can carry its own
+    settings &mdash; most usefully its own conditional include search path.</p>
+    <ul>
+      <li><strong>Overwrite, not append.</strong> A per-directory config
+      <em>replaces</em> the setting it names (an <code>includePaths</code> array
+      replaces the inherited list; it does not add to it), so a subtree can never
+      inherit a wrong include path. For its subtree a directory
+      <code>includePaths</code> also overrides a command-line
+      <code>-includePath</code>.</li>
+      <li><strong>Relative paths</strong> in a <code>radFormatter.json</code>
+      (like <code>./Source</code>) resolve against that file's own folder.</li>
+      <li><strong>Bounded to the <code>-d</code> tree.</strong> Discovery does not
+      look <em>above</em> the directory you pass to <code>-d</code>. (Formatting a
+      single file does not search parent folders.)</li>
+      <li><strong>Invalid config</strong> (bad JSON or an unsupported schema) is
+      reported as a warning and skipped &mdash; the enclosing configuration stays
+      in effect and the run continues.</li>
+    </ul>
 
     <h2 id="profiles" class="anchor-heading">Profiles</h2>
     <table class="data">

@@ -107,17 +107,17 @@ table.data.plain td:last-child{font-family:var(--body);font-size:.9rem}
 
     <h2 id="using" class="anchor-heading">Using the profile</h2>
     <p>Select it on the CLI:</p>
-<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -w -d source -r</code></pre>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -d source -r</code></pre>
     <p>The profile is a complete starting point. To adjust any individual
     setting, overlay your own JSON with <code>-config</code> &mdash; only the
     keys you list change:</p>
-<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -config team-overrides.json -w source/MyUnit.pas</code></pre>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -profile Embarcadero -config team-overrides.json source/MyUnit.pas</code></pre>
     <p>The companion <code>radFormatter.Embarcadero.json</code> is the full
     profile written out explicitly (equivalent to
     <code>-profile Embarcadero</code>). To adopt it, either save it into your
     project as <code>radFormatter.json</code> (the conventional active-config
     name) or pass it directly:</p>
-<pre class="term"><code><span class="p">&gt;</span> radFormatter -config radFormatter.Embarcadero.json -w -d source -r</code></pre>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter -config radFormatter.Embarcadero.json -d source -r</code></pre>
     <p><a class="dl" href="radFormatter.Embarcadero.json" download>Download radFormatter.Embarcadero.json</a></p>
     <div class="note">Unlike the conservative <strong>Default</strong> profile,
     <code>Embarcadero</code> performs active formatting: it lowercases keywords,
@@ -191,7 +191,7 @@ table.data.plain td:last-child{font-family:var(--body);font-size:.9rem}
       <li><code>casing.numbers</code> is left <code>"asis"</code>: the style
       guide does not mandate a hex or exponent letter case, so radFormatter
       preserves what you wrote.</li>
-      <li><code>output.lineEnding</code> is <code>"auto"</code> (the platform
+      <li><code>output.lineEnding</code> is <code>"platform"</code> (the platform
       default line ending; CRLF on Windows). Set it to <code>"crlf"</code>,
       <code>"lf"</code>, or <code>"cr"</code> if your project standardizes on
       one.</li>
