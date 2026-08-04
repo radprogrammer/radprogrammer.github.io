@@ -59,6 +59,25 @@
 .family .tiles .ghost{width:72px;height:72px;border-radius:16px;border:2px dashed var(--line)}
 .family .lede{max-width:44em;color:var(--steel)}
 
+/* product suite grid — dark band */
+.suite{background:linear-gradient(180deg,var(--ink) 0%,#25323d 100%);color:var(--mist);padding:64px 0}
+.suite h2{color:#fff}
+.suite .lede{max-width:46em;color:#AEC0CD;margin-top:.2em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:30px}
+.pcard{display:flex;flex-direction:column;gap:12px;background:#162028;border:1px solid var(--slate);border-radius:16px;padding:24px 22px;text-decoration:none;transition:transform .12s ease,border-color .12s ease}
+.pcard:hover{transform:translateY(-3px);border-color:var(--rad-red)}
+.pcard.lead{border-color:rgba(225,38,46,.55);box-shadow:inset 0 0 0 1px rgba(225,38,46,.25)}
+.pcard .top{display:flex;align-items:center;gap:13px}
+.ptile{width:50px;height:50px;flex:0 0 50px}
+.ptile img{width:50px;height:50px;border-radius:12px;display:block}
+/* wordmark: only the rad prefix is brand red; the rest is default white */
+.pname{font-family:var(--display);font-weight:800;font-size:1.12rem;letter-spacing:-.01em;color:#fff}
+.pname b{color:var(--rad-red);font-weight:800}
+.pcard p{margin:0;color:#AEC0CD;font-size:.92rem;line-height:1.5}
+.pill{align-self:flex-start;margin-top:2px;font-family:var(--mono);font-size:.7rem;letter-spacing:.03em;padding:.22em .62em;border-radius:999px}
+.pill.avail{background:rgba(64,180,110,.16);color:#7fdca6;border:1px solid rgba(64,180,110,.35)}
+.pill.soon{background:#22303B;color:#8FA3B1;border:1px solid var(--slate)}
+
 @media (max-width:860px){
   .hub-hero .cols{grid-template-columns:1fr}
   .hub-hero .mascot{order:-1}
@@ -91,7 +110,7 @@
       <h1><b>Rad</b> tooling for<br>Delphi developers.</h1>
       <p class="sub">Building the next generation of developer tools for the RAD Studio ecosystem - from formatting and code analysis to exploration and automation.</p>
       <div class="actions">
-        <a class="btn primary" href="radFormatter/index.html">Explore radFormatter</a>
+        <a class="btn primary" href="#tools">Explore the tools</a>
         <a class="btn outline" href="https://github.com/radprogrammer">GitHub</a>
       </div>
     </div>
@@ -101,39 +120,56 @@
   </div>
 </div>
 
-<!-- ================= FEATURED PRODUCT ================= -->
-<section class="featured" id="tools">
+<!-- ================= PRODUCT SUITE ================= -->
+<section class="suite" id="tools">
   <div class="wrap">
-    <div class="card">
-      <img class="tile" src="radFormatter/assets/radformatter-icon.svg" alt="">
-      <div>
-        <h2><b>rad</b>Formatter</h2>
-        <p>A non-destructive Delphi source code formatter. It parses your source
-        into a full syntax tree, formats from real structure, and validates that
-        nothing beyond whitespace and casing ever changes &mdash; fully offline,
-        with your source never leaving your machine.</p>
-        <p class="meta"><span>IDE plugin</span><span>CLI</span><span>CST-aware</span><span>68 options</span><span>CI-ready</span><span>offline</span></p>
-      </div>
-      <div class="go">
-        <a class="btn primary" href="radFormatter/index.html">Learn more</a>
-        <a class="btn ghost" href="radFormatter/docs/radFormatter-cli.html">Docs</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= FAMILY ================= -->
-<section class="family">
-  <div class="wrap">
-    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>One family, one standard</h2>
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>One suite, one standard</h2>
     <p class="lede">Every RAD Programmer tool is built to the same engineering
     bar: validated output, predictable behavior, no surprises in your source
-    tree &mdash; and nothing ever phoned home. radFormatter is the first; more
-    tools for code analysis, exploration, and automation are in development.</p>
-    <div class="tiles">
-      <a href="radFormatter/index.html" aria-label="radFormatter"><img src="radFormatter/assets/radformatter-icon.svg" alt="radFormatter"></a>
-      <div class="ghost" aria-hidden="true"></div>
-      <div class="ghost" aria-hidden="true"></div>
+    tree &mdash; and nothing ever phoned home. radFormatter ships today; the
+    rest of the suite is in active development.</p>
+
+    <div class="grid">
+
+      <a class="pcard lead" href="radFormatter/index.html">
+        <div class="top">
+          <span class="ptile"><img src="radFormatter/assets/radformatter-icon.svg" alt=""></span>
+          <span class="pname"><b>rad</b>Formatter</span>
+        </div>
+        <p>Non-destructive, CST-aware source formatting. Reformats from a full
+        syntax tree and proves nothing but whitespace and casing changed.</p>
+        <span class="pill avail">Available &middot; Alpha</span>
+      </a>
+
+      <a class="pcard" href="#tools" aria-disabled="true">
+        <div class="top">
+          <span class="ptile"><img src="assets/radcodescanner-icon.svg" alt=""></span>
+          <span class="pname"><b>rad</b>CodeScanner</span>
+        </div>
+        <p>Static analysis and configurable lint rules that read the same syntax
+        tree &mdash; consistent findings, zero false rewrites.</p>
+        <span class="pill soon">In development</span>
+      </a>
+
+      <a class="pcard" href="#tools" aria-disabled="true">
+        <div class="top">
+          <span class="ptile"><img src="assets/radcodecoverage-icon.svg" alt=""></span>
+          <span class="pname"><b>rad</b>CodeCoverage</span>
+        </div>
+        <p>Modern, dependency-free Delphi code coverage tool wired for CI.</p>
+        <span class="pill soon">In development</span>
+      </a>
+
+      <a class="pcard" href="#tools" aria-disabled="true">
+        <div class="top">
+          <span class="ptile"><img src="assets/radcallgraph-icon.svg" alt=""></span>
+          <span class="pname"><b>rad</b>CallGraph</span>
+        </div>
+        <p>Trace call relationships across an entire project and see how a change
+        ripples through the codebase before you make it.</p>
+        <span class="pill soon">In development</span>
+      </a>
+
     </div>
   </div>
 </section>
