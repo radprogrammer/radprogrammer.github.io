@@ -222,11 +222,21 @@
         },
         "directives": {
           "type": "string",
-          "description": "Indentation of compiler directives.",
+          "description": "Compiler-directive indentation: asIs preserves the source indent (Default); column0 forces the left margin (FormatterExe/Embarcadero); structural indents to the surrounding depth.",
           "enum": [
             "asIs",
             "column0",
             "structural"
+          ]
+        },
+        "labelIndent": {
+          "type": "string",
+          "description": "Indentation of a stand-alone goto-label line (a label alone on its line): bodyLevel keeps it at the statement column (Default); blockOpener outdents it one level to its enclosing block-opener column (Embarcadero); column0 forces the left margin; asIs preserves the source column. A same-line label: stmt; is unaffected.",
+          "enum": [
+            "bodyLevel",
+            "blockOpener",
+            "column0",
+            "asIs"
           ]
         },
         "continuationSize": {
@@ -291,6 +301,15 @@
         "keepUser": {
           "type": "boolean",
           "description": "Preserve user line breaks where allowed."
+        },
+        "sectionKeywordJoin": {
+          "type": "string",
+          "description": "Placement of a section introducer (type/const/var) that follows a visibility specifier (private type, strict private type): preserve keeps the author's layout (never splits an inline pair, never joins a broken one); join collapses the pair onto one line; break forces them onto separate lines. The atomic compound directives (strict private, class var/class function/...) stay intact regardless. An intervening comment leaves the pair as authored under every mode.",
+          "enum": [
+            "preserve",
+            "join",
+            "break"
+          ]
         },
         "beforeSingleInstr": {
           "description": "Break before a single controlled instruction.",
@@ -426,6 +445,10 @@
             "cr",
             "detect"
           ]
+        },
+        "trimTrailingWhitespace": {
+          "type": "boolean",
+          "description": "When true (Default), end-of-line whitespace is removed (each line is rebuilt from its tokens). When false, a line's trailing whitespace is preserved verbatim -- both the run after the last token and a whitespace-only blank line's spaces. The NoOp profile sets this false for a true byte-for-byte pass-through."
         },
         "rightMargin": {
           "type": "integer",

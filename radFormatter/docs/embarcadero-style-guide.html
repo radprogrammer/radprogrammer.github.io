@@ -122,9 +122,13 @@ table.data.plain td:last-child{font-family:var(--body);font-size:.9rem}
     <p><a class="dl" href="radFormatter.Embarcadero.json" download>Download radFormatter.Embarcadero.json</a></p>
     <div class="note">Unlike the conservative <strong>Default</strong> profile,
     <code>Embarcadero</code> performs active formatting: it lowercases keywords,
-    normalizes spacing, reflows <code>begin</code>/<code>end</code> and control
-    bodies (<code>lineBreaks.keepUser</code> is <code>false</code>), and wraps
-    at a 160-column margin.</div>
+    normalizes spacing, puts <code>begin</code>/<code>end</code> and
+    control-statement bodies on their own lines, and wraps at a 160-column
+    margin. It <strong>preserves your existing line breaks</strong>
+    (<code>lineBreaks.keepUser</code> is <code>true</code>) &mdash; the style
+    guide makes no call on un-wrapping &mdash; so it adds the structural breaks
+    above and wraps over-margin lines, but never collapses or reflows layout you
+    already chose.</div>
     <p>See the <a href="config-options.html">configuration options reference</a>
     for the meaning of every key.</p>
 
@@ -157,7 +161,7 @@ table.data.plain td:last-child{font-family:var(--body);font-size:.9rem}
     </table>
 
     <h2 id="structural" class="anchor-heading">Handled automatically by the CST indent engine</h2>
-    <p>Several style-guide layout rules need no option &mdash; the
+    <p>Several style-guide layout rules need no option in v2 &mdash; the
     concrete-syntax indent engine produces them structurally:</p>
     <ul>
       <li>Unit-level keywords (<code>unit</code>, <code>uses</code>,
@@ -195,7 +199,8 @@ table.data.plain td:last-child{font-family:var(--body);font-size:.9rem}
       <li><code>output.lineEnding</code> is <code>"platform"</code> (the platform
       default line ending; CRLF on Windows). Set it to <code>"crlf"</code>,
       <code>"lf"</code>, or <code>"cr"</code> if your project standardizes on
-      one.</li>
+      one, or <code>"detect"</code> to preserve each file's existing
+      convention.</li>
       <li>The profile leaves all <code>reshaping.*</code> options off, so it
       will not force call arguments, enums, arrays, or inheritance lists onto
       separate lines. The 160-column <code>rightMargin</code> still wraps

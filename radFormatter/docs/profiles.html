@@ -113,7 +113,7 @@ table.glance td:first-child,table.glance th:first-child{text-align:left;font-fam
     <table class="data glance">
       <thead><tr><th scope="col">Setting</th><th scope="col">Default</th><th scope="col">FormatterExe</th><th scope="col">Embarcadero</th><th scope="col">NoOp</th></tr></thead>
       <tbody>
-        <tr><td>Keep user line breaks</td><td>yes</td><td>no</td><td>no</td><td>yes</td></tr>
+        <tr><td>Keep user line breaks</td><td>yes</td><td>no</td><td>yes</td><td>yes</td></tr>
         <tr><td>Keyword casing</td><td>as-is</td><td>as-is</td><td>lower</td><td>as-is</td></tr>
         <tr><td>Directive casing</td><td>as-is</td><td>upper</td><td>lower</td><td>as-is</td></tr>
         <tr><td>Number casing</td><td>as-is</td><td>upper</td><td>as-is</td><td>as-is</td></tr>
@@ -192,11 +192,15 @@ table.glance td:first-child,table.glance th:first-child{text-align:left;font-fam
 <span class="k">end</span>.</code></pre>
 
     <h3 id="embarcadero" class="anchor-heading"><code>Embarcadero</code></h3>
-    <p>The Embarcadero Delphi style guide. Everything FormatterExe does, plus
-    <strong>lowercase keywords and directives</strong> (<code>if</code> /
-    <code>then</code>), one <code>uses</code> entry per line, one statement per
-    line (a break after every statement-terminating semicolon), and a 160-column
-    right margin:</p>
+    <p>The Embarcadero Delphi style guide. Like FormatterExe &mdash; active
+    spacing, <code>begin</code>-style control bodies, blank lines around
+    sections &mdash; plus <strong>lowercase keywords and directives</strong>
+    (<code>if</code> / <code>then</code>), one <code>uses</code> entry per line,
+    one statement per line (a break after every statement-terminating
+    semicolon), and a 160-column right margin. Unlike FormatterExe, Embarcadero
+    <strong>keeps your existing line breaks</strong> (the style guide makes no
+    call on un-wrapping), so only the structural forced breaks above reshape the
+    code:</p>
 <pre class="term"><code><span class="k">unit</span> Demo;
 
 <span class="k">interface</span>

@@ -108,7 +108,7 @@ pre.term{margin:16px 0 24px}
     <p><strong>CST-aware.</strong> Indentation, <code>case</code> structure,
     generic parameters, and nested control flow are driven by real parse data,
     not line heuristics.</p>
-    <p><strong>65 configuration options</strong> across eight sections (casing,
+    <p><strong>68 configuration options</strong> across eight sections (casing,
     spacing, indent, line breaks, reshaping, alignment, output, conditional). Commit one
     <code>radFormatter.json</code> and every developer and CI job formats
     identically. See the
@@ -124,10 +124,10 @@ pre.term{margin:16px 0 24px}
     <p class="filetypes"><span>.pas</span><span>.dpr</span><span>.dpk</span><span>.dpkw</span><span>.inc</span></p>
 
     <h2 id="usage" class="anchor-heading">Usage</h2>
-<pre class="term"><code>radFormatter &lt;file|pattern&gt; [&lt;file|pattern&gt; ...] [-b] [-profile &lt;n&gt;] [-config &lt;file&gt;]
-radFormatter -d &lt;directory&gt; [-r] [-b] [-profile &lt;n&gt;] [-config &lt;file&gt;]
-radFormatter &lt;file|pattern&gt; [...] -check [-profile &lt;n&gt;] [-config &lt;file&gt;]
-radFormatter &lt;file|pattern&gt; [...] -diff  [-profile &lt;n&gt;] [-config &lt;file&gt;]
+<pre class="term"><code>radFormatter &lt;file|pattern&gt; [&lt;file|pattern&gt; ...] [-b] [-profile &lt;name&gt;] [-config &lt;file&gt;]
+radFormatter -d &lt;directory&gt; [-r] [-b] [-profile &lt;name&gt;] [-config &lt;file&gt;]
+radFormatter &lt;file|pattern&gt; [...] -check [-profile &lt;name&gt;] [-config &lt;file&gt;]
+radFormatter &lt;file|pattern&gt; [...] -diff  [-profile &lt;name&gt;] [-config &lt;file&gt;]
 radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
     <p>Running with no arguments prints usage.</p>
 
@@ -142,7 +142,7 @@ radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
         <tr><td>-d &lt;directory&gt;</td><td>Format all supported files found in this directory</td></tr>
         <tr><td>-r</td><td>Recurse into subdirectories (with <code>-d</code> or a glob pattern)</td></tr>
         <tr><td>-exclude &lt;patterns&gt;</td><td>Semicolon-separated exclude patterns (file names or wildcards); cumulative across repeated <code>-exclude</code> flags</td></tr>
-        <tr><td>-profile &lt;n&gt;</td><td>Base profile: <code>Default</code>, <code>FormatterExe</code>, <code>Embarcadero</code>, or <code>NoOp</code></td></tr>
+        <tr><td>-profile &lt;name&gt;</td><td>Base profile: <code>Default</code>, <code>FormatterExe</code>, <code>Embarcadero</code>, or <code>NoOp</code></td></tr>
         <tr><td>-config &lt;file&gt;</td><td>JSON config file, overlaid on the selected profile</td></tr>
         <tr><td>-writeDefaultConfig &lt;file&gt;</td><td>Write the default config JSON to <code>&lt;file&gt;</code> and exit</td></tr>
         <tr><td>-conditionalMode &lt;mode&gt;</td><td>How <code>{$IFDEF}</code>/<code>{$IF}</code> branches are handled: <code>activeBranch</code> (default), <code>allBranches</code>, or <code>preserveConditionals</code> (see <a href="conditional-compilation.html">Conditional compilation</a>)</td></tr>
@@ -300,6 +300,10 @@ radFormatter -check -config radFormatter.json -d source -r</code></pre>
     <p>Commit <code>radFormatter.json</code> to your repository. Every developer
     and CI job uses the same configuration &mdash; formatting disputes are
     settled once, in the config file.</p>
+
+    <p class="crumb" style="margin:3em 0 0;text-align:center">
+      <a href="https://github.com/radprogrammer/radFormatter/releases">CLI reference as of radFormatter v2.7.963 (Alpha) &mdash; see release notes</a>
+    </p>
   </main>
 </div>
 

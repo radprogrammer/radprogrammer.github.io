@@ -111,10 +111,10 @@ section.block.alt{background:#fff;border-top:1px solid var(--line);border-bottom
     editable source on the left, the formatted result on the right. Change any
     option and the preview reformats instantly, so you can watch exactly what
     each setting does &mdash; across tabs for casing, spacing, indent, line
-    breaks, reshaping, alignment, and output.</p>
+    breaks, reshaping, alignment, output, and parsing.</p>
     <div class="shotwrap">
       <img class="shot" src="assets/ide-config-editor.png" width="1286" height="693"
-        alt="RAD Formatter Options editor: tabs for Casing, Spacing, Indent, LineBreaks, Reshaping, Alignment and Output on the left with spacing dropdowns, and a split-screen source view showing editable Delphi source beside its formatted result, with a Format button and SyntaxHighlight checkbox">
+        alt="RAD Formatter Options editor: tabs for Casing, Spacing, Indent, LineBreaks, Reshaping, Alignment, Output and Parsing on the left with spacing dropdowns, and a split-screen source view showing editable Delphi source beside its formatted result, with a Format button and SyntaxHighlight checkbox">
       <p class="caption">Live preview: edit source on the left, see the formatted result on the right</p>
     </div>
     <ul class="checks">
@@ -138,6 +138,12 @@ section.block.alt{background:#fff;border-top:1px solid var(--line);border-bottom
     editor buffer, and the plugin makes no network connections of any kind &mdash;
     no telemetry, no license phone-home. The plugin and its installer are
     code-signed.</p>
+    <p>If a unit cannot be parsed &mdash; incomplete code, a non-Delphi dialect
+    (Free Pascal <code>{$mode}</code> with unsupported constructs), or an
+    unresolved <code>{$I}</code> include &mdash; <span class="kbd">Ctrl+D</span>
+    leaves the buffer <strong>unchanged</strong> and explains why in a dialog and
+    the <strong>Messages</strong> view, instead of silently doing nothing or
+    rewriting code it does not understand.</p>
   </div>
 </section>
 

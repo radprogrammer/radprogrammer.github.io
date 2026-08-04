@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Known limitations - radFormatter</title>
-<meta name="description" content="Known constraints and deliberate limits for radFormatter v2: default preserve-source behavior, tab handling, right-margin wrap coverage, conditional compilation, and comment indentation.">
+<meta name="description" content="Known constraints and deliberate limits for radFormatter v2: formatter scope, preserve-source behavior, tab handling, right-margin wrap coverage, conditional compilation, unsupported dialects, comment indentation, and safety guarantees.">
 <link rel="canonical" href="https://radprogrammer.com/radFormatter/docs/known-limitations.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RAD Programmer">
 <meta property="og:title" content="Known limitations - radFormatter">
-<meta property="og:description" content="Known constraints and deliberate limits for radFormatter v2: default preserve-source behavior, tab handling, right-margin wrap coverage, conditional compilation, and comment indentation.">
+<meta property="og:description" content="Known constraints and deliberate limits for radFormatter v2: formatter scope, preserve-source behavior, tab handling, right-margin wrap coverage, conditional compilation, unsupported dialects, comment indentation, and safety guarantees.">
 <meta property="og:url" content="https://radprogrammer.com/radFormatter/docs/known-limitations.html">
 <meta property="og:image" content="https://radprogrammer.com/radFormatter/assets/og-radformatter.png">
 <meta property="og:image:width" content="1200">
@@ -68,12 +68,15 @@ table.data td:first-child{white-space:normal}
   <aside class="toc" aria-label="On this page">
     <h2>On this page</h2>
     <ul>
+      <li><a href="#scope">What the formatter changes</a></li>
       <li><a href="#asis">AsIs = preserve the source</a></li>
       <li><a href="#tabs">Tabs and indent style</a></li>
       <li><a href="#conditional">Conditional compilation</a></li>
+      <li><a href="#dialects">Delphi only (FPC / other dialects)</a></li>
       <li><a href="#right-margin">Right margin scope</a></li>
       <li><a href="#comments">Comment indentation</a></li>
       <li><a href="#alignment">Alignment</a></li>
+      <li><a href="#safety">Safety</a></li>
     </ul>
     <h2>Documentation</h2>
     <ul>
@@ -93,6 +96,20 @@ table.data td:first-child{white-space:normal}
     Some of these are engineering trade-offs; others are principled decisions
     about what a layout formatter should and should not do. They are documented
     here so behavior is predictable rather than surprising.</p>
+
+    <h2 id="scope" class="anchor-heading">What the formatter changes &mdash; and what it does not</h2>
+    <p>radFormatter is a <strong>layout</strong> tool. It adjusts whitespace,
+    line breaks, indentation, and casing. It does <strong>not</strong> change
+    what your code means:</p>
+    <ul>
+      <li>It does not rename identifiers or enforce naming conventions (type
+      <code>T</code>, interface <code>I</code>, exception <code>E</code>
+      prefixes, canonical symbol casing). That is a linter's job, not a
+      formatter's.</li>
+      <li>It does not add, remove, or reorder code.</li>
+    </ul>
+    <p>If you are looking for naming-convention enforcement or refactoring, that
+    is outside the scope of a formatter.</p>
 
     <h2 id="asis" class="anchor-heading">AsIs = preserve the source</h2>
     <p><code>as-is</code> for any spacing option means <em>do not alter the
@@ -136,6 +153,21 @@ table.data td:first-child{white-space:normal}
     <code>preserveConditionals</code>), the <code>activeBranch</code> build
     context, and worked examples.</p>
 
+    <h2 id="dialects" class="anchor-heading">Delphi only (FPC and other dialects)</h2>
+    <p>radFormatter targets <strong>Delphi</strong>. A source in another dialect
+    &mdash; most commonly Free Pascal with <code>{$mode objfpc}</code> /
+    <code>{$modeswitch ...}</code> and constructs Delphi does not have (operator
+    overloading, <code>generic</code> / <code>specialize</code>, and similar)
+    &mdash; is <strong>not supported</strong>. When radFormatter detects such a
+    dialect it <strong>leaves the file unformatted</strong> and reports it,
+    rather than producing a possibly-wrong best-effort layout. It is treated
+    exactly like a file that cannot be parsed: the CLI honors
+    <code>-onParseError</code> (<code>skip</code> warns, <code>fail</code> exits
+    non-zero) and lists it as <em>skipped (unsupported dialect)</em>; the IDE
+    leaves the buffer unchanged and shows why. If a construct is valid
+    <strong>newer Delphi</strong> that this build's parser does not yet
+    recognize, update radFormatter so the bundled parser catches up.</p>
+
     <h2 id="right-margin" class="anchor-heading">Right margin scope</h2>
     <p>Right-margin wrapping works by activating declared soft break points, so
     coverage depends on which constructs declare them. Currently supported wrap
@@ -145,7 +177,7 @@ table.data td:first-child{white-space:normal}
       <li>Formal parameter lists</li>
       <li><code>uses</code> clause commas</li>
       <li>Binary expression operators</li>
-      <li>Record initializer fields</li>
+      <li>Record constructor / initializer fields</li>
       <li>Class/interface inheritance lists</li>
       <li>Type member declaration boundaries</li>
       <li>Enum values</li>
@@ -214,6 +246,19 @@ table.data td:first-child{white-space:normal}
     interacts correctly with right-margin wrapping &mdash; alignment is computed
     before wrapping, and wrapping triggers indent recomputation but not
     alignment recomputation.</p>
+
+    <h2 id="safety" class="anchor-heading">Safety</h2>
+    <p>If the formatter ever produces output that does not match the input
+    token-for-token (aside from the whitespace and casing it is allowed to
+    change), it <strong>declines and returns your source unchanged</strong>
+    rather than emit a corrupted result. If you see a validation error like this,
+    it is a bug we want reported &mdash; your code is safe, but the formatter
+    should have handled it.</p>
+
+    <p style="color:var(--steel);font-style:italic;margin-top:2.6em">Applies to
+    radFormatter v2 (alpha). This list grows and shrinks as the formatter
+    evolves; when in doubt about whether something is a limitation or a bug,
+    report it.</p>
   </main>
 </div>
 

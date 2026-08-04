@@ -1,4 +1,5 @@
 {
+  "schemaVersion": "3.4",
   "casing": {
     "keywords": "lower",
     "numbers": "asis",
@@ -25,6 +26,7 @@
     "tabWidth": 0,
     "style": "spaces",
     "directives": "column0",
+    "labelIndent": "blockOpener",
     "continuationSize": 2,
     "anchorBased": false,
     "maxColumn": 0,
@@ -34,7 +36,8 @@
     "caseElseAlignment": "withLabels"
   },
   "lineBreaks": {
-    "keepUser": false,
+    "keepUser": true,
+    "sectionKeywordJoin": "join",
     "beforeSingleInstr": "yes",
     "beforeBegin": "yes",
     "betweenElseAndIf": false,
