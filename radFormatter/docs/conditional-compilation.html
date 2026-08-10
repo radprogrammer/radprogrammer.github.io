@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1F2A33">
 <title>Conditional compilation - radFormatter</title>
 <meta name="description" content="How radFormatter formats Delphi code guarded by {$IFDEF}/{$IF} directives: why it is hard, the three conditional modes (activeBranch, allBranches, preserveConditionals), the activeBranch build context, and deriving context from a .dproj project.">
 <link rel="canonical" href="https://radprogrammer.com/radFormatter/docs/conditional-compilation.html">
@@ -25,7 +27,7 @@
 .toc h2{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);margin-bottom:.8em}
 .toc ul{list-style:none;margin:0 0 1.6em;padding:0}
 .toc li{margin:0 0 .45em}
-.toc a{text-decoration:none;color:var(--ink)}
+.toc a{text-decoration:none;color:var(--fg)}
 .toc a:hover{color:var(--rad-red)}
 main h1{margin-bottom:.3em}
 main h2{font-size:1.35rem;margin-top:2.2em;padding-top:.6em}
@@ -35,8 +37,8 @@ main h3 code{background:none;padding:0}
 .crumb{font-family:var(--mono);font-size:.78rem;color:var(--steel);margin:0 0 1.4em}
 .crumb a{color:var(--steel);text-decoration:none}
 .crumb a:hover{color:var(--rad-red)}
-.note{border-left:4px solid var(--sky);background:#fff;border-radius:0 10px 10px 0;padding:14px 18px;margin:20px 0;color:var(--steel);font-size:.93rem}
-.note strong{color:var(--ink)}
+.note{border-left:4px solid var(--sky);background:var(--surface);border-radius:0 10px 10px 0;padding:14px 18px;margin:20px 0;color:var(--steel);font-size:.93rem}
+.note strong{color:var(--fg)}
 .lede{font-size:1.08rem;color:var(--steel);max-width:44em}
 pre.term{margin:8px 0 8px}
 .example{margin:20px 0 26px}
@@ -48,7 +50,7 @@ pre.term{margin:8px 0 8px}
 .anchor-heading{scroll-margin-top:24px}
 @media (max-width:860px){
   .docs{grid-template-columns:1fr;gap:0}
-  .toc{position:static;border:1px solid var(--line);background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:28px}
+  .toc{position:static;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:18px 20px;margin-bottom:28px}
 }
 </style>
 </head>

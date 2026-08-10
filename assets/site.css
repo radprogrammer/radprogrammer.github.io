@@ -7,6 +7,7 @@
 
 /* radProgrammer shared site styles */
 :root{
+  color-scheme:light dark;  /* themes UA controls/scrollbars; signals browsers not to auto-invert */
   --ink:#1F2A33;        /* brand tile */
   --slate:#3A4A57;      /* alignment guide */
   --steel:#42535F;
@@ -18,6 +19,34 @@
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
   --display:"Montserrat",system-ui,sans-serif;
   --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+
+  /* Semantic surface/content tokens - the theming layer.
+     Light-shell rules reference THESE; the dark block below reassigns them.
+     The intentional dark bands (header/footer/hero/featured/suite/safety/term)
+     keep their own hardcoded palette and are unaffected by the theme switch. */
+  --bg:var(--paper);        /* page background            */
+  --fg:var(--ink);          /* body text                  */
+  --muted:var(--steel);     /* secondary/body-copy text   */
+  --surface:#fff;           /* raised light cards, tables */
+  --surface-2:var(--paper); /* alt sections, table heads  */
+  --border:var(--line);     /* light-shell borders        */
+  --code-bg:var(--mist);    /* inline <code> background    */
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0E141A;           /* darker than the #1F2A33 bands so bands read as raised */
+    --fg:#E7EDF2;
+    --muted:#AEC0CD;
+    --surface:#162028;      /* reuses the existing dark-card hex for consistency */
+    --surface-2:#1B2731;
+    --border:#2E3B46;
+    --code-bg:#22303B;
+    --sky:#5BB6E5;          /* lighten links/accents for AA contrast on dark */
+    --line:#2E3B46;         /* light-band separators that survive into dark   */
+    --paper:#1B2731;        /* legacy references that mean "light surface"     */
+    --mist:#E7EDF2;         /* stays light: it is text-on-dark, not a surface  */
+    --steel:#AEC0CD;        /* secondary text: lift to readable light-gray    */
+  }
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -25,7 +54,7 @@ html{scroll-behavior:smooth}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
-body{margin:0;font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+body{margin:0;font-family:var(--body);color:var(--fg);background:var(--bg);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
 a{color:var(--sky)}
 a:focus-visible,button:focus-visible{outline:3px solid var(--sky);outline-offset:2px;border-radius:4px}
 img{max-width:100%;height:auto}
@@ -36,7 +65,7 @@ h2{font-size:1.7rem;letter-spacing:-.01em}
 h3{font-size:1.05rem}
 p{margin:.35em 0 1em}
 code,pre{font-family:var(--mono)}
-code{background:var(--mist);padding:.1em .35em;border-radius:4px;font-size:.9em}
+code{background:var(--code-bg);padding:.1em .35em;border-radius:4px;font-size:.9em}
 pre code{background:none;padding:0;font-size:inherit}
 
 /* stair-step section marker - echoes the icon glyph */
@@ -70,9 +99,9 @@ header.site{background:var(--ink);color:var(--mist)}
 .term .p{color:var(--rad-red);font-weight:600}
 
 /* data tables */
-table.data{width:100%;border-collapse:collapse;margin:18px 0 26px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.9rem}
-table.data th,table.data td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
-table.data th{font-family:var(--display);font-size:.82rem;background:var(--paper)}
+table.data{width:100%;border-collapse:collapse;margin:18px 0 26px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:.9rem}
+table.data th,table.data td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+table.data th{font-family:var(--display);font-size:.82rem;background:var(--surface-2)}
 table.data tr:last-child td{border-bottom:none}
 table.data td:first-child{font-family:var(--mono);font-size:.84rem;white-space:nowrap}
 @media (max-width:860px){
