@@ -6,12 +6,12 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#1F2A33">
 <title>Configuration options - radFormatter</title>
-<meta name="description" content="Complete reference for all 68 radFormatter configuration options across eight sections: casing, spacing, indent, lineBreaks, reshaping, alignment, output, and conditional.">
+<meta name="description" content="Complete reference for all 72 radFormatter configuration options across nine sections: casing, spacing, indent, lineBreaks, reshaping, alignment, output, conditional, and input.">
 <link rel="canonical" href="https://radprogrammer.com/radFormatter/docs/config-options.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RAD Programmer">
 <meta property="og:title" content="Configuration options - radFormatter">
-<meta property="og:description" content="Complete reference for all 68 radFormatter configuration options across eight sections: casing, spacing, indent, lineBreaks, reshaping, alignment, output, and conditional.">
+<meta property="og:description" content="Complete reference for all 72 radFormatter configuration options across nine sections: casing, spacing, indent, lineBreaks, reshaping, alignment, output, conditional, and input.">
 <meta property="og:url" content="https://radprogrammer.com/radFormatter/docs/config-options.html">
 <meta property="og:image" content="https://radprogrammer.com/radFormatter/assets/og-radformatter.png">
 <meta property="og:image:width" content="1200">
@@ -79,6 +79,7 @@ pre.term{margin:16px 0 24px}
       <li><a class="sect" href="#alignment">alignment</a></li>
       <li><a class="sect" href="#output">output</a></li>
       <li><a class="sect" href="#conditional">conditional</a></li>
+      <li><a class="sect" href="#input">input</a></li>
     </ul>
     <ul>
       <li><a href="#default-config">Full default configuration</a></li>
@@ -105,10 +106,10 @@ pre.term{margin:16px 0 24px}
     applies the chosen profile's defaults &mdash; with no profile selected, that
     is the built-in <strong>Default</strong> profile.</p>
 
-    <p>There are <strong>68 options across eight sections</strong>:
+    <p>There are <strong>72 options across nine sections</strong>:
     <code>casing</code>, <code>spacing</code>, <code>indent</code>,
     <code>lineBreaks</code>, <code>reshaping</code>, <code>alignment</code>,
-    <code>output</code>, and <code>conditional</code>.</p>
+    <code>output</code>, <code>conditional</code>, and <code>input</code>.</p>
 
     <p>Generate a fully populated config with the current defaults using the CLI:</p>
 <pre class="term"><code><span class="p">&gt;</span> radFormatter -writeDefaultConfig radFormatter.json</code></pre>
@@ -280,11 +281,36 @@ pre.term{margin:16px 0 24px}
     four context values above entirely &mdash; the config context is the
     no-project fallback only.</div>
 
+    <h2 id="input" class="anchor-heading"><code>input</code></h2>
+    <p>The <strong>source-read</strong> policy: how a file's encoding is resolved
+    before formatting. These keys correlate 1:1 with the CLI encoding flags and use
+    the same <code>utf8</code> / <code>utf16le</code> / <code>utf16be</code> /
+    <code>cpNNNN</code> / <code>NNNN</code> grammar, so a value set here is the
+    committed, per-directory equivalent of the flag (a mixed monorepo can declare
+    each tree's code page in its own <code>radFormatter.json</code>). Defaults
+    reproduce the known-encoding-only default, so an absent <code>input</code>
+    section changes nothing. See the
+    <a href="radFormatter-cli.html#source-encoding">Source encoding</a> section for
+    the model. Precedence: built-in default &lt; <code>input</code> config &lt;
+    CLI flag.</p>
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>input.assumeEncoding</td><td>string</td><td>""</td><td>Assume this encoding for a non-BOM/non-ASCII file when it validly decodes (the CLI <code>--assume-encoding</code>). Empty keeps the built-in UTF-8 assumption. Declare a legacy tree with, e.g., <code>"cp1252"</code></td></tr>
+        <tr><td>input.fallback</td><td>string array</td><td>[]</td><td>Encodings tried when the assumption fails (the CLI <code>-fallback</code>). <strong>Requires <code>assumeEncoding</code>.</strong> Always evaluated strict: an ambiguous file fails rather than being decoded by a Western catch-all</td></tr>
+        <tr><td>input.heuristic</td><td>bool</td><td>true</td><td>When <code>false</code>, disables the BOM-less UTF-16 NUL-pattern probe (the CLI <code>--no-heuristic</code>)</td></tr>
+      </tbody>
+    </table>
+    <div class="note">A <code>fallback</code> without <code>assumeEncoding</code>, or
+    an unparseable encoding token, makes the config <strong>refused</strong> (the
+    run reports the error and does not format), mirroring the CLI's usage-error
+    handling.</div>
+
     <h2 id="default-config" class="anchor-heading">Full default configuration</h2>
     <p>This is exactly what <code>-writeDefaultConfig</code> emits (the
     <strong>Default</strong> profile).</p>
 <pre class="term"><code>{
-  <span class="j">"schemaVersion"</span>: "3.4",
+  <span class="j">"schemaVersion"</span>: "3.5",
   <span class="j">"casing"</span>: {
     <span class="j">"keywords"</span>: "asis",
     <span class="j">"numbers"</span>: "asis",
@@ -370,6 +396,11 @@ pre.term{margin:16px 0 24px}
     <span class="j">"platform"</span>: "",
     <span class="j">"defines"</span>: [],
     <span class="j">"includePaths"</span>: []
+  },
+  <span class="j">"input"</span>: {
+    <span class="j">"assumeEncoding"</span>: "",
+    <span class="j">"fallback"</span>: [],
+    <span class="j">"heuristic"</span>: true
   }
 }</code></pre>
 
@@ -435,7 +466,7 @@ pre.term{margin:16px 0 24px}
     </table>
 
     <p class="crumb" style="margin:3em 0 0;text-align:center">
-      <a href="https://github.com/radprogrammer/radFormatter/releases">Configuration options as of radFormatter v2.7.963 (Alpha) &middot; config schema 3.4 &mdash; see release notes</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">Configuration options as of radFormatter v2.7.986 (Alpha) &middot; config schema 3.5 &mdash; see release notes</a>
     </p>
 
   </main>

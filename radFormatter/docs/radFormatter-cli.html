@@ -74,6 +74,7 @@ pre.term{margin:16px 0 24px}
       <li><a href="#usage">Usage</a></li>
       <li><a href="#options">Options</a></li>
       <li><a href="#output-safety">Output and safety rules</a></li>
+      <li><a href="#source-encoding">Source encoding</a></li>
       <li><a href="#examples">Examples</a></li>
       <li><a href="#configuration">Configuration</a></li>
       <li><a href="#profiles">Profiles</a></li>
@@ -110,8 +111,8 @@ pre.term{margin:16px 0 24px}
     <p><strong>CST-aware.</strong> Indentation, <code>case</code> structure,
     generic parameters, and nested control flow are driven by real parse data,
     not line heuristics.</p>
-    <p><strong>68 configuration options</strong> across eight sections (casing,
-    spacing, indent, line breaks, reshaping, alignment, output, conditional). Commit one
+    <p><strong>72 configuration options</strong> across nine sections (casing,
+    spacing, indent, line breaks, reshaping, alignment, output, conditional, input). Commit one
     <code>radFormatter.json</code> and every developer and CI job formats
     identically. See the
     <a href="config-options.html">configuration options reference</a>.</p>
@@ -131,22 +132,76 @@ radFormatter -d &lt;directory&gt; [-r] [-b] [-profile &lt;name&gt;] [-config &lt
 radFormatter &lt;file|pattern&gt; [...] -check [-profile &lt;name&gt;] [-config &lt;file&gt;]
 radFormatter &lt;file|pattern&gt; [...] -diff  [-profile &lt;name&gt;] [-config &lt;file&gt;]
 radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
-    <p>Running with no arguments prints usage.</p>
+    <p>Running with no arguments prints usage (exit <code>2</code>). An
+    unrecognized <code>-</code>/<code>--</code> token is a usage error
+    (<code>Error: unknown option "..."</code>, exit <code>2</code>) &mdash; a
+    mistyped flag is never silently treated as a filename.</p>
 
     <h2 id="options" class="anchor-heading">Options</h2>
+    <p>Grouped to match the <code>radFormatter --help</code> sections.</p>
+
+    <h3 id="opt-general">General</h3>
+    <table class="data">
+      <thead><tr><th scope="col">Flag</th><th scope="col">Description</th></tr></thead>
+      <tbody>
+        <tr><td>--help, -help, -h, -?</td><td>Print the usage screen and exit <code>0</code> (wins over every other argument)</td></tr>
+        <tr><td>--version</td><td>Print the version line and exit <code>0</code> (long form only &mdash; <code>-v</code> is <code>--verbose</code>)</td></tr>
+        <tr><td>-q, --quiet</td><td>Suppress the per-file success lines (<code>Formatted:</code> / <code>would format:</code>); errors, skips, and the end-of-run summary still print</td></tr>
+        <tr><td>-v, --verbose</td><td>Print per-file detail to <strong>stderr</strong>: a run-context line, then for each file its encoding decision (<code>encoding=&lt;enc&gt; BOM=&lt;yes/no&gt; via=&lt;basis&gt;</code>), change + line delta (<code>changed=142-&gt;138 lines</code> / <code>unchanged=142 lines</code>), and validation (<code>validated=hash+fingerprint</code>). STDOUT is unchanged. Mutually exclusive with <code>-q</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="opt-actions">Actions (default: format in place)</h3>
     <table class="data">
       <thead><tr><th scope="col">Flag</th><th scope="col">Description</th></tr></thead>
       <tbody>
         <tr><td>-b</td><td>Create a <code>.bak</code> backup of each file before overwriting</td></tr>
         <tr><td>-check</td><td>Report files that need formatting; exit code <code>1</code> if any do (does not modify files)</td></tr>
         <tr><td>-diff</td><td>Print a unified diff of what formatting would change; exit code <code>1</code> if any (does not modify files)</td></tr>
-        <tr><td>-onParseError &lt;policy&gt;</td><td>What to do when a file cannot be parsed into a compilation unit: <code>skip</code> (default &mdash; leave it unformatted, warn to stderr, keep going) or <code>fail</code> (leave it unformatted and exit non-zero). Applies to formatting, <code>-check</code>, and <code>-diff</code></td></tr>
+        <tr><td>-writeDefaultConfig &lt;file&gt;</td><td>Write the default config JSON to <code>&lt;file&gt;</code> and exit</td></tr>
+      </tbody>
+    </table>
+    <p>Files are formatted in place by default (single file, multiple files, or
+    <code>-d</code>); use <code>-check</code> or <code>-diff</code> to inspect
+    changes without modifying files.</p>
+
+    <h3 id="opt-input">Input and scope</h3>
+    <table class="data">
+      <thead><tr><th scope="col">Flag</th><th scope="col">Description</th></tr></thead>
+      <tbody>
         <tr><td>-d &lt;directory&gt;</td><td>Format all supported files found in this directory</td></tr>
         <tr><td>-r</td><td>Recurse into subdirectories (with <code>-d</code> or a glob pattern)</td></tr>
         <tr><td>-exclude &lt;patterns&gt;</td><td>Semicolon-separated exclude patterns (file names or wildcards); cumulative across repeated <code>-exclude</code> flags</td></tr>
+      </tbody>
+    </table>
+    <p>Supported extensions: <code>*.pas</code>, <code>*.dpr</code>,
+    <code>*.dpk</code>, <code>*.dpkw</code>, <code>*.inc</code>. Wildcards
+    (<code>*</code>, <code>?</code>) are supported in file arguments.</p>
+
+    <h3 id="opt-config">Configuration</h3>
+    <table class="data">
+      <thead><tr><th scope="col">Flag</th><th scope="col">Description</th></tr></thead>
+      <tbody>
         <tr><td>-profile &lt;name&gt;</td><td>Base profile: <code>Default</code>, <code>FormatterExe</code>, <code>Embarcadero</code>, or <code>NoOp</code></td></tr>
         <tr><td>-config &lt;file&gt;</td><td>JSON config file, overlaid on the selected profile</td></tr>
-        <tr><td>-writeDefaultConfig &lt;file&gt;</td><td>Write the default config JSON to <code>&lt;file&gt;</code> and exit</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="opt-parse-errors">Parse errors</h3>
+    <table class="data">
+      <thead><tr><th scope="col">Flag</th><th scope="col">Description</th></tr></thead>
+      <tbody>
+        <tr><td>-onParseError &lt;policy&gt;</td><td>What to do when a file cannot be parsed into a compilation unit: <code>skip</code> (default &mdash; leave it unformatted, warn to stderr, keep going) or <code>fail</code> (leave it unformatted and exit non-zero). Applies to formatting, <code>-check</code>, and <code>-diff</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="opt-conditional">Conditional compilation / build context</h3>
+    <p>These flags apply only to <code>activeBranch</code> mode;
+    <code>allBranches</code> and <code>preserveConditionals</code> ignore the
+    build context.</p>
+    <table class="data">
+      <thead><tr><th scope="col">Flag</th><th scope="col">Description</th></tr></thead>
+      <tbody>
         <tr><td>-conditionalMode &lt;mode&gt;</td><td>How <code>{$IFDEF}</code>/<code>{$IF}</code> branches are handled: <code>activeBranch</code> (default), <code>allBranches</code>, or <code>preserveConditionals</code> (see <a href="conditional-compilation.html">Conditional compilation</a>)</td></tr>
         <tr><td>-define &lt;NAME[=VALUE]&gt;</td><td>Add a conditional define for <code>activeBranch</code> mode (repeatable)</td></tr>
         <tr><td>-platform &lt;name&gt;</td><td>Target platform for <code>activeBranch</code> mode (e.g. <code>Win32Target</code>, <code>Win64Target</code>)</td></tr>
@@ -158,10 +213,16 @@ radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
         <tr><td>-projectPlatform &lt;name&gt;</td><td>Project platform to read with <code>-project</code> (e.g. <code>Win32</code>, <code>Win64</code>)</td></tr>
       </tbody>
     </table>
-    <p>Wildcards (<code>*</code>, <code>?</code>) are supported in file arguments.
-    The conditional flags apply only to <code>activeBranch</code> mode;
-    <code>allBranches</code> and <code>preserveConditionals</code> ignore the
-    build context.</p>
+
+    <h3 id="opt-source-encoding">Source encoding</h3>
+    <table class="data">
+      <thead><tr><th scope="col">Flag</th><th scope="col">Description</th></tr></thead>
+      <tbody>
+        <tr><td>--assume-encoding &lt;enc&gt;</td><td>Assume <code>&lt;enc&gt;</code> for a non-BOM/non-ASCII file when it validly decodes (short: <code>--assume</code>). <code>&lt;enc&gt;</code> = <code>utf8</code> | <code>utf16le</code> | <code>utf16be</code> | <code>cpNNNN</code> | <code>NNNN</code>. See <a href="#source-encoding">Source encoding</a></td></tr>
+        <tr><td>-fallback &lt;list&gt;</td><td>Comma-separated encodings tried when the assumption fails (requires <code>--assume-encoding</code>). Always evaluated strict</td></tr>
+        <tr><td>--no-heuristic</td><td>Disable the BOM-less UTF-16 NUL-pattern detection probe</td></tr>
+      </tbody>
+    </table>
 
     <h2 id="output-safety" class="anchor-heading">Output and safety rules</h2>
     <ul>
@@ -187,10 +248,58 @@ radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
       as <em>skipped (could not parse)</em> or <em>skipped (unsupported
       dialect)</em>, distinct from &ldquo;would format&rdquo; and from &ldquo;no
       change.&rdquo;</li>
+      <li><strong>The reason is specific where the parser can tell:</strong> when
+      it is due to an unrecognized language element, the message names the
+      construct and its location and points at the right fix &mdash; <em>&ldquo;looks
+      like an FPC/other-dialect source&rdquo;</em> (radFormatter targets Delphi)
+      versus <em>&ldquo;if this is valid newer Delphi, update radFormatter&rdquo;</em>
+      (the message includes the bundled parser version) &mdash; rather than the
+      generic missing-build-context hint.</li>
       <li><strong>Auto config:</strong> when <code>-config</code> is not given,
       radFormatter looks for a <code>radFormatter.json</code> next to the
       executable and uses it if present.</li>
+      <li><strong>End-of-run summary:</strong> a multi-file run prints one
+      trailing tally line, e.g. <code>Summary: 42 formatted, 3 skipped, 1 error
+      (46 files)</code> (<code>-check</code>/<code>-diff</code> say <em>would
+      format</em>). It is additive and does not affect the exit code. A
+      single-file run prints no summary (its one progress line already says
+      everything). For <code>-diff</code> the summary is written to
+      <strong>stderr</strong> so stdout stays a clean patch stream; the other
+      modes print it to stdout with their per-file progress.</li>
     </ul>
+
+    <h2 id="source-encoding" class="anchor-heading">Source encoding</h2>
+    <p>radFormatter reads and rewrites your files, so it is deliberately the
+    strictest reader: it only formats a file whose encoding it can determine with
+    confidence, and it <strong>never guesses</strong>. A wrong guess would
+    re-encode identifiers to different bytes and write mojibake back to disk.</p>
+    <p>By default it reads <strong>known-encoding-only</strong>: a UTF-8/UTF-16
+    BOM, pure ASCII, BOM-less UTF-16, or valid (BOM-less) UTF-8. Anything else
+    &mdash; typically a BOM-less legacy code page (CP1252, CP1251, Shift-JIS,
+    ...) &mdash; is <strong>skipped</strong> with exit code <code>4</code> and
+    left byte-for-byte unchanged, rather than mis-decoded. Writes always
+    round-trip the file's original encoding and BOM state; radFormatter never
+    transcodes (there is deliberately no output-encoding option).</p>
+    <p>To process a legacy tree, declare its encoding:</p>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter --assume-encoding cp1252 -d legacy-src -r</code></pre>
+    <p><code>--assume-encoding utf8</code> is the explicit form of the default
+    assumption. For a mixed CJK tree, add a strict fallback ladder (a file that is
+    ambiguous under two or more pages fails rather than being guessed):</p>
+<pre class="term"><code><span class="p">&gt;</span> radFormatter --assume-encoding utf8 -fallback 932,936,949,950 -d src -r</code></pre>
+    <p><code>-fallback</code> requires <code>--assume-encoding</code>. radFormatter
+    evaluates any fallback strictly and never applies a silent Western (CP1252)
+    catch-all &mdash; a single-byte legacy tree is named explicitly with
+    <code>--assume-encoding cp1252</code>, not rescued by a fallback. (Because a
+    writer's fallback is always strict, there is no separate strict-fallback
+    flag.)</p>
+    <p>These flags follow the shared radProgrammer source-encoding grammar, so the
+    same syntax works across the tool suite. Every one is also settable in
+    <code>radFormatter.json</code> under an
+    <a href="config-options.html#input"><code>input</code></a> section
+    (<code>assumeEncoding</code> / <code>fallback</code> / <code>heuristic</code>)
+    &mdash; the committed, per-directory way to declare a tree's encoding, so a
+    mixed monorepo can give each project its own code page. A CLI flag overrides
+    the config value.</p>
 
     <h2 id="examples" class="anchor-heading">Examples</h2>
     <p>Format a single file in place using the Default profile:</p>
@@ -275,9 +384,14 @@ radFormatter -writeDefaultConfig &lt;file&gt;</code></pre>
       <thead><tr><th scope="col">Code</th><th scope="col">Meaning</th></tr></thead>
       <tbody>
         <tr><td>0</td><td>Success (and, for <code>-check</code> / <code>-diff</code>, no files needed changes)</td></tr>
-        <tr><td>1</td><td>Usage error, a file/config error, or &mdash; under <code>-check</code> / <code>-diff</code> &mdash; at least one file needs formatting</td></tr>
+        <tr><td>1</td><td>A file failed to format (validation/parse error), or &mdash; under <code>-check</code> / <code>-diff</code> &mdash; at least one file needs formatting</td></tr>
+        <tr><td>2</td><td>Usage error (unknown/incomplete flag, mutually exclusive flags, missing profile/config path, <code>-fallback</code> without <code>--assume-encoding</code>)</td></tr>
+        <tr><td>3</td><td>A file could not be read (I/O error)</td></tr>
+        <tr><td>4</td><td>A file's encoding could not be resolved &mdash; it was skipped and left unchanged. Declare it with <code>--assume-encoding</code> (see <a href="#source-encoding">Source encoding</a>)</td></tr>
       </tbody>
     </table>
+    <p>A run reports the most significant code it reached (<code>4</code> over
+    <code>3</code> over <code>1</code>); any non-zero code fails a CI gate.</p>
 
     <h2 id="safety" class="anchor-heading">Safety guarantees</h2>
     <p><strong>Content-hash validation</strong> &mdash; a whitespace-excluded
@@ -304,7 +418,7 @@ radFormatter -check -config radFormatter.json -d source -r</code></pre>
     settled once, in the config file.</p>
 
     <p class="crumb" style="margin:3em 0 0;text-align:center">
-      <a href="https://github.com/radprogrammer/radFormatter/releases">CLI reference as of radFormatter v2.7.963 (Alpha) &mdash; see release notes</a>
+      <a href="https://github.com/radprogrammer/radFormatter/releases">CLI reference as of radFormatter v2.7.986 (Alpha) &mdash; see release notes</a>
     </p>
   </main>
 </div>
