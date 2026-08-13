@@ -6,12 +6,12 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#1F2A33">
 <title>Configuration options - radFormatter</title>
-<meta name="description" content="Complete reference for all 72 radFormatter configuration options across nine sections: casing, spacing, indent, lineBreaks, reshaping, alignment, output, conditional, and input.">
+<meta name="description" content="Complete reference for all 72 radFormatter configuration options across nine sections: casing, spacing, indent, lineBreaks, reshaping, alignment, input, output, and conditional.">
 <link rel="canonical" href="https://radprogrammer.com/radFormatter/docs/config-options.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RAD Programmer">
 <meta property="og:title" content="Configuration options - radFormatter">
-<meta property="og:description" content="Complete reference for all 72 radFormatter configuration options across nine sections: casing, spacing, indent, lineBreaks, reshaping, alignment, output, conditional, and input.">
+<meta property="og:description" content="Complete reference for all 72 radFormatter configuration options across nine sections: casing, spacing, indent, lineBreaks, reshaping, alignment, input, output, and conditional.">
 <meta property="og:url" content="https://radprogrammer.com/radFormatter/docs/config-options.html">
 <meta property="og:image" content="https://radprogrammer.com/radFormatter/assets/og-radformatter.png">
 <meta property="og:image:width" content="1200">
@@ -77,9 +77,9 @@ pre.term{margin:16px 0 24px}
       <li><a class="sect" href="#linebreaks">lineBreaks</a></li>
       <li><a class="sect" href="#reshaping">reshaping</a></li>
       <li><a class="sect" href="#alignment">alignment</a></li>
+      <li><a class="sect" href="#input">input</a></li>
       <li><a class="sect" href="#output">output</a></li>
       <li><a class="sect" href="#conditional">conditional</a></li>
-      <li><a class="sect" href="#input">input</a></li>
     </ul>
     <ul>
       <li><a href="#default-config">Full default configuration</a></li>
@@ -109,7 +109,7 @@ pre.term{margin:16px 0 24px}
     <p>There are <strong>72 options across nine sections</strong>:
     <code>casing</code>, <code>spacing</code>, <code>indent</code>,
     <code>lineBreaks</code>, <code>reshaping</code>, <code>alignment</code>,
-    <code>output</code>, <code>conditional</code>, and <code>input</code>.</p>
+    <code>input</code>, <code>output</code>, and <code>conditional</code>.</p>
 
     <p>Generate a fully populated config with the current defaults using the CLI:</p>
 <pre class="term"><code><span class="p">&gt;</span> radFormatter -writeDefaultConfig radFormatter.json</code></pre>
@@ -152,8 +152,8 @@ pre.term{margin:16px 0 24px}
         <tr><td>spacing.insideParens</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space just inside <code>( )</code></td></tr>
         <tr><td>spacing.insideBrackets</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space just inside <code>[ ]</code></td></tr>
         <tr><td>spacing.beforeParens</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space before an opening <code>(</code> (calls / declarations)</td></tr>
-        <tr><td>spacing.beforeBracket</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space before an opening <code>[</code> (index / bounds)</td></tr>
         <tr><td>spacing.aroundRange</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space around the range operator <code>..</code></td></tr>
+        <tr><td>spacing.beforeBracket</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space before an opening <code>[</code> (index / bounds)</td></tr>
         <tr><td>spacing.genericBrackets</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space just inside generic angle brackets <code>&lt; &gt;</code></td></tr>
         <tr><td>spacing.aroundUnaryOperators</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space around unary <code>-</code>, <code>+</code>, <code>@</code></td></tr>
         <tr><td>spacing.aroundBinaryOperators</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Space around <strong>symbol</strong> binary operators (<code>=</code>, <code>&lt;&gt;</code>, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, &hellip;)</td></tr>
@@ -172,10 +172,9 @@ pre.term{margin:16px 0 24px}
       <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
       <tbody>
         <tr><td>indent.size</td><td>integer</td><td>2</td><td>Spaces per depth level. <strong>Applies to space indentation only</strong> &mdash; ignored when the effective style is tabs (the editor's tab stop owns the visual width). <code>0</code> disables reindentation</td></tr>
-        <tr><td>indent.tabWidth</td><td>integer</td><td>0</td><td>Display width (in columns) used only to <strong>measure</strong> existing tab-indented source when computing visual columns for right-margin / soft-break decisions. <code>0</code> = same as <code>indent.size</code>; <code>&gt;0</code> = an explicit editor tab-stop width. Does not affect emitted indentation</td></tr>
         <tr><td>indent.style</td><td>"spaces" | "tabs" | "asIs"</td><td>"asIs"</td><td>Indent character: <code>spaces</code> always uses spaces; <code>tabs</code> uses one tab per structural level (continuation/alignment stay spaces); <code>asIs</code> (Default) preserves the source's indent character &mdash; the first line with leading indentation decides (leading tab &rarr; tabs, leading space &rarr; spaces), none &rarr; spaces. Depth is always recomputed; only the character is preserved</td></tr>
+        <tr><td>indent.tabWidth</td><td>integer</td><td>0</td><td>Display width (in columns) used only to <strong>measure</strong> existing tab-indented source when computing visual columns for right-margin / soft-break decisions. <code>0</code> = same as <code>indent.size</code>; <code>&gt;0</code> = an explicit editor tab-stop width. Does not affect emitted indentation</td></tr>
         <tr><td>indent.directives</td><td>"asIs" | "column0" | "structural"</td><td>"asIs"</td><td>Compiler-directive indentation: <code>asIs</code> preserves source indent (Default); <code>column0</code> forces the left margin (FormatterExe/Embarcadero); <code>structural</code> indents to surrounding depth</td></tr>
-        <tr><td>indent.labelIndent</td><td>"bodyLevel" | "blockOpener" | "column0" | "asIs"</td><td>"bodyLevel"</td><td>Indentation of a stand-alone goto-label line (<code>findAgain:</code> alone on its line): <code>bodyLevel</code> keeps it at the statement column (Default); <code>blockOpener</code> outdents it one level to its enclosing block-opener column (Embarcadero); <code>column0</code> forces the left margin; <code>asIs</code> preserves the source column. A same-line <code>label: stmt;</code> is unaffected</td></tr>
         <tr><td>indent.continuationSize</td><td>integer</td><td>2</td><td>Extra spaces added to wrapped / continuation lines</td></tr>
         <tr><td>indent.anchorBased</td><td>bool</td><td>false</td><td>When wrapping, align continuation lines under the column after the opening delimiter instead of using a fixed continuation indent</td></tr>
         <tr><td>indent.maxColumn</td><td>integer</td><td>0</td><td><code>0</code> = no cap; <code>&gt;0</code> = clamp any computed indent to this column</td></tr>
@@ -185,6 +184,7 @@ pre.term{margin:16px 0 24px}
         <tr><td>indent.caseElseAlignment</td><td>"asIs" / "withLabels" / "withCase"</td><td>"asIs"</td><td><code>asIs</code> keeps a <code>case</code>'s <code>else</code> at its source column (content re-indented one level under it); <code>withLabels</code> aligns it with the arm labels; <code>withCase</code> aligns it with the <code>case</code> keyword</td></tr>
         <tr><td>indent.commentSingleLine</td><td>"structural" / "anchored" / "asIs"</td><td>"structural"</td><td>Single-line own-line comments (<code>//</code> or a single-line block): <code>structural</code> re-indents each to the enclosing content level; <code>anchored</code> preserves the comment's source column but shifts it by the same amount the statement it leads (its anchor) moved, so it tracks re-indented code without normalizing the offset (falls back to <code>asIs</code> when there is no following statement; never dedents onto a following <code>end</code>/<code>else</code>); <code>asIs</code> preserves the comment's source column</td></tr>
         <tr><td>indent.commentMultiLine</td><td>"structural" / "anchored" / "asIs"</td><td>"structural"</td><td>Multi-line <code>{ }</code> / <code>(* *)</code> comments: <code>structural</code> re-indents the opener to the content level and re-homes the closer; <code>anchored</code> delta-shifts the opener to track its anchor's movement (closer left verbatim, like <code>asIs</code>); <code>asIs</code> preserves the opener column and leaves the closer verbatim (interior lines are verbatim either way)</td></tr>
+        <tr><td>indent.labelIndent</td><td>"bodyLevel" | "blockOpener" | "column0" | "asIs"</td><td>"bodyLevel"</td><td>Indentation of a stand-alone goto-label line (<code>findAgain:</code> alone on its line): <code>bodyLevel</code> keeps it at the statement column (Default); <code>blockOpener</code> outdents it one level to its enclosing block-opener column (Embarcadero); <code>column0</code> forces the left margin; <code>asIs</code> preserves the source column. A same-line <code>label: stmt;</code> is unaffected</td></tr>
       </tbody>
     </table>
 
@@ -199,8 +199,8 @@ pre.term{margin:16px 0 24px}
         <tr><td>lineBreaks.afterBegin</td><td>bool</td><td>false</td><td>Force a line break after <code>begin</code></td></tr>
         <tr><td>lineBreaks.afterSectionKeyword</td><td>bool</td><td>false</td><td>Force a line break after a section keyword (<code>uses</code>, <code>type</code>, <code>var</code>, <code>const</code>, <code>interface</code>, <code>implementation</code>)</td></tr>
         <tr><td>lineBreaks.afterLabel</td><td><a href="#tri-state">tri-state</a></td><td>"asis"</td><td>Newline after a statement label's colon</td></tr>
-        <tr><td>lineBreaks.lineAfterSemicolon</td><td>bool</td><td>false</td><td>Force a line break after every statement-terminating semicolon, so each statement lands on its own line. Add-only (never removes user breaks) and CST-aware &mdash; parameter-list and declaration separators are left untouched</td></tr>
         <tr><td>lineBreaks.usesMode</td><td>"preserve" / "singleLine" / "onePerLine"</td><td>"preserve"</td><td>How <code>uses</code> clauses are laid out: unchanged, collapsed to one line, or one unit per line</td></tr>
+        <tr><td>lineBreaks.lineAfterSemicolon</td><td>bool</td><td>false</td><td>Force a line break after every statement-terminating semicolon, so each statement lands on its own line. Add-only (never removes user breaks) and CST-aware &mdash; parameter-list and declaration separators are left untouched</td></tr>
         <tr><td>lineBreaks.sectionKeywordJoin</td><td>"preserve" / "join" / "break"</td><td>"preserve"</td><td>Placement of a section introducer (<code>type</code>/<code>const</code>/<code>var</code>) that follows a visibility specifier (<code>private type</code>, <code>strict private type</code>): <code>preserve</code> keeps the author's layout (never splits an inline pair, never joins a broken one); <code>join</code> collapses the pair onto one line; <code>break</code> forces them onto separate lines. The atomic compound directives (<code>strict private</code>, <code>class var</code>/<code>class function</code>/&hellip;) are always intact regardless. An intervening comment (<code>private {note} type</code>) leaves the pair as authored under every mode</td></tr>
       </tbody>
     </table>
@@ -235,14 +235,39 @@ pre.term{margin:16px 0 24px}
       </tbody>
     </table>
 
+    <h2 id="input" class="anchor-heading"><code>input</code></h2>
+    <p>The <strong>source-read</strong> policy: how a file's encoding is resolved
+    before formatting. These keys correlate 1:1 with the CLI encoding flags and use
+    the same <code>utf8</code> / <code>utf16le</code> / <code>utf16be</code> /
+    <code>cpNNNN</code> / <code>NNNN</code> grammar, so a value set here is the
+    committed, per-directory equivalent of the flag (a mixed monorepo can declare
+    each tree's code page in its own <code>radFormatter.json</code>). Defaults
+    reproduce the known-encoding-only default, so an absent <code>input</code>
+    section changes nothing. See the
+    <a href="radFormatter-cli.html#source-encoding">Source encoding</a> section for
+    the model. Precedence: built-in default &lt; <code>input</code> config &lt;
+    CLI flag.</p>
+    <table class="data">
+      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>input.assumeEncoding</td><td>string</td><td>""</td><td>Assume this encoding for a non-BOM/non-ASCII file when it validly decodes (the CLI <code>--assume-encoding</code>). Empty keeps the built-in UTF-8 assumption. Declare a legacy tree with, e.g., <code>"cp1252"</code></td></tr>
+        <tr><td>input.fallback</td><td>string array</td><td>[]</td><td>Encodings tried when the assumption fails (the CLI <code>-fallback</code>). <strong>Requires <code>assumeEncoding</code>.</strong> Always evaluated strict: an ambiguous file fails rather than being decoded by a Western catch-all</td></tr>
+        <tr><td>input.heuristic</td><td>bool</td><td>true</td><td>When <code>false</code>, disables the BOM-less UTF-16 NUL-pattern probe (the CLI <code>--no-heuristic</code>)</td></tr>
+      </tbody>
+    </table>
+    <div class="note">A <code>fallback</code> without <code>assumeEncoding</code>, or
+    an unparseable encoding token, makes the config <strong>refused</strong> (the
+    run reports the error and does not format), mirroring the CLI's usage-error
+    handling.</div>
+
     <h2 id="output" class="anchor-heading"><code>output</code></h2>
     <table class="data">
       <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
       <tbody>
         <tr><td>output.lineEnding</td><td>"platform" / "crlf" / "lf" / "cr" / "detect"</td><td>"platform"</td><td><code>platform</code> uses the platform default line ending (CRLF on Windows), regardless of the source; <code>crlf</code> / <code>lf</code> / <code>cr</code> force that terminator; <code>detect</code> keys off the source file's first line break (<code>\r\n</code>&rarr;CRLF, <code>\n</code>&rarr;LF, <code>\r</code>&rarr;CR; none &rarr; platform) and applies it uniformly, so a LF-only file stays LF. The NoOp profile uses <code>detect</code></td></tr>
-        <tr><td>output.trimTrailingWhitespace</td><td>bool</td><td>true</td><td>When <code>true</code>, end-of-line whitespace is removed (the renderer rebuilds each line from its tokens). When <code>false</code>, a line's trailing whitespace is preserved verbatim &mdash; both the run after the last token and a whitespace-only blank line's spaces. The NoOp profile sets this <code>false</code> so it is a true byte-for-byte pass-through; other profiles keep it <code>true</code></td></tr>
         <tr><td>output.rightMargin</td><td>integer</td><td>0</td><td>Wrap column. <code>0</code> = disabled. When <code>&gt;0</code>, lines longer than this are wrapped at their declared soft-break points (call arguments, parameter lists, <code>uses</code> commas, binary operators, inheritance lists, and so on)</td></tr>
         <tr><td>output.maxEmptyLines</td><td>integer</td><td>-1</td><td><code>-1</code> = unlimited; <code>0+</code> = maximum consecutive blank lines</td></tr>
+        <tr><td>output.trimTrailingWhitespace</td><td>bool</td><td>true</td><td>When <code>true</code>, end-of-line whitespace is removed (the renderer rebuilds each line from its tokens). When <code>false</code>, a line's trailing whitespace is preserved verbatim &mdash; both the run after the last token and a whitespace-only blank line's spaces. The NoOp profile sets this <code>false</code> so it is a true byte-for-byte pass-through; other profiles keep it <code>true</code></td></tr>
         <tr><td>output.strictMode</td><td>bool</td><td>true</td><td>When <code>true</code>, an unclassifiable feature is a validation error; when <code>false</code>, unknown constructs pass through untouched</td></tr>
       </tbody>
     </table>
@@ -270,8 +295,8 @@ pre.term{margin:16px 0 24px}
       <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
       <tbody>
         <tr><td>conditional.mode</td><td>"activeBranch" / "allBranches" / "preserveConditionals"</td><td>"activeBranch"</td><td><code>activeBranch</code> formats the branch selected by the build context and preserves inactive branches verbatim (directives included); <code>allBranches</code> parses every branch as one stream and formats best-effort (no build context used); <code>preserveConditionals</code> leaves every conditional line exactly as authored &mdash; any physical line holding a conditional directive, or lying between an opener and its matching closer, is emitted verbatim &mdash; while everything outside conditional regions is reformatted (it folds against the deterministic default context only to obtain a parse stream; that branch choice never affects the verbatim regions). Values parse case-insensitively</td></tr>
-        <tr><td>conditional.compilerVersion</td><td>string</td><td>""</td><td>Build context (used by <code>activeBranch</code> only): compiler version as a product name (<code>"Delphi 12"</code>), an alias, or a <code>VERxxx</code> define. Empty = the parser's latest known version (deterministic)</td></tr>
         <tr><td>conditional.platform</td><td>string</td><td>""</td><td>Build context: a target-platform enum name (<code>Win32Target</code>, <code>Win64Target</code>, &hellip;). Empty = <code>Win32Target</code> (deterministic default)</td></tr>
+        <tr><td>conditional.compilerVersion</td><td>string</td><td>""</td><td>Build context (used by <code>activeBranch</code> only): compiler version as a product name (<code>"Delphi 12"</code>), an alias, or a <code>VERxxx</code> define. Empty = the parser's latest known version (deterministic)</td></tr>
         <tr><td>conditional.defines</td><td>string array</td><td>[]</td><td>Build context: conditional symbols to define (a <code>NAME=VALUE</code> entry keeps only <code>NAME</code>; folding is name-only)</td></tr>
         <tr><td>conditional.includePaths</td><td>string array</td><td>[]</td><td>Build context: extra directories searched for <code>{$I}</code> include files that gate conditionals. The source file's own directory is searched automatically when the caller supplies the file path</td></tr>
       </tbody>
@@ -280,31 +305,6 @@ pre.term{margin:16px 0 24px}
     or CLI <code>-project</code> / <code>-buildContext</code>), it replaces the
     four context values above entirely &mdash; the config context is the
     no-project fallback only.</div>
-
-    <h2 id="input" class="anchor-heading"><code>input</code></h2>
-    <p>The <strong>source-read</strong> policy: how a file's encoding is resolved
-    before formatting. These keys correlate 1:1 with the CLI encoding flags and use
-    the same <code>utf8</code> / <code>utf16le</code> / <code>utf16be</code> /
-    <code>cpNNNN</code> / <code>NNNN</code> grammar, so a value set here is the
-    committed, per-directory equivalent of the flag (a mixed monorepo can declare
-    each tree's code page in its own <code>radFormatter.json</code>). Defaults
-    reproduce the known-encoding-only default, so an absent <code>input</code>
-    section changes nothing. See the
-    <a href="radFormatter-cli.html#source-encoding">Source encoding</a> section for
-    the model. Precedence: built-in default &lt; <code>input</code> config &lt;
-    CLI flag.</p>
-    <table class="data">
-      <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead>
-      <tbody>
-        <tr><td>input.assumeEncoding</td><td>string</td><td>""</td><td>Assume this encoding for a non-BOM/non-ASCII file when it validly decodes (the CLI <code>--assume-encoding</code>). Empty keeps the built-in UTF-8 assumption. Declare a legacy tree with, e.g., <code>"cp1252"</code></td></tr>
-        <tr><td>input.fallback</td><td>string array</td><td>[]</td><td>Encodings tried when the assumption fails (the CLI <code>-fallback</code>). <strong>Requires <code>assumeEncoding</code>.</strong> Always evaluated strict: an ambiguous file fails rather than being decoded by a Western catch-all</td></tr>
-        <tr><td>input.heuristic</td><td>bool</td><td>true</td><td>When <code>false</code>, disables the BOM-less UTF-16 NUL-pattern probe (the CLI <code>--no-heuristic</code>)</td></tr>
-      </tbody>
-    </table>
-    <div class="note">A <code>fallback</code> without <code>assumeEncoding</code>, or
-    an unparseable encoding token, makes the config <strong>refused</strong> (the
-    run reports the error and does not format), mirroring the CLI's usage-error
-    handling.</div>
 
     <h2 id="default-config" class="anchor-heading">Full default configuration</h2>
     <p>This is exactly what <code>-writeDefaultConfig</code> emits (the
@@ -334,10 +334,9 @@ pre.term{margin:16px 0 24px}
   },
   <span class="j">"indent"</span>: {
     <span class="j">"size"</span>: 2,
-    <span class="j">"tabWidth"</span>: 0,
     <span class="j">"style"</span>: "asIs",
+    <span class="j">"tabWidth"</span>: 0,
     <span class="j">"directives"</span>: "asIs",
-    <span class="j">"labelIndent"</span>: "bodyLevel",
     <span class="j">"continuationSize"</span>: 2,
     <span class="j">"anchorBased"</span>: false,
     <span class="j">"maxColumn"</span>: 0,
@@ -346,19 +345,20 @@ pre.term{margin:16px 0 24px}
     <span class="j">"caseSingleLine"</span>: true,
     <span class="j">"caseElseAlignment"</span>: "asIs",
     <span class="j">"commentSingleLine"</span>: "structural",
-    <span class="j">"commentMultiLine"</span>: "structural"
+    <span class="j">"commentMultiLine"</span>: "structural",
+    <span class="j">"labelIndent"</span>: "bodyLevel"
   },
   <span class="j">"lineBreaks"</span>: {
     <span class="j">"keepUser"</span>: true,
-    <span class="j">"sectionKeywordJoin"</span>: "preserve",
     <span class="j">"beforeSingleInstr"</span>: "asis",
     <span class="j">"beforeBegin"</span>: "asis",
     <span class="j">"betweenElseAndIf"</span>: false,
     <span class="j">"afterBegin"</span>: false,
     <span class="j">"afterSectionKeyword"</span>: false,
     <span class="j">"afterLabel"</span>: "asis",
+    <span class="j">"usesMode"</span>: "preserve",
     <span class="j">"lineAfterSemicolon"</span>: false,
-    <span class="j">"usesMode"</span>: "preserve"
+    <span class="j">"sectionKeywordJoin"</span>: "preserve"
   },
   <span class="j">"reshaping"</span>: {
     <span class="j">"oneParamPerLineInCalls"</span>: false,
@@ -377,9 +377,13 @@ pre.term{margin:16px 0 24px}
     <span class="j">"trailingComments"</span>: false,
     <span class="j">"maxPadWidth"</span>: 0
   },
+  <span class="j">"input"</span>: {
+    <span class="j">"assumeEncoding"</span>: "",
+    <span class="j">"fallback"</span>: [],
+    <span class="j">"heuristic"</span>: true
+  },
   <span class="j">"output"</span>: {
     <span class="j">"lineEnding"</span>: "platform",
-    <span class="j">"trimTrailingWhitespace"</span>: true,
     <span class="j">"rightMargin"</span>: 0,
     <span class="j">"maxEmptyLines"</span>: -1,
     <span class="j">"emptyLines"</span>: {
@@ -388,19 +392,15 @@ pre.term{margin:16px 0 24px}
       <span class="j">"betweenDeclarations"</span>: -1,
       <span class="j">"beforeTypeKeyword"</span>: -1
     },
+    <span class="j">"trimTrailingWhitespace"</span>: true,
     <span class="j">"strictMode"</span>: true
   },
   <span class="j">"conditional"</span>: {
     <span class="j">"mode"</span>: "activeBranch",
-    <span class="j">"compilerVersion"</span>: "",
     <span class="j">"platform"</span>: "",
+    <span class="j">"compilerVersion"</span>: "",
     <span class="j">"defines"</span>: [],
     <span class="j">"includePaths"</span>: []
-  },
-  <span class="j">"input"</span>: {
-    <span class="j">"assumeEncoding"</span>: "",
-    <span class="j">"fallback"</span>: [],
-    <span class="j">"heuristic"</span>: true
   }
 }</code></pre>
 
