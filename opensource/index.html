@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1F2A33">
+<title>Open Source — RAD Programmer</title>
+<meta name="description" content="Free, permissively licensed Delphi libraries and sample projects from RAD Programmer — radNullableTypes, radJSON, and radAuthenticator, with more on the way.">
+<link rel="canonical" href="https://radprogrammer.com/opensource/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RAD Programmer">
+<meta property="og:title" content="Open Source — RAD Programmer">
+<meta property="og:description" content="Free, permissively licensed Delphi libraries and sample projects from RAD Programmer — radNullableTypes, radJSON, and radAuthenticator, with more on the way.">
+<meta property="og:url" content="https://radprogrammer.com/opensource/">
+<meta property="og:image" content="https://radprogrammer.com/assets/og-radprogrammer.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/svg+xml" href="../assets/radprogrammer-logo.svg">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+.brandmark-head{font-family:var(--display);font-weight:800;font-size:1.15rem;color:#fff;text-decoration:none}
+.brandmark-head b{color:var(--rad-red)}
+
+/* hero */
+.os-hero{background:var(--paper);border-bottom:1px solid var(--line);padding:64px 0}
+.os-hero h1{font-size:clamp(2rem,4.5vw,2.9rem);letter-spacing:-.02em}
+.os-hero h1 b{color:var(--rad-red);font-weight:800}
+.os-hero .lede{font-size:1.15rem;color:var(--steel);max-width:40em;margin-top:.4em}
+.os-hero .facts{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0 0;font-family:var(--mono);font-size:.8rem}
+.os-hero .facts span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:.35em .95em}
+
+/* project grid */
+.projects{padding:56px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:12px}
+.pcard{display:flex;flex-direction:column;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px 24px;text-decoration:none;color:var(--fg);transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease}
+.pcard:hover{transform:translateY(-3px);border-color:var(--rad-red);box-shadow:0 12px 34px rgba(31,42,51,.10)}
+.pcard .top{display:flex;align-items:center;gap:14px}
+.ptile{width:54px;height:54px;flex:0 0 54px}
+.ptile img{width:54px;height:54px;border-radius:13px;display:block}
+.pname{font-family:var(--display);font-weight:800;font-size:1.16rem;letter-spacing:-.01em}
+.pname b{color:var(--rad-red);font-weight:800}
+.pcard p{margin:0;color:var(--steel);font-size:.95rem;line-height:1.55}
+.pmeta{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.pill{font-family:var(--mono);font-size:.7rem;letter-spacing:.03em;padding:.24em .66em;border-radius:999px;border:1px solid var(--line)}
+.pill.lic{background:var(--code-bg);color:var(--steel)}
+.pill.avail{background:rgba(64,180,110,.14);color:#2e9e5b;border-color:rgba(64,180,110,.4)}
+.pill.dev{background:rgba(45,156,219,.12);color:#1f7bb0;border-color:rgba(45,156,219,.35)}
+@media (prefers-color-scheme:dark){
+  .pill.avail{color:#7fdca6}
+  .pill.dev{color:#7cc7ec}
+}
+.pcard .more{font-family:var(--display);font-weight:700;font-size:.9rem;color:var(--rad-red)}
+
+/* ghost (coming soon) card */
+.ghost{display:flex;flex-direction:column;justify-content:center;gap:8px;border:2px dashed var(--line);border-radius:16px;padding:26px 24px;color:var(--steel);text-align:center}
+.ghost strong{font-family:var(--display);color:var(--fg)}
+
+/* blog band */
+.blog{background:linear-gradient(180deg,var(--ink) 0%,#25323d 100%);color:var(--mist);padding:56px 0}
+.blog h2{color:#fff}
+.blog .lede{max-width:44em;color:#AEC0CD}
+.blog a.btn{margin-top:8px}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brandmark-head" href="../index.html"><b>RAD</b>&nbsp;Programmer</a>
+    <nav aria-label="Main">
+      <a href="../radFormatter/index.html">radFormatter</a>
+      <a href="index.html" aria-current="page">Open Source</a>
+      <a href="../about.html">About</a>
+      <a href="https://github.com/radprogrammer">GitHub</a>
+      <a class="cta" href="../radFormatter/buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="os-hero">
+  <div class="wrap">
+    <h1><b>Open</b> source for Delphi developers.</h1>
+    <p class="lede">Alongside our commercial tools, RAD Programmer publishes free,
+    permissively licensed Delphi libraries and sample projects &mdash; small,
+    focused, dependency-light code you can drop into your own projects and read
+    end to end. Everything here lives on
+    <a href="https://github.com/radprogrammer">github.com/radprogrammer</a>.</p>
+    <p class="facts">
+      <span>MIT &amp; Apache-2.0</span>
+      <span>Pure Object Pascal</span>
+      <span>No runtime dependencies</span>
+    </p>
+  </div>
+</div>
+
+<!-- ================= PROJECTS ================= -->
+<section class="projects">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>The projects</h2>
+    <div class="grid">
+
+      <a class="pcard" href="radnullabletypes.html">
+        <div class="top">
+          <span class="ptile"><img src="assets/radnullabletypes-icon.svg" alt=""></span>
+          <span class="pname"><b>rad</b>NullableTypes</span>
+        </div>
+        <p>Focused nullable and tri-state value types for Delphi &mdash;
+        <code>TNullable&lt;T&gt;</code> and <code>TTriState&lt;T&gt;</code> &mdash; that
+        start null by construction and unwrap explicitly, so a null never escapes
+        unnoticed.</p>
+        <div class="pmeta">
+          <span class="pill lic">MIT</span>
+          <span class="pill lic">Delphi 10.4+</span>
+          <span class="pill avail">Available</span>
+        </div>
+        <span class="more">Learn more &rarr;</span>
+      </a>
+
+      <a class="pcard" href="radjson.html">
+        <div class="top">
+          <span class="ptile"><img src="assets/radjson-icon.svg" alt=""></span>
+          <span class="pname"><b>rad</b>JSON</span>
+        </div>
+        <p>An object- and record-oriented JSON serializer for Delphi that streams
+        straight to and from text through RTTI &mdash; no intermediate
+        <code>System.JSON</code> DOM &mdash; with a single, richly configurable
+        options record.</p>
+        <div class="pmeta">
+          <span class="pill lic">Delphi</span>
+          <span class="pill dev">In development</span>
+        </div>
+        <span class="more">Learn more &rarr;</span>
+      </a>
+
+      <a class="pcard" href="radauthenticator.html">
+        <div class="top">
+          <span class="ptile"><img src="assets/radauthenticator-icon.svg" alt=""></span>
+          <span class="pname"><b>rad</b>Authenticator</span>
+        </div>
+        <p>A TOTP two-factor-authentication sample for Delphi with
+        Google&nbsp;Authenticator&ndash;compatible one-time codes, backed by a
+        five-part blog series that walks through building it.</p>
+        <div class="pmeta">
+          <span class="pill lic">Apache-2.0</span>
+          <span class="pill lic">TOTP / 2FA</span>
+          <span class="pill avail">Available</span>
+        </div>
+        <span class="more">Learn more &rarr;</span>
+      </a>
+
+      <div class="ghost">
+        <strong>More on the way</strong>
+        <span>Additional open source projects are in the pipeline &mdash; watch
+        <a href="https://github.com/radprogrammer">github.com/radprogrammer</a>.</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= BLOG BAND ================= -->
+<section class="blog">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Read the write-ups</h2>
+    <p class="lede">Many of these projects started as articles. Darian writes about
+    Delphi development &mdash; including the full build-along series behind
+    radAuthenticator &mdash; over at ideasawakened.com.</p>
+    <a class="btn primary" href="https://ideasawakened.com">Visit the blog</a>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../index.html" aria-label="RAD Programmer home"><img class="mark" src="../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p><strong>RAD Programmer</strong> &mdash; developer tooling for the
+      Delphi ecosystem.</p>
+    </div>
+    <div>
+      <h3>Open Source</h3>
+      <ul>
+        <li><a href="radnullabletypes.html">radNullableTypes</a></li>
+        <li><a href="radjson.html">radJSON</a></li>
+        <li><a href="radauthenticator.html">radAuthenticator</a></li>
+        <li><a href="https://github.com/radprogrammer">GitHub</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="../radFormatter/index.html">radFormatter</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../legal/privacy.html">Privacy</a></li>
+        <li><a href="../legal/terms.html">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

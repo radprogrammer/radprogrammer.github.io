@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1F2A33">
+<title>radJSON — object-oriented JSON serialization for Delphi</title>
+<meta name="description" content="radJSON is a Delphi JSON serializer and deserializer that streams straight to and from text through RTTI — no intermediate System.JSON DOM — driven by a single, richly configurable options record.">
+<link rel="canonical" href="https://radprogrammer.com/opensource/radjson.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RAD Programmer">
+<meta property="og:title" content="radJSON — object-oriented JSON serialization for Delphi">
+<meta property="og:description" content="A Delphi JSON serializer and deserializer that streams straight to and from text through RTTI — no intermediate System.JSON DOM.">
+<meta property="og:url" content="https://radprogrammer.com/opensource/radjson.html">
+<meta property="og:image" content="https://radprogrammer.com/assets/og-radprogrammer.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/svg+xml" href="assets/radjson-icon.svg">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+.brandmark-head{font-family:var(--display);font-weight:800;font-size:1.15rem;color:#fff;text-decoration:none}
+.brandmark-head b{color:var(--rad-red)}
+
+.hero{background:linear-gradient(180deg,var(--ink) 0%,#25323d 100%);color:var(--mist);padding:56px 0 64px}
+.hero .crumb{font-family:var(--mono);font-size:.78rem;color:#8FA3B1;margin-bottom:20px}
+.hero .crumb a{color:#AEC0CD}
+.hero .wordmark{max-width:300px;width:100%;height:auto;margin-bottom:8px}
+.hero .sub{font-size:1.15rem;color:var(--mist);max-width:34em}
+.hero .pills{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 4px;font-family:var(--mono);font-size:.78rem}
+.hero .pills span{border:1px solid var(--steel);color:#AEC0CD;border-radius:999px;padding:.22em .8em}
+.hero .actions{display:flex;gap:14px;margin-top:24px;flex-wrap:wrap}
+
+.devnote{background:rgba(45,156,219,.1);border-bottom:1px solid var(--line)}
+.devnote .wrap{padding:16px 24px;font-size:.92rem;color:var(--steel)}
+.devnote strong{color:var(--fg)}
+
+section.block{padding:56px 0}
+section.block.alt{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lede{max-width:46em;color:var(--steel)}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:28px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:28px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px}
+.alt .card{background:var(--paper)}
+.card h3{margin-top:0}
+.card p{margin-bottom:0;color:var(--steel);font-size:.95rem}
+.card .tag{font-family:var(--mono);font-size:.72rem;color:var(--rad-red);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px}
+.codewrap{margin-top:28px}
+.codewrap .cap{font-family:var(--mono);font-size:.72rem;color:var(--steel);letter-spacing:.05em;text-transform:uppercase;margin:0 0 8px}
+pre.term .k{color:var(--sky)}
+pre.term .s{color:#8FA3B1}
+.striplabel{font-family:var(--mono);font-size:.72rem;color:var(--steel);letter-spacing:.06em;text-transform:uppercase;margin:34px 0 0}
+.enums{max-width:none;color:var(--steel);font-size:.86rem;line-height:1.7;margin-top:14px}
+.enums code{font-size:.82em}
+@media (max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brandmark-head" href="../index.html"><b>RAD</b>&nbsp;Programmer</a>
+    <nav aria-label="Main">
+      <a href="../radFormatter/index.html">radFormatter</a>
+      <a href="index.html" aria-current="page">Open Source</a>
+      <a href="../about.html">About</a>
+      <a href="https://github.com/radprogrammer">GitHub</a>
+      <a class="cta" href="../radFormatter/buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">Open Source</a> &nbsp;/&nbsp; radJSON</p>
+    <img class="wordmark" src="assets/radjson-logo-reversed.svg" alt="radJSON">
+    <p class="sub">An object- and record-oriented JSON serializer and deserializer
+    for Delphi. It streams straight to and from text through RTTI &mdash; with no
+    intermediate <code>System.JSON</code> DOM to build, walk, and free &mdash; and
+    every behavior is controlled by a single configuration record.</p>
+    <div class="pills">
+      <span>Delphi</span>
+      <span>RTTI-driven</span>
+      <span>No System.JSON DOM</span>
+    </div>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/radprogrammer/rad-json-dev">View on GitHub</a>
+    </div>
+  </div>
+</div>
+
+<div class="devnote">
+  <div class="wrap"><strong>Status: in active development.</strong> The API and
+  configuration surface described below are stabilizing &mdash; expect refinement
+  before a tagged release.</div>
+</div>
+
+<!-- ================= API ================= -->
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Serialize an object in one call</h2>
+    <p class="lede">The primary API is two class types. Serialize objects, records,
+    or dynamic arrays; deserialize the same shapes plus a top-level scalar. An
+    optional class helper adds <code>ToJSON</code> / <code>FromJSON</code> straight
+    onto every object for convenience.</p>
+    <div class="codewrap">
+<pre class="term"><code><span class="k">uses</span> radJSON.Serializer, radJSON.Deserializer;
+
+JSON := TJSONSerializer.ObjectToJSON(obj);       <span class="s">// also RecordToJSON&lt;T&gt; / ArrayToJSON&lt;T&gt;</span>
+TJSONDeserializer.DeserializeObject(JSON, obj);  <span class="s">// also DeserializeRecord / Array / Value&lt;T&gt;</span></code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY ================= -->
+<section class="block alt">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Designed for real Delphi types</h2>
+    <div class="grid3">
+      <div class="card">
+        <span class="tag">Direct streaming</span>
+        <h3>No DOM in the middle</h3>
+        <p>Values are read and written straight against the text, so there is no
+        intermediate document object to allocate and tear down on the hot path.</p>
+      </div>
+      <div class="card">
+        <span class="tag">RTL-aware</span>
+        <h3>Collections map naturally</h3>
+        <p><code>TList</code> / <code>TObjectList</code> become JSON arrays and
+        <code>TDictionary</code> becomes a JSON object out of the box &mdash; with
+        configurable handling for enums, GUIDs, dates, and sets.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Strict or lenient</span>
+        <h3>You choose the rigor</h3>
+        <p>Reject unknown members and unmappable values for a strict contract, or
+        fall back leniently &mdash; the deserializer never silently misrepresents a
+        value unless you ask it to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONFIG ================= -->
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>One configuration record</h2>
+    <p class="lede">All behavior lives in a single <code>TJsonConfig</code> record.
+    Start from the default, change only the fields you care about, and pass it to
+    any entry point &mdash; or install one process-wide default at startup. Options
+    cover pretty-printing, enum and GUID formats, date/time wire formats, member
+    visibility, omitting empty or default members, non-finite floats, depth
+    guarding, and unknown- / unmappable-member handling.</p>
+    <div class="codewrap">
+      <p class="cap">Customize only what you need</p>
+<pre class="term"><code><span class="k">uses</span> radJSON.Config, radJSON.Serializer, radJSON.Deserializer;
+
+<span class="k">var</span>
+  cfg: TJsonConfig;
+<span class="k">begin</span>
+  cfg := TJsonConfig.CreateDefaultConfig;
+  cfg.PrettyPrint := True;                <span class="s">// indented output</span>
+  cfg.EscapeNonAscii := False;            <span class="s">// emit raw UTF-16</span>
+  cfg.UnknownMemberHandling := TJsonUnknownMemberHandling.Reject;
+
+  JSON := TJSONSerializer.ObjectToJSON(obj, cfg);
+  TJSONDeserializer.DeserializeObject(JSON, obj, cfg);
+<span class="k">end</span>;</code></pre>
+    </div>
+    <p class="striplabel">Every option in <code>radJSON.Config</code></p>
+    <table class="data">
+      <thead>
+        <tr>
+          <th scope="col">Option</th>
+          <th scope="col">Type</th>
+          <th scope="col">Default</th>
+          <th scope="col">Applies to</th>
+          <th scope="col">Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>SerializeEnums</td><td>TJsonEnumSerialization</td><td>EnumToString</td><td>serialize</td><td>Emit an enum as its name or its ordinal. Deserialize auto-detects either form.</td></tr>
+        <tr><td>DateTimesAreUTC</td><td>Boolean</td><td>False</td><td>both</td><td>Treat <code>TDateTime</code>/<code>TDate</code>/<code>TTime</code> as UTC for ISO 8601 / Unix conversion.</td></tr>
+        <tr><td>DateTimeTypeFormat</td><td>TJsonDateTimeFormat</td><td>ISO8601</td><td>both</td><td>Wire format for <code>TDateTime</code>.</td></tr>
+        <tr><td>DateTypeFormat</td><td>TJsonDateTimeFormat</td><td>UnixTime</td><td>both</td><td>Wire format for <code>TDate</code>.</td></tr>
+        <tr><td>TimeTypeFormat</td><td>TJsonDateTimeFormat</td><td>UnixTime</td><td>both</td><td>Wire format for <code>TTime</code>.</td></tr>
+        <tr><td>GuidTypeFormat</td><td>TJsonGUIDFormat</td><td>UpperWithBraces</td><td>serialize</td><td><code>TGUID</code> output form. Deserialize accepts any casing, braced or bare, dashed or not, plus the 22-char ShortGUID.</td></tr>
+        <tr><td>NonFiniteFloats</td><td>TJsonNonFiniteFloat</td><td>EmitNull</td><td>serialize</td><td>How a NaN / Infinity float is written (JSON has neither).</td></tr>
+        <tr><td>EscapeForwardSlash</td><td>Boolean</td><td>False</td><td>serialize</td><td><code>False</code> emits <code>/</code> bare; <code>True</code> emits <code>\/</code> for embedding in an HTML <code>&lt;script&gt;</code>.</td></tr>
+        <tr><td>EscapeNonAscii</td><td>Boolean</td><td>True</td><td>serialize</td><td><code>True</code> escapes chars &gt; 127 as <code>\uXXXX</code>; <code>False</code> emits raw UTF-16. Control chars are always escaped.</td></tr>
+        <tr><td>MaxDepth</td><td>Integer</td><td>64</td><td>both</td><td>Nesting-depth guard against cyclic references and deeply nested input; exceeding it raises.</td></tr>
+        <tr><td>StringKeyedPairsAsObject</td><td>Boolean</td><td>True</td><td>both</td><td><code>TArray&lt;TPair&lt;string,V&gt;&gt;</code> as a JSON object <code>{"k":v}</code>; <code>False</code> uses the array-of-pairs form.</td></tr>
+        <tr><td>DictionaryAsObject</td><td>Boolean</td><td>True</td><td>both</td><td><code>TDictionary</code>/<code>TObjectDictionary</code> as a JSON object of its entries; <code>False</code> reflects the object's properties.</td></tr>
+        <tr><td>ListAsArray</td><td>Boolean</td><td>True</td><td>both</td><td><code>TList</code>/<code>TObjectList</code> as a JSON array of its elements; <code>False</code> reflects the object's properties.</td></tr>
+        <tr><td>UnknownMemberHandling</td><td>TJsonUnknownMemberHandling</td><td>Ignore</td><td>deserialize</td><td>JSON with no target (unknown key, static-array overflow): <code>Ignore</code> discards it, <code>Reject</code> raises.</td></tr>
+        <tr><td>ClassMemberVisibility</td><td>TMemberVisibilities</td><td>[mvPublic, mvPublished]</td><td>both</td><td>Which class member visibilities are (de)serialized. Records always use <code>mvPublic</code> only.</td></tr>
+        <tr><td>OmitMembers</td><td>TJsonOmitMembers</td><td>Never</td><td>serialize</td><td>Which members to skip: <code>Never</code> / <code>WhenNil</code> / <code>WhenEmpty</code> / <code>WhenDefault</code> &mdash; a superset ladder.</td></tr>
+        <tr><td>UnmappableValueHandling</td><td>TJsonUnmappableHandling</td><td>RaiseUnmappable</td><td>deserialize</td><td>JSON that cannot be represented in the target (bad enum name, unconstructable class): raise, or fall back leniently.</td></tr>
+        <tr><td>AllowNonFiniteFloats</td><td>Boolean</td><td>False</td><td>deserialize</td><td>Parse the non-standard <code>NaN</code> / <code>Infinity</code> / <code>-Infinity</code> tokens some producers emit; default rejects them.</td></tr>
+        <tr><td>AutoConstructNilObjects</td><td>Boolean</td><td>False</td><td>deserialize</td><td>A nil class-typed member: <code>False</code> stays nil; <code>True</code> constructs and populates it (the deserialized object then owns it).</td></tr>
+        <tr><td>PrettyPrint</td><td>Boolean</td><td>False</td><td>serialize</td><td>Emit indented JSON directly during the write pass (no second reparse). <code>False</code> is compact.</td></tr>
+        <tr><td>IndentSize</td><td>Byte</td><td>2</td><td>serialize</td><td>Spaces per indent level when <code>PrettyPrint</code>.</td></tr>
+        <tr><td>LineBreak</td><td>TJsonLineBreak</td><td>CRLF</td><td>serialize</td><td>Line ending when <code>PrettyPrint</code>: <code>CRLF</code> or <code>LF</code>.</td></tr>
+      </tbody>
+    </table>
+    <p class="enums"><strong>Enum values &mdash;</strong>
+    <code>TJsonEnumSerialization</code>: <code>EnumToString</code>, <code>EnumToValue</code>.
+    <code>TJsonDateTimeFormat</code>: <code>ISO8601</code>, <code>UnixTime</code>, <code>DelphiDateTime</code>, <code>DelphiDate</code>, <code>DelphiTime</code>.
+    <code>TJsonGUIDFormat</code>: <code>UpperWithBraces</code>, <code>LowerWithBraces</code>, <code>UpperNoBraces</code>, <code>LowerNoBraces</code>, <code>UpperNoDashes</code>, <code>LowerNoDashes</code>, <code>ShortGUID</code>.
+    <code>TJsonNonFiniteFloat</code>: <code>EmitNull</code>, <code>EmitZero</code>, <code>RaiseError</code>.
+    <code>TJsonUnknownMemberHandling</code>: <code>Ignore</code>, <code>Reject</code>.
+    <code>TJsonUnmappableHandling</code>: <code>RaiseUnmappable</code>, <code>BestEffort</code>.
+    <code>TJsonOmitMembers</code>: <code>Never</code>, <code>WhenNil</code>, <code>WhenEmpty</code>, <code>WhenDefault</code>.
+    <code>TJsonLineBreak</code>: <code>CRLF</code>, <code>LF</code>.</p>
+  </div>
+</section>
+
+<!-- ================= ATTRIBUTES ================= -->
+<section class="block alt">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Per-member control with attributes</h2>
+    <p class="lede">Where the config record sets document-wide policy, custom
+    attributes in <code>radJSON.CustomAttributes</code> tune individual members
+    &mdash; decorate a field or property and the (de)serializer honors it, taking
+    precedence over the global config for that member. Skip a member entirely with
+    <code>[JsonIgnore]</code>; rename it on the wire with
+    <code>[JsonCustomName('id')]</code>; override a date member's format with
+    <code>[JsonDateFormat(TJsonDateTimeFormat.UnixTime)]</code> or an enum's
+    name-vs-ordinal choice with <code>[JsonEnum(TJsonEnumSerialization.EnumToValue)]</code>;
+    force a numeric member onto the wire as a quoted string with
+    <code>[JsonNumberAsString]</code>; carry an opaque raw-JSON passthrough in a
+    string member with <code>[JsonRawValue]</code>; and emit a
+    <code>TStrings</code> member as a <code>{name:value}</code> map with
+    <code>[JsonSerializeAsStringMap]</code>. Because Delphi cannot attribute
+    individual enum values, two type-level attributes,
+    <code>[JsonEnumNames('active,inactive,pending')]</code> and
+    <code>[JsonEnumIntValues('1,2,5')]</code>, map an enum's members to custom
+    string or integer wire values.</p>
+    <div class="codewrap">
+      <p class="cap">Attributes on a class</p>
+<pre class="term"><code>TAccount = <span class="k">class</span>
+  [JsonIgnore]
+  <span class="k">property</span> CacheKey: string <span class="k">read</span> fCacheKey;
+
+  [JsonCustomName('id')]
+  <span class="k">property</span> AccountId: Int64 <span class="k">read</span> fAccountId <span class="k">write</span> fAccountId;
+
+  [JsonDateFormat(TJsonDateTimeFormat.UnixTime)]
+  <span class="k">property</span> Created: TDateTime <span class="k">read</span> fCreated <span class="k">write</span> fCreated;
+<span class="k">end</span>;</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CUSTOM SERIALIZERS ================= -->
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Custom serializers for your own types</h2>
+    <p class="lede">When a type needs wire handling that reflection alone cannot
+    express, register a pair of procedures against its <code>TypeInfo</code> with
+    <code>gRttiCache.AddCustomSerializer</code> /
+    <code>AddCustomDeserializer</code>. Each receives the member, an instance
+    pointer, and an <code>IJsonWriter</code> or <code>IJsonReader</code>, so you
+    write and read the exact wire shape you want &mdash; radJSON then uses your
+    procedures anywhere that type appears. The <code>radJSON.CustomSerializers</code>
+    unit ships built-in handlers for the common
+    <code>TPair&lt;string, V&gt;</code> value types (string, Integer, Int64, Single,
+    Double, Extended, Boolean), and exposes a generic
+    <code>TCustomSerializers.SerializeStringKeyedPairs&lt;V&gt;</code> /
+    <code>DeserializeStringKeyedPairs&lt;V&gt;</code> helper that maps a
+    <code>TArray&lt;TPair&lt;string, V&gt;&gt;</code> of <em>record</em> <code>V</code> to
+    a JSON object &mdash; the entry point the OpenAPI / AWS model code generators
+    delegate to for their nested-object maps.</p>
+    <div class="codewrap">
+      <p class="cap">Register a per-type serializer</p>
+<pre class="term"><code><span class="k">procedure</span> SerializePaths(<span class="k">const</span> M: TMember; I: Pointer; <span class="k">const</span> W: IJsonWriter);
+<span class="k">begin</span>
+  TCustomSerializers.SerializeStringKeyedPairs&lt;TPathItem&gt;(M, I, W);
+<span class="k">end</span>;
+
+gRttiCache.AddCustomSerializer(
+  TypeInfo(TArray&lt;TPair&lt;string, TPathItem&gt;&gt;), SerializePaths);</code></pre>
+    </div>
+    <p style="margin-top:26px"><a href="index.html">&larr; Back to Open Source</a></p>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../index.html" aria-label="RAD Programmer home"><img class="mark" src="../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radJSON is part of the <a href="index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a>
+      open source collection.</p>
+    </div>
+    <div>
+      <h3>radJSON</h3>
+      <ul>
+        <li><a href="https://github.com/radprogrammer/rad-json-dev">GitHub</a></li>
+        <li><a href="index.html">Open Source index</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="../radFormatter/index.html">radFormatter</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../legal/privacy.html">Privacy</a></li>
+        <li><a href="../legal/terms.html">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

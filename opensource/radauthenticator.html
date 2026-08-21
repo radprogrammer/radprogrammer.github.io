@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1F2A33">
+<title>radAuthenticator — TOTP two-factor authentication in Delphi</title>
+<meta name="description" content="radAuthenticator is an Apache-2.0 Delphi sample that generates Google Authenticator-compatible TOTP one-time codes, with a five-part blog series that walks through building it.">
+<link rel="canonical" href="https://radprogrammer.com/opensource/radauthenticator.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RAD Programmer">
+<meta property="og:title" content="radAuthenticator — TOTP two-factor authentication in Delphi">
+<meta property="og:description" content="An Apache-2.0 Delphi sample generating Google Authenticator-compatible TOTP one-time codes, with a five-part build-along blog series.">
+<meta property="og:url" content="https://radprogrammer.com/opensource/radauthenticator.html">
+<meta property="og:image" content="https://radprogrammer.com/assets/og-radprogrammer.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/svg+xml" href="assets/radauthenticator-icon.svg">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+.brandmark-head{font-family:var(--display);font-weight:800;font-size:1.15rem;color:#fff;text-decoration:none}
+.brandmark-head b{color:var(--rad-red)}
+
+.hero{background:linear-gradient(180deg,var(--ink) 0%,#25323d 100%);color:var(--mist);padding:56px 0 64px}
+.hero .crumb{font-family:var(--mono);font-size:.78rem;color:#8FA3B1;margin-bottom:20px}
+.hero .crumb a{color:#AEC0CD}
+.hero .wordmark{max-width:440px;width:100%;height:auto;margin-bottom:8px}
+.hero .sub{font-size:1.15rem;color:var(--mist);max-width:34em}
+.hero .pills{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 4px;font-family:var(--mono);font-size:.78rem}
+.hero .pills span{border:1px solid var(--steel);color:#AEC0CD;border-radius:999px;padding:.22em .8em}
+.hero .actions{display:flex;gap:14px;margin-top:24px;flex-wrap:wrap}
+
+section.block{padding:56px 0}
+section.block.alt{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lede{max-width:46em;color:var(--steel)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:28px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px}
+.alt .card{background:var(--paper)}
+.card h3{margin-top:0}
+.card p{margin-bottom:0;color:var(--steel);font-size:.95rem}
+.card .tag{font-family:var(--mono);font-size:.72rem;color:var(--rad-red);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px}
+
+/* series list */
+.series{counter-reset:step;list-style:none;padding:0;margin:28px 0 0;display:grid;gap:12px}
+.series li{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px}
+.series li::before{counter-increment:step;content:counter(step);font-family:var(--display);font-weight:800;color:var(--rad-red);background:var(--code-bg);border-radius:9px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex:0 0 38px}
+.series li span{color:var(--steel)}
+@media (max-width:860px){.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brandmark-head" href="../index.html"><b>RAD</b>&nbsp;Programmer</a>
+    <nav aria-label="Main">
+      <a href="../radFormatter/index.html">radFormatter</a>
+      <a href="index.html" aria-current="page">Open Source</a>
+      <a href="../about.html">About</a>
+      <a href="https://github.com/radprogrammer">GitHub</a>
+      <a class="cta" href="../radFormatter/buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">Open Source</a> &nbsp;/&nbsp; radAuthenticator</p>
+    <img class="wordmark" src="assets/radauthenticator-logo-reversed.svg" alt="radAuthenticator">
+    <p class="sub">A Delphi sample that generates Time-based One-Time Password
+    (TOTP) codes compatible with Google&nbsp;Authenticator &mdash; the same
+    rotating six-digit codes users already scan into their phones for two-factor
+    authentication. It is a complete, readable walk-through of how 2FA actually
+    works, in plain Object Pascal.</p>
+    <div class="pills">
+      <span>Apache-2.0 licensed</span>
+      <span>TOTP / RFC 6238</span>
+      <span>Google Authenticator compatible</span>
+    </div>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/radprogrammer/rad-authenticator">View on GitHub</a>
+      <a class="btn ghost" href="https://ideasawakened.com/tags/rad-authenticator/">Read the series</a>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WHAT ================= -->
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Two-factor auth, demystified</h2>
+    <p class="lede">Behind every authenticator app is a small, well-specified
+    algorithm: a shared secret, the current time, and an HMAC reduced to a handful
+    of digits. radAuthenticator implements exactly that in Delphi, producing codes
+    that verify against Google Authenticator and any RFC&nbsp;6238-compliant
+    server.</p>
+    <div class="grid3">
+      <div class="card">
+        <span class="tag">TOTP</span>
+        <h3>Standards-based codes</h3>
+        <p>Time-based one-time passwords per RFC&nbsp;6238, built on the HOTP
+        (RFC&nbsp;4226) HMAC construction &mdash; the same math the big
+        authenticator apps use.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Compatible</span>
+        <h3>Works with Google Authenticator</h3>
+        <p>Codes are interoperable with Google&nbsp;Authenticator and compatible
+        apps, so you can validate the implementation against tools you already
+        trust.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Readable</span>
+        <h3>A teaching implementation</h3>
+        <p>Kept deliberately generic and clear &mdash; no vendor marks, no magic.
+        A dependable starting point for adding 2FA to your own Delphi apps.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERIES ================= -->
+<section class="block alt">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>The build-along series</h2>
+    <p class="lede">radAuthenticator grew out of a five-part series on
+    ideasawakened.com that builds the whole thing step by step &mdash; from the
+    underlying algorithm to a working app. Read it front to back, or jump to the
+    code.</p>
+    <ol class="series">
+      <li><span>A five-part walk-through of building a TOTP authenticator in Delphi &mdash; secrets, HMAC, time steps, code generation, and a working UI.</span></li>
+    </ol>
+    <p style="margin-top:22px;display:flex;gap:28px;flex-wrap:wrap">
+      <a href="https://ideasawakened.com/tags/rad-authenticator/">Read all articles &rarr;</a>
+      <a href="https://github.com/radprogrammer/rad-authenticator">Browse the source &rarr;</a>
+    </p>
+    <p style="margin-top:22px"><a href="index.html">&larr; Back to Open Source</a></p>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../index.html" aria-label="RAD Programmer home"><img class="mark" src="../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radAuthenticator is part of the <a href="index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a>
+      open source collection.</p>
+    </div>
+    <div>
+      <h3>radAuthenticator</h3>
+      <ul>
+        <li><a href="https://github.com/radprogrammer/rad-authenticator">GitHub</a></li>
+        <li><a href="https://ideasawakened.com/tags/rad-authenticator/">Blog series</a></li>
+        <li><a href="https://github.com/radprogrammer/rad-authenticator/blob/main/LICENSE">License (Apache-2.0)</a></li>
+        <li><a href="index.html">Open Source index</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="../radFormatter/index.html">radFormatter</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../legal/privacy.html">Privacy</a></li>
+        <li><a href="../legal/terms.html">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc. radAuthenticator is released under the Apache License 2.0.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

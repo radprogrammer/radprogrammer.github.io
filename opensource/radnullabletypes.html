@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1F2A33">
+<title>radNullableTypes — nullable and tri-state value types for Delphi</title>
+<meta name="description" content="radNullableTypes is a focused, dependency-light MIT-licensed Delphi library: TNullable<T> and TTriState<T> that start null by construction, unwrap explicitly, and order like .NET Nullable<T>.">
+<link rel="canonical" href="https://radprogrammer.com/opensource/radnullabletypes.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RAD Programmer">
+<meta property="og:title" content="radNullableTypes — nullable and tri-state value types for Delphi">
+<meta property="og:description" content="Focused, dependency-light nullable and tri-state value types for Delphi. TNullable<T> and TTriState<T>, MIT licensed.">
+<meta property="og:url" content="https://radprogrammer.com/opensource/radnullabletypes.html">
+<meta property="og:image" content="https://radprogrammer.com/assets/og-radprogrammer.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/svg+xml" href="assets/radnullabletypes-icon.svg">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+.brandmark-head{font-family:var(--display);font-weight:800;font-size:1.15rem;color:#fff;text-decoration:none}
+.brandmark-head b{color:var(--rad-red)}
+
+/* hero */
+.hero{background:linear-gradient(180deg,var(--ink) 0%,#25323d 100%);color:var(--mist);padding:56px 0 64px}
+.hero .crumb{font-family:var(--mono);font-size:.78rem;color:#8FA3B1;margin-bottom:20px}
+.hero .crumb a{color:#AEC0CD}
+.hero .wordmark{max-width:440px;width:100%;height:auto;margin-bottom:8px}
+.hero .sub{font-size:1.15rem;color:var(--mist);max-width:34em}
+.hero .pills{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 4px;font-family:var(--mono);font-size:.78rem}
+.hero .pills span{border:1px solid var(--steel);color:#AEC0CD;border-radius:999px;padding:.22em .8em}
+.hero .actions{display:flex;gap:14px;margin-top:24px;flex-wrap:wrap}
+
+section.block{padding:56px 0}
+section.block.alt{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lede{max-width:46em;color:var(--steel)}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:28px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px}
+.alt .card{background:var(--paper)}
+.card h3{margin-top:0}
+.card p{margin-bottom:0;color:var(--steel);font-size:.95rem}
+.card .tag{font-family:var(--mono);font-size:.72rem;color:var(--rad-red);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px}
+.codewrap{margin-top:28px}
+.codewrap .cap{font-family:var(--mono);font-size:.72rem;color:var(--steel);letter-spacing:.05em;text-transform:uppercase;margin:0 0 8px}
+pre.term .k{color:var(--sky)}
+pre.term .s{color:#8FA3B1}
+.backlink{margin-top:8px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brandmark-head" href="../index.html"><b>RAD</b>&nbsp;Programmer</a>
+    <nav aria-label="Main">
+      <a href="../radFormatter/index.html">radFormatter</a>
+      <a href="index.html" aria-current="page">Open Source</a>
+      <a href="../about.html">About</a>
+      <a href="https://github.com/radprogrammer">GitHub</a>
+      <a class="cta" href="../radFormatter/buy.html">Buy</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">Open Source</a> &nbsp;/&nbsp; radNullableTypes</p>
+    <img class="wordmark" src="assets/radnullabletypes-logo-reversed.svg" alt="radNullableTypes">
+    <p class="sub">Focused, dependency-light nullable and tri-state value types for
+    Delphi. A freshly declared value starts <em>null</em> &mdash; guaranteed, not
+    stack garbage &mdash; lifts from a bare value implicitly, and only unwraps
+    explicitly, so a null can never slip into ordinary code unnoticed.</p>
+    <div class="pills">
+      <span>MIT licensed</span>
+      <span>Delphi 10.4 Sydney+</span>
+      <span>Pure RTL &mdash; no dependencies</span>
+    </div>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/radprogrammer/radNullableTypes">View on GitHub</a>
+      <a class="btn ghost" href="https://github.com/radprogrammer/radNullableTypes/blob/main/LICENSE">MIT License</a>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WHAT ================= -->
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Two value types, one clear contract</h2>
+    <p class="lede">radNullableTypes gives Delphi the optional-value semantics that
+    higher-level languages take for granted &mdash; without dragging heavyweight
+    RTL units into every unit that merely declares an optional field. The core
+    unit <code>radNullable</code> depends only on <code>System.SysUtils</code>,
+    <code>System.TypInfo</code>, and <code>System.Generics.Defaults</code>;
+    Variant / <code>TValue</code> / JSON conversions live in a separate
+    <code>radNullable.Rtti</code> companion so they are opt-in.</p>
+    <div class="grid2">
+      <div class="card">
+        <span class="tag">TNullable&lt;T&gt;</span>
+        <h3>Null or value</h3>
+        <p>A two-state value &mdash; the Delphi equivalent of .NET
+        <code>Nullable&lt;T&gt;</code>. Implicit in, explicit out: a bare value
+        lifts automatically, but unwrapping back to <code>T</code> is explicit and
+        raises if it is null. Lenient accessors
+        (<code>ValueOrDefault</code>, <code>TryGetValue</code>) never raise.</p>
+      </div>
+      <div class="card">
+        <span class="tag">TTriState&lt;T&gt;</span>
+        <h3>Unset / null / value</h3>
+        <p>A three-state value that distinguishes &ldquo;field omitted&rdquo; from
+        &ldquo;field explicitly null&rdquo; &mdash; exactly what JSON Merge Patch and
+        cloud update-to-clear (PATCH) semantics require.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY ================= -->
+<section class="block alt">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Correct by construction</h2>
+    <div class="grid2">
+      <div class="card">
+        <span class="tag">Managed record</span>
+        <h3>Starts null, always</h3>
+        <p>A custom <code>Initialize</code> operator guarantees a freshly declared
+        local reads as null (or Unset) rather than stack garbage &mdash; the hard
+        floor of Delphi 10.4 Sydney exists precisely to make this guarantee.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Total ordering</span>
+        <h3>Usable as a key</h3>
+        <p>Equality and ordering follow .NET <code>Nullable&lt;T&gt;</code>, not SQL
+        three-valued logic: <code>null = null</code> is true and null sorts below
+        every value. A ready-made cached comparer makes a nullable safe as a
+        dictionary or sort key, even for managed <code>T</code> like
+        <code>string</code>.</p>
+      </div>
+    </div>
+    <div class="codewrap">
+      <p class="cap">A freshly declared nullable starts null</p>
+<pre class="term"><code><span class="k">uses</span> radNullable;
+
+<span class="k">var</span>
+  Age: TNullable&lt;Integer&gt;;
+<span class="k">begin</span>
+  Assert(Age.IsNull);              <span class="s">// guaranteed, not stack garbage</span>
+
+  Age := 42;                       <span class="s">// implicit lift from a value</span>
+  <span class="k">if</span> Age.HasValue <span class="k">then</span>
+    Writeln(Age.Value);            <span class="s">// 42</span>
+
+  Age := NullValue;                <span class="s">// back to null via the sentinel</span>
+  Writeln(Age.ValueOrDefault(-1)); <span class="s">// -1  (lenient, never raises)</span>
+
+  Age := 7;
+  Writeln(Integer(Age));           <span class="s">// 7  -- explicit unwrap</span>
+<span class="k">end</span>;</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GET IT ================= -->
+<section class="block">
+  <div class="wrap">
+    <h2><span class="stair" aria-hidden="true"><i></i><i></i><i></i></span>Get it</h2>
+    <p class="lede">Add the <code>source</code> directory to your project search path
+    and use the units. That is the whole install &mdash; there is nothing to build
+    and nothing to link.</p>
+    <div class="codewrap">
+<pre class="term"><code><span class="k">uses</span>
+  radNullable,        <span class="s">// TNullable&lt;T&gt;, TTriState&lt;T&gt;, comparer, NullValue</span>
+  radNullable.Rtti;   <span class="s">// Variant / TValue / JSON conversions (optional)</span></code></pre>
+    </div>
+    <p class="backlink" style="margin-top:26px"><a href="index.html">&larr; Back to Open Source</a></p>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <a href="../index.html" aria-label="RAD Programmer home"><img class="mark" src="../assets/radprogrammer-logo.svg" alt="RAD Programmer"></a>
+      <p>radNullableTypes is part of the <a href="index.html" style="color:#fff;text-decoration:underline"><strong>RAD Programmer</strong></a>
+      open source collection.</p>
+    </div>
+    <div>
+      <h3>radNullableTypes</h3>
+      <ul>
+        <li><a href="https://github.com/radprogrammer/radNullableTypes">GitHub</a></li>
+        <li><a href="https://github.com/radprogrammer/radNullableTypes/blob/main/LICENSE">License (MIT)</a></li>
+        <li><a href="index.html">Open Source index</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Project</h3>
+      <ul>
+        <li><a href="../radFormatter/index.html">radFormatter</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../legal/privacy.html">Privacy</a></li>
+        <li><a href="../legal/terms.html">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    &copy; 2026 Ideas Awakened, Inc. radNullableTypes is released under the MIT License.
+    Delphi and RAD Studio are trademarks of Embarcadero Technologies, Inc.;
+    RAD Programmer is not affiliated with Embarcadero.
+    &nbsp;&middot;&nbsp; <a href="../legal/privacy.html">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="../legal/terms.html">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>
